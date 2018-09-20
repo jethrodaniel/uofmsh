@@ -1,6 +1,7 @@
 Feature: Built-in commands
 
+  # @announce-stdout
   Scenario: Exiting the shell
     When I run `uofmsh` interactively
     And  I type "exit"
-    Then the output should contain exactly ""
+    Then the output should contain exactly "uofmsh> "

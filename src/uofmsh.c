@@ -9,10 +9,13 @@
 int main()
 {
   // Prompt for the shell
-  // char *prompt = "uofmsh> ";
+  char *prompt = "uofmsh> ";
 
   // The line to be read from input
   char line[MAX_LINE_LENGTH];
+
+  // Print the prompt before reading input
+  printf("%s", prompt);
 
   // Use `fgets` to get the next line
   if (fgets(line, MAX_LINE_LENGTH, stdin) != NULL) {
