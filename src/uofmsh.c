@@ -1,26 +1,34 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "helpers.h"
 
-#define SUCCESS_CODE 0
-#define MAX_LINE_LENGTH 255
+#define MAX_LINE_LENGTH   255
+#define PROMPT            "uofmsh> "
+#define WHITESPACE_DELIMS " \t"
 
 int main()
 {
-  // Prompt for the shell
-  char *prompt = "uofmsh> ";
-
   // The line to be read from input
   char line[MAX_LINE_LENGTH];
 
-  // Print the prompt before reading input
-  printf("%s", prompt);
+  bool newline_only = false;
 
-  // Use `fgets` to get the next line
-  if (fgets(line, MAX_LINE_LENGTH, stdin) != NULL) {
-      // printf("line: %s\n", line);
+  while (!newline_only) {
+    printf("%s", PROMPT);
+
+    // Use fgets to save the next line of input in line
+    fgets(line, sizeof line, stdin);
+
+    // Exit if command is exit
+    if (strcmp("exit\n", line) == 0) {
+      printf("exit");
+      newline_only = true;
+    }
+
   }
 
-  return SUCCESS_CODE;
+  return EXIT_SUCCESS;
 }
