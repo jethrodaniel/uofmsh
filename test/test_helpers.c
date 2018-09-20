@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../vendor/Unity/src/unity.h"
 #include "../src/helpers.h"
 
@@ -11,7 +13,11 @@ void tearDown(void)
 
 void test_something(void)
 {
-    TEST_ASSERT_EQUAL_STRING(something(), "something");
+    char *string = something();
+
+    TEST_ASSERT_EQUAL_STRING(string, "something");
+
+    free(string);
 }
 
 void test_something_else(void)

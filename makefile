@@ -8,7 +8,7 @@ CFLAGS += -Wextra
 CFLAGS += -pedantic
 CFLAGS += -Werror
 
-# Valgrind memory-checking options
+# valgrind memory-checking options
 VFLAGS  = --quiet
 VFLAGS += --tool=memcheck
 VFLAGS += --leak-check=full
@@ -25,7 +25,8 @@ default:
 	@echo "  build        Compiles the source code into an executable"
 	@echo "  run          Runs 'build', then runs the executable"
 	@echo "  test         Runs the helper tests"
-	@echo "  clean        Removes any makefile-generated files\n"
+	@echo "  clean        Removes any makefile-generated files"
+	@echo "  memcheck     Checks memory-usage using valgrind\n"
 
 run: build
 	@echo "Running ./$(PROGRAM_NAME)\n"
@@ -41,15 +42,17 @@ clean:
 	rm -rf *.o *.out *.out.dSYM $(PROGRAM_NAME)
 	@echo "Removed any generated files"
 
-_test: tests.out
-	@echo "Running helper tests"
-	@./tests.out
+memcheck: _memcheck clean
 
-memcheck: tests.out
+_memcheck: tests.out
 	@valgrind $(VFLAGS) ./tests.out
 	@echo "Memory check passed"
 
-tests.out: test/test_helpers.c src/helpers.c
+_test: _tests.out
+	@echo "Running helper tests"
+	@./tests.out
+
+_tests.out: test/test_helpers.c src/helpers.c
 	@echo Compiling $@
 	@$(CC) $(CFLAGS) src/helpers.c vendor/Unity/src/unity.c test/test_helpers.c -o tests.out
 
