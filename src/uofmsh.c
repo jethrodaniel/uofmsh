@@ -6,5 +6,5 @@ int main()
 {
   printf("uofmsh says hello!\n");
 
-  something();
+  printf("something() => %s\n", something());
 }

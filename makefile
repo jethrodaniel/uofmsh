@@ -14,20 +14,42 @@ VFLAGS += --tool=memcheck
 VFLAGS += --leak-check=full
 VFLAGS += --error-exitcode=1
 
-# Default rule, will run when make is called with no arguments
-default: test clean
+# Name of the output program
+PROGRAM_NAME = uofmsh
 
-test: tests.out
-	@echo "Running helper tests ..."
+# Default rule, will run when make is called with no arguments
+default:
+	@echo "Usage\n"
+	@echo "  make COMMAND"
+	@echo "\nCOMMANDS\n"
+	@echo "  build        Compiles the source code into an executable"
+	@echo "  run          Runs 'build', then runs the executable"
+	@echo "  test         Runs the helper tests"
+	@echo "  clean        Removes any makefile-generated files\n"
+
+run: build
+	@echo "Running ./$(PROGRAM_NAME)\n"
+	@./$(PROGRAM_NAME)
+
+build:
+	@$(CC) $(CFLAGS) src/uofmsh.c src/helpers.c -o $(PROGRAM_NAME)
+	@echo "Compiled source code into ./$(PROGRAM_NAME)"
+
+test: _test clean
+
+clean:
+	rm -rf *.o *.out *.out.dSYM $(PROGRAM_NAME)
+	@echo "Removed any generated files"
+
+_test: tests.out
+	@echo "Running helper tests"
 	@./tests.out
 
 memcheck: tests.out
 	@valgrind $(VFLAGS) ./tests.out
 	@echo "Memory check passed"
 
-clean:
-	rm -rf *.o *.out *.out.dSYM
-
 tests.out: test/test_helpers.c src/helpers.c
 	@echo Compiling $@
 	@$(CC) $(CFLAGS) src/helpers.c vendor/Unity/src/unity.c test/test_helpers.c -o tests.out
+

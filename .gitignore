@@ -1,3 +1,7 @@
+# Don't accidently add the compiled program
+uofmsh
+
+# The following is a general-purpose C language .gitignore
 # Prerequisites
 *.d
 
