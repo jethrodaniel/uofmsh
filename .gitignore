@@ -1,6 +1,9 @@
 # Don't accidently add the compiled program
 uofmsh
 
+# Vagrant dotfiles
+.vagrant
+
 # The following is a general-purpose C language .gitignore
 # Prerequisites
 *.d
