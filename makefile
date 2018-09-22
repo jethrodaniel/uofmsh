@@ -24,7 +24,9 @@ default:
 	@echo "\nCOMMANDS\n"
 	@echo "  build        Compiles the source code into an executable"
 	@echo "  run          Runs 'build', then runs the executable"
-	@echo "  test         Runs the helper tests, then the cli tests"
+	@echo "  test         Runs the helper tests"
+	@echo "  test_cli     Runs the cli tests"
+	@echo "  test_all     Runs 'test', then 'test_cli'"
 	@echo "  clean        Removes any makefile-generated files"
 	@echo "  memcheck     Checks memory-usage using valgrind\n"
 
@@ -37,7 +39,9 @@ build:
 	@echo "Compiling source code into ./$(PROGRAM_NAME)\n"
 	@$(CC) $(CFLAGS) src/uofmsh.c src/helpers.c -o $(PROGRAM_NAME)
 
-test: _test_helpers _test_cli clean
+test_all: test test_cli clean
+test_cli:  _test_cli clean
+test: _test_helpers
 
 _test_cli: build
 	@echo "Running cli tests"
@@ -45,7 +49,7 @@ _test_cli: build
 
 clean:
 	@echo "Removing any generated files"
-	rm -rf *.o *.out *.out.dSYM $(PROGRAM_NAME)
+	rm -rf *.o *.out *.out.dSYM $(PROGRAM_NAME) tmp
 	@echo
 
 memcheck: _memcheck clean
