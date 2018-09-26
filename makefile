@@ -3,9 +3,9 @@
 # Compliler options
 CFLAGS  = -std=c99
 CFLAGS += -g
+CFLAGS += -pedantic
 CFLAGS += -Wall
 CFLAGS += -Wextra
-CFLAGS += -pedantic
 CFLAGS += -Werror
 
 # valgrind memory-checking options

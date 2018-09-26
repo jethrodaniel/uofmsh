@@ -6,10 +6,12 @@
 #include "uofmsh.h"
 #include "helpers.h"
 
+// Constants
 #define MAX_LINE_LENGTH   255
 #define PROMPT            "uofmsh> "
 #define WHITESPACE_DELIMS " \t"
 
+// Main shell user input loop
 int shell_loop(void)
 {
   // The line to be read from input
@@ -33,7 +35,7 @@ int shell_loop(void)
       }
 
       for (int i = 0; tokens[i][0] != '\0'; i++) {
-        // printf("%i: %s ", i, tokens[i]);
+        // printf("%i: %s\n", i, tokens[i]);
       }
 
       // Break out of input loop if command is exit
@@ -46,7 +48,15 @@ int shell_loop(void)
   return EXIT_SUCCESS;
 }
 
-int main(int argc, char *argv)
+// Starts the shell
+int main(int argc, char **argv)
 {
+  // To avoid the unused params warning from gcc, we reference the parmaeter
+  char *program_name = argv[argc - argc];
+
+  // To avoid the unused variable warning from gcc, we use the variable
+  (void)program_name;
+
+  // Start the shell
   return shell_loop();
 }
