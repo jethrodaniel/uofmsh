@@ -3,13 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "uofmsh.h"
 #include "helpers.h"
 
 #define MAX_LINE_LENGTH   255
 #define PROMPT            "uofmsh> "
 #define WHITESPACE_DELIMS " \t"
 
-int shell_loop()
+int shell_loop(void)
 {
   // The line to be read from input
   char line[MAX_LINE_LENGTH];
@@ -45,7 +46,7 @@ int shell_loop()
   return EXIT_SUCCESS;
 }
 
-int main()
+int main(int argc, char *argv)
 {
-  shell_loop();
+  return shell_loop();
 }
