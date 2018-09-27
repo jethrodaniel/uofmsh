@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "uofmsh.h"
-#include "helpers.h"
+#include "uofmsh.hpp"
+#include "helpers.hpp"
 
 // Constants
 #define MAX_LINE_LENGTH   255

@@ -1,69 +1,75 @@
-# Makefile for this project
+CPP = g++
 
-# Compliler options
-CFLAGS  = -std=c99
-CFLAGS += -g
-CFLAGS += -pedantic
-CFLAGS += -Wall
-CFLAGS += -Wextra
-CFLAGS += -Werror
+CPP_FLAGS  = -std=c++11
+CPP_FLAGS += -g
+CPP_FLAGS += -pedantic
+CPP_FLAGS += -Wall
+CPP_FLAGS += -Wextra
+CPP_FLAGS += -Werror
 
-# valgrind memory-checking options
-VFLAGS  = --quiet
-VFLAGS += --tool=memcheck
-VFLAGS += --leak-check=full
-VFLAGS += --error-exitcode=1
+TEST_FLAGS  = -std=c++11
+TEST_FLAGS += -Wall
+TEST_FLAGS += -I./test/Catch2
 
-# Name of the output program
 PROGRAM_NAME = uofmsh
 
-# Default rule, will run when make is called with no arguments
-default:
+SOURCES    := $(shell find src -name '*.cpp')
+TEST_SETUP := './test/setup.cpp'
+TESTS      := $(shell find ./test -name '*.cpp'            \
+                                  -not -path '*Catch2*'    \
+                                  -not -name "*setup.cpp")
+
+.PHONY: usage
+usage:
 	@echo "Usage\n"
 	@echo "  make COMMAND"
 	@echo "\nCOMMANDS\n"
-	@echo "  build        Compiles the source code into an executable"
-	@echo "  run          Runs 'build', then runs the executable"
-	@echo "  test         Runs the helper tests"
-	@echo "  test_cli     Runs the cli tests"
-	@echo "  test_all     Runs 'test', then 'test_cli'"
-	@echo "  clean        Removes any makefile-generated files"
-	@echo "  memcheck     Checks memory-usage using valgrind\n"
-
-run: build
-	@echo "Running ./$(PROGRAM_NAME)\n"
-	@./$(PROGRAM_NAME)
+	@echo "  build       Compiles the source code into an executable"
+	@echo "  clean       Removes any generated files. (all=true) to rm ./.test.out"
+	@echo "  test        Runs the helper tests"
+	@echo "  cucumber    Runs the aruba/cucumber tests"
 	@echo
 
+.PHONY: clean
+clean:
+ifneq (${all},'true')
+	@echo "Removing any generated files, except for ./.test.out"
+	rm -rf *.o $(PROGRAM_NAME) tmp
+else
+	@echo "Removing all generated files"
+	rm -rf *.o *.out $(PROGRAM_NAME) tmp .test.out .setup.o
+endif
+
+.PHONY: build
 build:
-	@echo "Compiling source code into ./$(PROGRAM_NAME)\n"
-	@$(CC) $(CFLAGS) src/uofmsh.c src/helpers.c -o $(PROGRAM_NAME)
+	@echo "Compiling source code into ./$(PROGRAM_NAME)"
+	@$(CPP) $(CPP_FLAGS) $(SOURCES) -o $(PROGRAM_NAME)
 
-test_all: test test_cli clean
-test_cli:  _test_cli clean
-test: _test_helpers
+.PHONY: test
+test: .test.out
+	@echo "Running the tests..."
+	./.test.out
 
-_test_cli: build
+.test.out: .setup.o $(TESTS)
+	$(CPP) $(TEST_FLAGS) .setup.o $(TESTS) -o .test.out
+
+.setup.o:
+	$(CPP) $(TEST_FLAGS) -c $(TEST_SETUP) -o .setup.o
+
+.PHONY: cucumber
+cucumber: build bundle
 	@echo "Running cli tests"
 	bundle exec cucumber
 
-clean:
-	@echo "Removing any generated files"
-	rm -rf *.o *.out *.out.dSYM $(PROGRAM_NAME) tmp
-	@echo
+bundle: gem
+	bundle --quiet
 
-memcheck: _memcheck clean
+gem: ruby
+ifeq ( , $(shell which bundle))
+	gem install bundle
+endif
 
-_memcheck: _tests.out
-	@echo "\nRunning memory checks using valgrind ..."
-	@valgrind $(VFLAGS) ./tests.out
-	@echo "Memory check passed\n"
-
-_test_helpers: _tests.out
-	@echo "\nRunning helper tests"
-	@./tests.out
-
-_tests.out: test/test_helpers.c src/helpers.c
-	@echo "\nCompiling $@"
-	@$(CC) $(CFLAGS) src/helpers.c vendor/Unity/src/unity.c test/test_helpers.c -o tests.out
-
+ruby:
+ifeq ( , $(shell which ruby))
+	$(error Please install Ruby to run the aruba/cucumber tests)
+endif
