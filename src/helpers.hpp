@@ -4,6 +4,6 @@
 #include <string>
 
 // A function that does something helpful
-char *something(void);
+std::string example(void);
 
 #endif
