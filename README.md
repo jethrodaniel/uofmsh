@@ -12,7 +12,7 @@ Features
 
 ### To compile and run the shell
 
-* A C compiler, such as [GCC](https://gcc.gnu.org/)
+* A C++ compiler, such as [g++](https://gcc.gnu.org/)
 
 ### Additionally, to use the included makefile for project tasks
 
@@ -70,27 +70,24 @@ make
 
 ### To run the aruba/cucumber tests
 
-* Install the required Ruby gems (provided you've already installed Ruby)
+* Also installs the required Ruby gems. Fails if Ruby isn't already installed.
      ```
-     gem install bundle
-     bundle
+     make cucumber
      ```
 
 ### Using Vagrant
 
-A Vagrantfile is included that will set up a simple dev environment running Ubuntu 18.04.
+A Vagrantfile is included that will set up a simple development environment running Ubuntu 18.04.
 
-Make sure Vagrant is installed, then run the following commands in Bash (these may take a long time)
+Make sure Vagrant is installed, then run the following commands (these may take a long time)
 
 ```
-./vagrant up    # To create the vm
-./vagrant ssh   # To ssh into the vm
+vagrant up    # To create the vm
+vagrant ssh   # To ssh into the vm
 ```
 
 When finished
 
 ```
-./vagrant halt  # To halt the vm
+vagrant halt  # To halt the vm
 ```
-
-
