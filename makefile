@@ -25,20 +25,22 @@ usage:
 	@echo "  make COMMAND"
 	@echo "\nCOMMANDS\n"
 	@echo "  build       Compiles the source code into an executable"
-	@echo "  clean       Removes any generated files. (all=true) to rm ./.test.out"
-	@echo "  test        Runs the helper tests"
+	@echo "  clean       Removes generated files, except .setup.o and .test.out"
 	@echo "  cucumber    Runs the aruba/cucumber tests"
+	@echo "  test        Runs the helper tests"
+	@echo "  purge       Removes all generated files."
 	@echo
 
 .PHONY: clean
 clean:
-ifneq (${all},'true')
-	@echo "Removing any generated files, except for ./.test.out"
-	rm -rf *.o $(PROGRAM_NAME) tmp
-else
+	@echo "Removing generated files, except .setup.o and .test.out"
+	rm -rf $(PROGRAM_NAME) tmp
+
+.PHONY: purge
+purge:
 	@echo "Removing all generated files"
-	rm -rf *.o *.out $(PROGRAM_NAME) tmp .test.out .setup.o
-endif
+	rm -rf $(PROGRAM_NAME) tmp *.o *.out .test.out .setup.o
+
 
 .PHONY: build
 build:
