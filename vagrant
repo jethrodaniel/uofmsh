@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-# Run vagrant, ignoring any Ruby gem environment variables
-env -u GEM_HOME -u GEM_PATH vagrant $@
