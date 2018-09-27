@@ -1,14 +1,16 @@
-Feature: Built-in commands
-  As a shell user
-  I want to run builtin commands
-  So that I can interact with the shell
+# For aruba documentation, see https://relishapp.com/cucumber/aruba/docs/
 
-  # @announce-output
-  Scenario: Exiting the shell
+Feature: Built-in commands
+
+  Background:
+    # When I run `bash` interactively
     When I run `uofmsh` interactively
+
+  Scenario: exit
     And  I type "exit"
-    Then it should pass with "exit"
-    And the output should contain exactly:
-    """
-    uofmsh> exit
-    """
+    Then the output should contain exactly ""
+
+  Scenario: pwd
+    And  I type "pwd"
+    Then the output should contain "tmp/aruba"
+
