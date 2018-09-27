@@ -1,18 +1,13 @@
 # uofmsh
 
-A shell, written in c
+A basic shell
 
 Features
-* Unit testing of C helper functions using [Unity](https://github.com/ThrowTheSwitch/Unity)
+* C++ testing with [Catch](https://github.com/catchorg/Catch2)
 * Interactive testing using [Aruba](https://github.com/cucumber/aruba) and [Cucumber](https://github.com/cucumber/cucumber-ruby)
 * Cross-platform development environment using [Vagrant](https://www.vagrantup.com)
 
-Dependencies
-* C language
-* Un\*x environment
-
-
-## Requirements
+## Dependencies
 ---
 
 ### To compile and run the shell
@@ -25,8 +20,8 @@ Dependencies
 
 ### Additionally, to run the tests
 
-* [Git](https://git-scm.com/), to add Unity as a submodule
-* [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests. [RVM](https://rvm.io/) is the prefered installation method.
+* [Git](https://git-scm.com/), to add Catch as a submodule
+* [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests. [RVM](https://rvm.io/) is the suggested installation method.
 
 ### Additionally, if using Vagrant
 
@@ -51,26 +46,41 @@ Dependencies
      make build
      ```
 
-
-## Usage
+## Development
 ---
 
-To show available commands
+### To show available project commands
 
 ```
 make
 ```
 
+### To run the unit tests
 
-## Testing
----
+* Download Catch, which is included as a submodule
+     ```
+     git submodule init
+     git submodule update
+     ```
+
+* Alternatively, you can download all submodules and clone at the same time using
+     ```
+     git clone --recurse-submodules https://github.com/jethrodaniel/uofmsh.git
+     ```
+
+### To run the aruba/cucumber tests
+
+* Install the required Ruby gems (provided you've already installed Ruby)
+     ```
+     gem install bundle
+     bundle
+     ```
 
 ### Using Vagrant
 
-By using Vagrant, we set up all dependencies in the Vagranfile, so getting the
-right Un\*x enviroment with all the development dependencies is easy.
+A Vagrantfile is included that will set up a simple dev environment running Ubuntu 18.04.
 
-Make sure Vagrant is installed, then run the following commands in Bash
+Make sure Vagrant is installed, then run the following commands in Bash (these may take a long time)
 
 ```
 ./vagrant up    # To create the vm
@@ -83,21 +93,4 @@ When finished
 ./vagrant halt  # To halt the vm
 ```
 
-### Requirements
-
-* Download Unity, which is included as a submodule
-     ```
-     git submodule init && git submodule update
-     ```
-
-Alternatively, you can download all Unity and clone at the same time using
-```
-git clone --recurse-submodules https://github.com/jethrodaniel/uofmsh.git
-```
-
-* Install the Ruby gems (provided you've already installed Ruby)
-     ```
-     gem install bundle
-     bundle
-     ```
 
