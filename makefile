@@ -64,7 +64,7 @@ cucumber: build bundle
 	bundle exec cucumber
 
 bundle: gem
-	bundle --quiet
+	bundle
 
 gem: ruby
 ifeq ( , $(shell which bundle))
