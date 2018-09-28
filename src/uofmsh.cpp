@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,9 +9,10 @@
 #include "helpers.hpp"
 
 // Constants
-#define MAX_LINE_LENGTH   255
-#define PROMPT            "uofmsh> "
-#define WHITESPACE_DELIMS " \t"
+const int MAX_LINE_LENGTH = 255;
+const std::string PROMPT = "uofmsh> ";
+
+const char *WHITESPACE_DELIMS = " \t";
 
 // Main shell user input loop
 int shell_loop(void)
@@ -20,7 +23,7 @@ int shell_loop(void)
   // Read commands until the shell is exited via exit or an interrupt
   while (true) {
       // Print the prompt before user input
-      printf("%s", PROMPT);
+      std::cout << PROMPT;
 
       // Use fgets to save the next line of input in line
       fgets(line, sizeof line, stdin);
@@ -35,7 +38,7 @@ int shell_loop(void)
       }
 
       for (int i = 0; tokens[i][0] != '\0'; i++) {
-        // printf("%i: %s\n", i, tokens[i]);
+        printf("%i: %s\n", i, tokens[i]);
       }
 
       // Break out of input loop if command is exit

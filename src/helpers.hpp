@@ -2,8 +2,13 @@
 #define HELPER_H
 
 #include <string>
+#include <vector>
 
-// A function that does something helpful
-std::string example(void);
+namespace uofmsh {
+
+std::vector<std::string> split(const std::string input, const char delim);
+
+} // namespace uofmsh
 
 #endif
+
