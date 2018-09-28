@@ -41,7 +41,6 @@ purge:
 	@echo "Removing all generated files"
 	rm -rf $(PROGRAM_NAME) tmp *.o *.out .test.out .setup.o
 
-
 .PHONY: build
 build:
 	@echo "Compiling source code into ./$(PROGRAM_NAME)"
