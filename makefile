@@ -27,35 +27,20 @@ usage:
 	@echo "  build       Compiles the source code into an executable"
 	@echo "  clean       Removes generated files, except .setup.o and .test.out"
 	@echo "  cucumber    Runs the aruba/cucumber tests"
+	@echo "  lint        Runs the linter"
 	@echo "  test        Runs the helper tests"
 	@echo "  purge       Removes all generated files."
 	@echo
-
-.PHONY: clean
-clean:
-	@echo "Removing generated files, except .setup.o and .test.out"
-	rm -rf $(PROGRAM_NAME) tmp
-
-.PHONY: purge
-purge:
-	@echo "Removing all generated files"
-	rm -rf $(PROGRAM_NAME) tmp *.o *.out .test.out .setup.o
 
 .PHONY: build
 build:
 	@echo "Compiling source code into ./$(PROGRAM_NAME)"
 	@$(CPP) $(CPP_FLAGS) $(SOURCES) -o $(PROGRAM_NAME)
 
-.PHONY: test
-test: .test.out
-	@echo "Running the tests..."
-	./.test.out
-
-.test.out: .setup.o $(TESTS)
-	$(CPP) $(TEST_FLAGS) .setup.o $(TESTS) -o .test.out
-
-.setup.o:
-	$(CPP) $(TEST_FLAGS) -c $(TEST_SETUP) -o .setup.o
+.PHONY: clean
+clean:
+	@echo "Removing generated files, except .setup.o and .test.out"
+	rm -rf $(PROGRAM_NAME) tmp
 
 .PHONY: cucumber
 cucumber: build bundle
@@ -74,3 +59,28 @@ ruby:
 ifeq ( , $(shell which ruby))
 	$(error Please install Ruby to run the aruba/cucumber tests)
 endif
+
+.PHONY: lint
+lint:
+	@echo "Running the linter"
+ifeq ( , $(shell which cppcheck))
+	$(error Please install cppcheck to run the linter)
+else
+	cppcheck --enable=all --suppress=missingIncludeSystem $(SOURCES)
+endif
+
+.PHONY: test
+test: .test.out
+	@echo "Running the tests..."
+	./.test.out
+
+.test.out: .setup.o $(TESTS)
+	$(CPP) $(TEST_FLAGS) .setup.o $(TESTS) -o .test.out
+
+.setup.o:
+	$(CPP) $(TEST_FLAGS) -c $(TEST_SETUP) -o .setup.o
+PHONY: purge
+purge:
+	@echo "Removing all generated files"
+	rm -rf $(PROGRAM_NAME) tmp *.o *.out .test.out .setup.o
+

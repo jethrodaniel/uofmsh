@@ -17,9 +17,9 @@ class Shell {
   public:
 
     // @return  a new shell instance
-    Shell(std::string prompt = "uofmsh> ") {
-      this->prompt = prompt;
-    }
+    explicit Shell(const std::string &prompt) : prompt(prompt) { }
+
+    Shell() : prompt("uofmsh> ") { }
 
     // Starts the user input loop
     //

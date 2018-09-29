@@ -10,7 +10,7 @@ namespace helpers {
  *
  * @return          the substrings from the split
  */
-std::vector<std::string> split(const std::string input, const std::string delims) {
+std::vector<std::string> split(const std::string &input, const std::string &delims) {
   std::vector<std::string> substrings;
   std::string substring;
   std::size_t current, previous = 0;
@@ -39,7 +39,7 @@ std::vector<std::string> split(const std::string input, const std::string delims
  * @param str             the string to trim
  * @param unwanted_chars  the characters to trim from the string
  */
-void trim(std::string& str, const std::string unwanted_chars) {
+void trim(std::string &str, const std::string &unwanted_chars) {
   // Remove any occurences starting from the right
   str.erase(str.find_last_not_of(unwanted_chars) + 1);
 

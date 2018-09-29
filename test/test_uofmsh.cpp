@@ -6,10 +6,9 @@
 SCENARIO("Setting the shell prompt") {
 
   GIVEN("A shell instance") {
-    std::string prompt;
 
     WHEN("A shell created with a prompt") {
-      prompt = "~> ";
+      const std::string prompt = "~> ";
       uofmsh::Shell shell(prompt);
 
       THEN("It has the supplied prompt") {
