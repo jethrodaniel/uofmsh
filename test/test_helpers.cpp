@@ -12,7 +12,7 @@ TEST_CASE("Splitting a string by a string of delimiters") {
 
   GIVEN("A string containing the delimiters") {
     input  = "veni,\nvidi, vici";
-    output = uofmsh::split(input, " ,\n");
+    output = uofmsh::helpers::split(input, " ,\n");
 
     THEN("It splits by the delimiters") {
       REQUIRE(output.size() == 3);
@@ -25,7 +25,7 @@ TEST_CASE("Splitting a string by a string of delimiters") {
 
   GIVEN("A string consisting of the delimiters") {
     input  = "!@#$%^&*";
-    output = uofmsh::split(input, "!@#$%^&*");
+    output = uofmsh::helpers::split(input, "!@#$%^&*");
 
     THEN("It collects nothing") {
       REQUIRE(output.size() == 0);
@@ -34,7 +34,7 @@ TEST_CASE("Splitting a string by a string of delimiters") {
 
   GIVEN("An empty string") {
     input  = "";
-    output = uofmsh::split(input, " ");
+    output = uofmsh::helpers::split(input, " ");
 
     THEN("It collects nothing") {
       REQUIRE(output.size() == 0);
@@ -49,7 +49,7 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
     str      = "   space on the left";
     trimmed  = "space on the left";
 
-    uofmsh::trim(str, "\n\t ");
+    uofmsh::helpers::trim(str, "\n\t ");
 
     THEN("It removes the leading spaces") {
       REQUIRE(str.compare(trimmed) == 0);
@@ -60,7 +60,7 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
     str     = "cash$$$$$$";
     trimmed = "cash";
 
-    uofmsh::trim(str, "$");
+    uofmsh::helpers::trim(str, "$");
 
     THEN("It removes the trailing $'s") {
       REQUIRE(str.compare(trimmed) == 0);
@@ -71,12 +71,11 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
     str     = "\t   doggos\n    \t\f";
     trimmed = "doggos";
 
-    uofmsh::trim(str, " \t\f\n");
+    uofmsh::helpers::trim(str, " \t\f\n");
 
     THEN("It removes the whitespace") {
       REQUIRE(str.compare(trimmed) == 0);
     }
   }
-
 
 }

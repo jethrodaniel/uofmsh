@@ -1,14 +1,12 @@
 #include "helpers.hpp"
 
-#include <iostream>
-#include <sstream>
-
 namespace uofmsh {
+namespace helpers {
 
-/* Splits a string by a single character delimiter into a vector of substrings
+/* Splits a string by a string of delimiters into a vector of substrings
  *
  * @param input     the string to split
- * @param delim     the delimiter to split by
+ * @param delim     the delimiters to split by
  *
  * @return          the substrings from the split
  */
@@ -36,7 +34,7 @@ std::vector<std::string> split(const std::string input, const std::string delims
   return substrings;
 }
 
-/* Trims leading and trailing occurances of specific characters from a string
+/* Trims leading and trailing occurances of characters from a string
  *
  * @param str             the string to trim
  * @param unwanted_chars  the characters to trim from the string
@@ -49,4 +47,5 @@ void trim(std::string& str, const std::string unwanted_chars) {
   str.erase(0, str.find_first_not_of(unwanted_chars));
 }
 
+} // namespace helpers
 } // namespace uofmsh
