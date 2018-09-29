@@ -8,6 +8,8 @@ namespace uofmsh {
 
 std::vector<std::string> split(const std::string input, const char delim);
 
+void trim(std::string &str, std::string delims);
+
 } // namespace uofmsh
 
 #endif

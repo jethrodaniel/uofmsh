@@ -1,65 +1,42 @@
 #include <iostream>
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "uofmsh.hpp"
 #include "helpers.hpp"
 
-// Constants
-const int MAX_LINE_LENGTH = 255;
-const std::string PROMPT = "uofmsh> ";
+namespace uofmsh {
 
-const char *WHITESPACE_DELIMS = " \t";
-
-// Main shell user input loop
-int shell_loop(void)
-{
+// User input loop
+int Shell::start() {
   // The line to be read from input
-  char line[MAX_LINE_LENGTH];
+  std::string input;
+
+  bool reading_input = true;
 
   // Read commands until the shell is exited via exit or an interrupt
-  while (true) {
-      // Print the prompt before user input
-      std::cout << PROMPT;
+  while (reading_input) {
+    // Print the prompt first
+    std::cout << this->prompt;
 
-      // Use fgets to save the next line of input in line
-      fgets(line, sizeof line, stdin);
+    // Get user input
+    std::getline(std::cin >> std::ws, input);
 
-      // Split the current line by whitespace characters, and save in tokens
-      char tokens[255][MAX_LINE_LENGTH];
+    auto commands = split(input, ' ');
 
-      char *token = strtok(line, WHITESPACE_DELIMS);
-      for (int i = 0; token != NULL; i++) {
-        strcpy(tokens[i], token);
-        token = strtok(NULL, WHITESPACE_DELIMS);
-      }
+    for (auto i = commands.begin(); i != commands.end(); i++) {
+      auto element = *i;
+      auto index = i - commands.begin();
+      std::cout << index << ": " << element << "\n";
+    }
 
-      for (int i = 0; tokens[i][0] != '\0'; i++) {
-        printf("%i: %s\n", i, tokens[i]);
-      }
-
-      // Break out of input loop if command is exit
-      if (strcmp("exit\n", line) == 0) {
-        printf("exit");
-        break;
-      }
+    // Break out of input loop if command is exit
+    if (input.compare("exit") == 0) {
+      std::cout << "exit" << "\n";
+      reading_input = false;
+    }
   }
 
   return EXIT_SUCCESS;
 }
 
-// Starts the shell
-int main(int argc, char **argv)
-{
-  // To avoid the unused params warning from gcc, we reference the parmaeter
-  char *program_name = argv[argc - argc];
+} // namespace uofmsh
 
-  // To avoid the unused variable warning from gcc, we use the variable
-  (void)program_name;
-
-  // Start the shell
-  return shell_loop();
-}
