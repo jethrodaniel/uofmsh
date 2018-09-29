@@ -6,7 +6,7 @@
 // Our helpers
 #include "../src/helpers.cpp"
 
-TEST_CASE("Splitting a string by a string of delimiters") {
+SCENARIO("Splitting a string by a string of delimiters") {
   std::string input;
   std::vector<std::string> output;
 
@@ -14,12 +14,14 @@ TEST_CASE("Splitting a string by a string of delimiters") {
     input  = "veni,\nvidi, vici";
     output = uofmsh::helpers::split(input, " ,\n");
 
-    THEN("It splits by the delimiters") {
-      REQUIRE(output.size() == 3);
+    WHEN("The string is split") {
+      THEN("It is split by the delimiters") {
+        REQUIRE(output.size() == 3);
 
-      REQUIRE(output[0] == "veni");
-      REQUIRE(output[1] == "vidi");
-      REQUIRE(output[2] == "vici");
+        REQUIRE(output[0] == "veni");
+        REQUIRE(output[1] == "vidi");
+        REQUIRE(output[2] == "vici");
+      }
     }
   }
 
@@ -27,8 +29,10 @@ TEST_CASE("Splitting a string by a string of delimiters") {
     input  = "!@#$%^&*";
     output = uofmsh::helpers::split(input, "!@#$%^&*");
 
-    THEN("It collects nothing") {
-      REQUIRE(output.size() == 0);
+    WHEN("The string is split") {
+      THEN("It collects nothing") {
+        REQUIRE(output.size() == 0);
+      }
     }
   }
 
@@ -36,13 +40,15 @@ TEST_CASE("Splitting a string by a string of delimiters") {
     input  = "";
     output = uofmsh::helpers::split(input, " ");
 
-    THEN("It collects nothing") {
-      REQUIRE(output.size() == 0);
+    WHEN("The string is split") {
+      THEN("It collects nothing") {
+        REQUIRE(output.size() == 0);
+      }
     }
   }
 }
 
-TEST_CASE("Trimming a string of by a group of delimiters") {
+SCENARIO("Trimming a string of by a group of delimiters") {
   std::string str, trimmed;
 
   GIVEN("A string with spaces on the left") {
@@ -51,8 +57,10 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
 
     uofmsh::helpers::trim(str, "\n\t ");
 
-    THEN("It removes the leading spaces") {
-      REQUIRE(str.compare(trimmed) == 0);
+    WHEN("The string is trimmed") {
+      THEN("It removes the leading spaces") {
+        REQUIRE(str.compare(trimmed) == 0);
+      }
     }
   }
 
@@ -62,8 +70,10 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
 
     uofmsh::helpers::trim(str, "$");
 
-    THEN("It removes the trailing $'s") {
-      REQUIRE(str.compare(trimmed) == 0);
+    WHEN("The string is trimmed") {
+      THEN("It removes the trailing $'s") {
+        REQUIRE(str.compare(trimmed) == 0);
+      }
     }
   }
 
@@ -73,8 +83,10 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
 
     uofmsh::helpers::trim(str, " \t\f\n");
 
-    THEN("It removes the whitespace") {
-      REQUIRE(str.compare(trimmed) == 0);
+    WHEN("The string is trimmed") {
+      THEN("It removes the whitespace") {
+        REQUIRE(str.compare(trimmed) == 0);
+      }
     }
   }
 

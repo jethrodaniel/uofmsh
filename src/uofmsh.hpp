@@ -45,7 +45,6 @@ class Shell {
     void parse(std::string input) {
       auto commands = helpers::split(input, ";");
 
-      std::string s;
       for (auto &c : commands) {
         helpers::trim(c, " \t");
         addCommand(c);
