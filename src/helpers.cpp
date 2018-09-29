@@ -12,14 +12,26 @@ namespace uofmsh {
  *
  * @return          the substrings from the split
  */
-std::vector<std::string> split(const std::string input, const char delim) {
+std::vector<std::string> split(const std::string input, const std::string delims) {
   std::vector<std::string> substrings;
-  std::stringstream        sstream(input);
-  std::string              substring;
+  std::string substring;
+  std::size_t current, previous = 0;
 
-  while (std::getline(sstream, substring, delim))
+  current = input.find_first_of(delims);
+  while (current != std::string::npos) {
+    substring = input.substr(previous, current - previous);
+
     if (substring.size() > 0)
       substrings.push_back(substring);
+
+    previous = current + 1;
+    current = input.find_first_of(delims, previous);
+  }
+
+  substring = input.substr(previous, current - previous);
+
+  if (substring.size() > 0)
+    substrings.push_back(substring);
 
   return substrings;
 }

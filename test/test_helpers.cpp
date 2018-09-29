@@ -6,38 +6,38 @@
 // Our helpers
 #include "../src/helpers.cpp"
 
-TEST_CASE("Splitting a string by a delimiter") {
+TEST_CASE("Splitting a string by a string of delimiters") {
   std::string input;
-  std::vector<std::string> words;
+  std::vector<std::string> output;
 
-  GIVEN("A regular string") {
-    input = "veni,vidi,vici";
-    words = uofmsh::split(input, ',');
+  GIVEN("A string containing the delimiters") {
+    input  = "veni,\nvidi, vici";
+    output = uofmsh::split(input, " ,\n");
 
-    THEN("It splits by the delimiter") {
-      REQUIRE(words.size() == 3);
+    THEN("It splits by the delimiters") {
+      REQUIRE(output.size() == 3);
 
-      REQUIRE(words[0] == "veni");
-      REQUIRE(words[1] == "vidi");
-      REQUIRE(words[2] == "vici");
+      REQUIRE(output[0] == "veni");
+      REQUIRE(output[1] == "vidi");
+      REQUIRE(output[2] == "vici");
     }
   }
 
-  GIVEN("A single character empty string") {
-    input = "";
-    words = uofmsh::split(input, ' ');
+  GIVEN("A string consisting of the delimiters") {
+    input  = "!@#$%^&*";
+    output = uofmsh::split(input, "!@#$%^&*");
 
     THEN("It collects nothing") {
-      REQUIRE(words.size() == 0);
+      REQUIRE(output.size() == 0);
     }
   }
 
-  GIVEN("A large empty string") {
-    input = "               ";
-    words = uofmsh::split(input, ' ');
+  GIVEN("An empty string") {
+    input  = "";
+    output = uofmsh::split(input, " ");
 
     THEN("It collects nothing") {
-      REQUIRE(words.size() == 0);
+      REQUIRE(output.size() == 0);
     }
   }
 }
@@ -67,13 +67,13 @@ TEST_CASE("Trimming a string of by a group of delimiters") {
     }
   }
 
-  GIVEN("A string surrounded by spaces") {
-    str     = "    doggos     ";
+  GIVEN("A string surrounded by whitespace") {
+    str     = "\t   doggos\n    \t\f";
     trimmed = "doggos";
 
-    uofmsh::trim(str, " ");
+    uofmsh::trim(str, " \t\f\n");
 
-    THEN("It removes the spaces") {
+    THEN("It removes the whitespace") {
       REQUIRE(str.compare(trimmed) == 0);
     }
   }

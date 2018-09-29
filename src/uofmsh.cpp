@@ -20,7 +20,7 @@ int Shell::start() {
     // Get user input
     std::getline(std::cin >> std::ws, input);
 
-    auto commands = split(input, ' ');
+    auto commands = split(input, " \t\n");
 
     for (auto i = commands.begin(); i != commands.end(); i++) {
       auto element = *i;
