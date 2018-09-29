@@ -5,7 +5,6 @@ A basic shell
 Features
 * C++ testing with [Catch](https://github.com/catchorg/Catch2)
 * Interactive testing using [Aruba](https://github.com/cucumber/aruba) and [Cucumber](https://github.com/cucumber/cucumber-ruby)
-* Cross-platform development environment using [Vagrant](https://www.vagrantup.com)
 
 ## Dependencies
 ---
@@ -22,11 +21,6 @@ Features
 
 * [Git](https://git-scm.com/), to add Catch as a submodule
 * [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests. [RVM](https://rvm.io/) is the suggested installation method.
-
-### Additionally, if using Vagrant
-
-* [Vagrant](https://www.vagrantup.com/downloads.html)
-
 
 ## Installation
 ---
@@ -74,20 +68,3 @@ make
      ```
      make cucumber
      ```
-
-### Using Vagrant
-
-A Vagrantfile is included that will set up a simple development environment running Ubuntu 18.04.
-
-Make sure Vagrant is installed, then run the following commands (these may take a long time)
-
-```
-vagrant up    # To create the vm
-vagrant ssh   # To ssh into the vm
-```
-
-When finished
-
-```
-vagrant halt  # To halt the vm
-```

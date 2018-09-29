@@ -1,9 +1,6 @@
 # Don't accidently add the compiled program
 uofmsh
 
-# Vagrant dotfiles
-.vagrant
-
 # Object files
 *.o
 *.out
