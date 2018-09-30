@@ -28,6 +28,7 @@ usage:
 	@echo "  clean       Removes generated files, except .setup.o and .test.out"
 	@echo "  cucumber    Runs the aruba/cucumber tests"
 	@echo "  lint        Runs the linter"
+	@echo "  style       Formats source and test files to adhere to project standards"
 	@echo "  test        Runs the helper tests"
 	@echo "  purge       Removes all generated files."
 	@echo
@@ -69,6 +70,15 @@ else
 	cppcheck --enable=all --suppress=missingIncludeSystem $(SOURCES)
 endif
 
+PHONY: style
+style:
+ifeq ( , $(shell which astyle))
+	$(error Please install astyle to run the formatter)
+else
+	@echo "Formating source and test files"
+	astyle --project=.astylerc $(SOURCES) $(TESTS)
+endif
+
 .PHONY: test
 test: .test.out
 	@echo "Running the tests..."
@@ -79,6 +89,7 @@ test: .test.out
 
 .setup.o:
 	$(CPP) $(TEST_FLAGS) -c $(TEST_SETUP) -o .setup.o
+
 PHONY: purge
 purge:
 	@echo "Removing all generated files"

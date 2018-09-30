@@ -10,12 +10,14 @@ namespace helpers {
  *
  * @return          the substrings from the split
  */
-std::vector<std::string> split(const std::string &input, const std::string &delims) {
+std::vector<std::string> split(const std::string &input,
+                               const std::string &delims) {
   std::vector<std::string> substrings;
   std::string substring;
   std::size_t current, previous = 0;
 
   current = input.find_first_of(delims);
+
   while (current != std::string::npos) {
     substring = input.substr(previous, current - previous);
 
