@@ -1,7 +1,9 @@
 #ifndef UOFMSH_H
 #define UOFMSH_H
 
-#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -14,43 +16,54 @@ class Shell {
   std::string prompt;
   std::vector<std::string> commands;
 
+
+  static void runFile(std::string fileName);
+  static void runPrompt();
+  static void run(std::string source);
+
+  static void error(int line, std::string message);
+  static void report(int line, std::string where, std::string message);
+
   public:
+    static int main(int argc, char **argv);
+    static bool hadError;
 
-    // @return  a new shell instance
-    explicit Shell(const std::string &prompt) : prompt(prompt) { }
+    enum class TokenType {
+      // Single-character tokens
+      LEFT_PAREN,    // (
+      RIGHT_PAREN,   // )
+      LEFT_BRACE,    // {
+      RIGHT_BRACE,   // }
+      PIPE,          // |
+      SEMICOLON,     // ;
+      POUND,         // #
 
-    Shell() : prompt("uofmsh> ") { }
+      // One or two character tokens
+      REDIRECT_LEFT,   // <
+      DREDIRECT_LEFT,  // >
+      REDIRECT_RIGHT,  // >>
+      DREDIRECT_RIGHT, // <<
+      BANG,            // !
+      AND_IF,          // &&
+      OR_IF,           // ||
+      DSEMI,           // ;;
+      LESS_AND,        // >&
+      GREATAND,        // <&
+      LESSGREAT,       // <>
+      DLESSDASH,       // <<-
+      CLOBBER,         // >|
 
-    // Starts the user input loop
-    //
-    // @return  the shell's exit status
-    int start();
+      // Literals
+      WORD, ASSIGNMENT_WORD, NAME, NEWLINE, IO_NUMBER,
 
-    // @return  this shell's prompt
-    const std::string getPrompt() {
-      return this->prompt;
-    }
+      // Keywords
+      IF, THEN, ELSE, ELIF, FI, DO, DONE,
+      CASE, ESAC, WHILE, UNTIL, FOR, IN,
 
-    // @return  this shell's commands
-    std::vector<std::string> getCommands() {
-      return this->commands;
-    }
-
-    // Adds a command to this shell
-    void addCommand(std::string command) {
-      this->commands.push_back(command);
-    }
-
-    // Parses input and creates commands
-    void parse(std::string input) {
-      auto commands = helpers::split(input, ";");
-
-      for (auto &c : commands) {
-        helpers::trim(c, " \t");
-        addCommand(c);
-      }
-    }
+      END // EOF
+    };
 };
+
 
 } // namespace uofmsh
 
