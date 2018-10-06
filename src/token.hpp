@@ -68,7 +68,7 @@ public:
   }
 
 private:
- const Type type;
+  const Type type;
   const std::string lexeme;    // The characters that form this token
   const int line,              // The line number of this token
             start,             // The column number of the start of this token

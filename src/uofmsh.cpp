@@ -22,18 +22,19 @@ int Shell::main(int argc, char **argv) {
   return 0;
 }
 
+// Reads a file into a string, then runs the string as input
 void Shell::runFile(std::string fileName) {
-  std::ifstream ifs { fileName };
-  std::string file {
-    std::istreambuf_iterator<char>(ifs),
-    std::istreambuf_iterator<char>()
-  };
+  std::ifstream ifs(fileName);
+  std::stringstream buffer;
+  buffer << ifs.rdbuf();
+  std::string file(buffer.str());
 
   run(file);
 
   exit(65);
 }
 
+// Reads and executes input interactively
 void Shell::runPrompt() {
   while (true) {
     std::cout << "uofmsh> ";
@@ -47,25 +48,30 @@ void Shell::runPrompt() {
   }
 }
 
+// Run a string of input
 void Shell::run(std::string source) {
   Scanner scanner(source);
 
-  auto tokens = scanner.scanTokens();
+  try {
+    auto tokens = scanner.scanTokens();
 
-  std::cout << "Tokens: " << tokens.size() << "\n";
+    std::cout << "Tokens: " << tokens.size() << "\n";
 
-  for (unsigned int i = 0; i < tokens.size(); i++)
-    std::cout << i << ": " << tokens[i] << "\n";
+    for (unsigned int i = 0; i < tokens.size(); i++)
+      std::cout << i << ": " << tokens[i] << "\n";
 
+  } catch (const Scanner::Exception e) {
+    error(e.line, e.start, e.msg);
+  }
 }
 
 void Shell::error(int line, int column, std::string msg) {
   Shell::report(line, column, msg);
+  Shell::hadError = true;
 }
 
 void Shell::report(int line, int column, std::string msg) {
   std::cerr << "Error: [" << line << "," << column << "] " << msg << "\n";
-  Shell::hadError = true;
 }
 
 } // namespace uofmsh
