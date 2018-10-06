@@ -42,11 +42,34 @@ class Scanner {
       return source[current];
   }
 
-  void alphaNumeric() {
-    while (std::isalnum(peek()) || peek() == '-')
-      advance();
+  void alphaNumeric(bool startsWithNum = false) {
+    bool onlyNumbers = startsWithNum;
 
-    addToken(Token::Type::TOKEN);
+    while (std::isalnum(peek()) || peek() == '-') {
+      if (!std::isdigit(peek()))
+        onlyNumbers = false;
+
+      advance();
+    }
+
+    if (onlyNumbers && (peek() == '<' || peek() == '>')) {
+      if (peek() == '<') {
+        advance(); // Skip a <
+        if (peek() == '<') {
+          advance(); // Skip the next <
+          addToken(Token::Type::NDREDIRECT_LEFT);
+        } else
+          addToken(Token::Type::NREDIRECT_LEFT);
+      } else {
+        advance(); // Skip a >
+        if (peek() == '>') {
+          advance(); // Skip the next >
+          addToken(Token::Type::NDREDIRECT_RIGHT);
+        } else
+          addToken(Token::Type::NREDIRECT_RIGHT);
+      }
+    } else
+      addToken(Token::Type::TOKEN);
   }
 
   void singleQuotedStr() {
@@ -160,9 +183,12 @@ class Scanner {
         line++;
         break;
       default:
-        if (std::isalnum(c) || (c == '-' && peek() != ' '))
-          alphaNumeric();
-        else if (c == '-' && peek() == ' ')
+        if (std::isalnum(c) || (c == '-' && peek() != ' ')) {
+          if (std::isdigit(c))
+            alphaNumeric(true);
+          else
+            alphaNumeric();
+        } else if (c == '-' && peek() == ' ')
           addToken(Token::Type::HYPHEN);
         else
           throw Scanner::Exception(line, start, "Unexpected character");

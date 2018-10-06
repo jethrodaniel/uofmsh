@@ -10,7 +10,8 @@ SCENARIO("Scanning input") {
                         "# a comment\n"
                         "ruby -w --debug program < input >> output "
                         " \\ ' single quotes ' \" double  quotes \" "
-                        " ` backticks ` ";
+                        " ` backticks ` "
+                        " 123< 123<<  321>  321>>";
 
     uofmsh::Scanner scanner(input);
 
@@ -105,8 +106,20 @@ SCENARIO("Scanning input") {
         REQUIRE(tokens[28].getType() == uofmsh::Token::Type::BACKTICK_STR);
         REQUIRE(tokens[28].getLexeme() == " backticks ");
 
-        REQUIRE(tokens[29].getType() == uofmsh::Token::Type::END);
-        REQUIRE(tokens[29].getLexeme() == "END");
+        REQUIRE(tokens[29].getType() == uofmsh::Token::Type::NREDIRECT_LEFT);
+        REQUIRE(tokens[29].getLexeme() == "123<");
+
+        REQUIRE(tokens[30].getType() == uofmsh::Token::Type::NDREDIRECT_LEFT);
+        REQUIRE(tokens[30].getLexeme() == "123<<");
+
+        REQUIRE(tokens[31].getType() == uofmsh::Token::Type::NREDIRECT_RIGHT);
+        REQUIRE(tokens[31].getLexeme() == "321>");
+
+        REQUIRE(tokens[32].getType() == uofmsh::Token::Type::NDREDIRECT_RIGHT);
+        REQUIRE(tokens[32].getLexeme() == "321>>");
+
+        REQUIRE(tokens[tokens.size() - 1].getType() == uofmsh::Token::Type::END);
+        REQUIRE(tokens[tokens.size() - 1].getLexeme() == "END");
       }
     }
   }

@@ -18,16 +18,20 @@ public:
     HYPHEN,        // -
     BACKSLASH,     // '\'
 
-    REDIRECT_LEFT,   // <
-    DREDIRECT_RIGHT, // <<
-    DREDIRECT_LEFT,  // >
-    REDIRECT_RIGHT,  // >>
-    BANG,            // !
-    BANGBANG,        // !!
-    AND,             // &
-    AND_IF,          // &&
-    PIPE,            // |
-    OR_IF,           // ||
+    REDIRECT_LEFT,    // <
+    DREDIRECT_LEFT,   // <<
+    NREDIRECT_LEFT,   // n<
+    NDREDIRECT_LEFT,  // n<<
+    REDIRECT_RIGHT,   // >
+    DREDIRECT_RIGHT,  // >>
+    NREDIRECT_RIGHT,  // n>
+    NDREDIRECT_RIGHT, // n>>
+    BANG,             // !
+    BANGBANG,         // !!
+    AND,              // &
+    AND_IF,           // &&
+    PIPE,             // |
+    OR_IF,            // ||
 
     SINGLE_QUOTED_STR,  // 'a single quoted string'
     DOUBLE_QUOTED_STR,  // "a double quoted string"
