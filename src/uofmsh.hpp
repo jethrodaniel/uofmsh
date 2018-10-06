@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "helpers.hpp"
+#include "token.hpp"
 
 namespace uofmsh {
 
@@ -40,76 +41,6 @@ public:
 
   static bool hadError;  // Whether the last command typed had an error
 
-  enum class TokenType {
-    LEFT_PAREN,    // (
-    RIGHT_PAREN,   // )
-    LEFT_BRACE,    // {
-    RIGHT_BRACE,   // }
-    SEMI,          // ;
-    POUND,         // #
-    COLON,         // :
-    HYPHEN,        // -
-    BACKSLASH,     // '\'
-
-    REDIRECT_LEFT,   // <
-    DREDIRECT_RIGHT, // <<
-    DREDIRECT_LEFT,  // >
-    REDIRECT_RIGHT,  // >>
-    BANG,            // !
-    BANGBANG,        // !!
-    AND,             // &
-    AND_IF,          // &&
-    PIPE,            // |
-    OR_IF,           // ||
-
-    SINGLE_QUOTED_STR,  // 'a single quoted string'
-    DOUBLE_QUOTED_STR,  // "a double quoted string"
-    BACKTICK_STR,       // `a double quoted string`
-
-    // A generic token, which could be any of the below tokens,
-    // depending on the context
-    TOKEN,
-
-    WORD,
-    ASSIGNMENT_WORD,
-    NAME,
-    NEWLINE,
-    IO_NUMBER,
-
-    END // EOF
-  };
-};
-
-// A token represents the building blocks of the grammar
-class Token {
-  const Shell::TokenType type;
-  const std::string lexeme;    // The characters that form this token
-  const int line,              // The line number of this token
-            start,             // The column number of the start of this token
-            end;               // The column number of the end of this token
-
-public:
-  // @return  A new Token instance
-  Token(Shell::TokenType type, std::string lexeme,
-        const int line, const int start, const int end)
-  : type(type), lexeme(lexeme), line(line), start(start), end(end) { }
-
-  // Allows a token to be printed using <<
-  friend std::ostream &operator<<(std::ostream &output, const Token &t ) {
-    output << "Type: " << (int)t.type << " ["
-           << t.line << "," << t.start << " - " << std::setw(3) << t.end
-           << "]: '" << t.lexeme << "'";
-    return output;
-  }
-
-  Shell::TokenType getType() {
-    return type;
-  }
-
-  std::string getLexeme() {
-    return lexeme;
-  }
-
 };
 
 // A scanner/lexer reads the input and splits it into tokens
@@ -133,7 +64,7 @@ class Scanner {
   }
 
   // Adds a token to the list of tokens
-  void addToken(Shell::TokenType type) {
+  void addToken(Token::Type type) {
     std::string lexeme = source.substr(start, current - start);
     tokens.push_back(Token(type, lexeme, line, start, current));
   }
@@ -151,7 +82,7 @@ class Scanner {
     while (std::isalnum(peek()) || peek() == '-')
       advance();
 
-    addToken(Shell::TokenType::TOKEN);
+    addToken(Token::Type::TOKEN);
   }
 
   void singleQuotedStr() {
@@ -162,7 +93,7 @@ class Scanner {
       Shell::error(line, start, "Missing single quote.");
     else {
       start++;   // To skip the leading '
-      addToken(Shell::TokenType::SINGLE_QUOTED_STR);
+      addToken(Token::Type::SINGLE_QUOTED_STR);
       advance(); // Skip the trailing '
     }
   }
@@ -175,7 +106,7 @@ class Scanner {
       Shell::error(line, start, "Missing double quote.");
     else {
       start++;   // To skip the leading "
-      addToken(Shell::TokenType::DOUBLE_QUOTED_STR);
+      addToken(Token::Type::DOUBLE_QUOTED_STR);
       advance(); // Skip the trailing "
     }
   }
@@ -188,7 +119,7 @@ class Scanner {
       Shell::error(line, start, "Missing backtick.");
     else {
       start++;   // To skip the leading "
-      addToken(Shell::TokenType::BACKTICK_STR);
+      addToken(Token::Type::BACKTICK_STR);
       advance(); // Skip the trailing "
     }
   }
@@ -197,13 +128,13 @@ class Scanner {
   void scanToken() {
     char c = advance();
     switch (c) {
-      case '(': addToken(Shell::TokenType::LEFT_PAREN); break;
-      case ')': addToken(Shell::TokenType::RIGHT_PAREN); break;
-      case '{': addToken(Shell::TokenType::LEFT_BRACE); break;
-      case '}': addToken(Shell::TokenType::RIGHT_BRACE); break;
-      case ';': addToken(Shell::TokenType::SEMI); break;
-      case ':': addToken(Shell::TokenType::COLON); break;
-      case '\\': addToken(Shell::TokenType::BACKSLASH); break;
+      case '(': addToken(Token::Type::LEFT_PAREN); break;
+      case ')': addToken(Token::Type::RIGHT_PAREN); break;
+      case '{': addToken(Token::Type::LEFT_BRACE); break;
+      case '}': addToken(Token::Type::RIGHT_BRACE); break;
+      case ';': addToken(Token::Type::SEMI); break;
+      case ':': addToken(Token::Type::COLON); break;
+      case '\\': addToken(Token::Type::BACKSLASH); break;
       case '\'':
         singleQuotedStr();
         break;
@@ -216,41 +147,41 @@ class Scanner {
       case '<':
         if (peek() == '<') {
           advance();
-          addToken(Shell::TokenType::DREDIRECT_LEFT);
+          addToken(Token::Type::DREDIRECT_LEFT);
         } else
-          addToken(Shell::TokenType::REDIRECT_LEFT);
+          addToken(Token::Type::REDIRECT_LEFT);
 
         break;
       case '>':
         if (peek() == '>') {
           advance();
-          addToken(Shell::TokenType::DREDIRECT_RIGHT);
+          addToken(Token::Type::DREDIRECT_RIGHT);
         } else
-          addToken(Shell::TokenType::REDIRECT_RIGHT);
+          addToken(Token::Type::REDIRECT_RIGHT);
 
         break;
       case '!':
         if (peek() == '!') {
           advance();
-          addToken(Shell::TokenType::BANGBANG);
+          addToken(Token::Type::BANGBANG);
         } else
-          addToken(Shell::TokenType::BANG);
+          addToken(Token::Type::BANG);
 
         break;
       case '&':
         if (peek() == '&') {
           advance();
-          addToken(Shell::TokenType::AND_IF);
+          addToken(Token::Type::AND_IF);
         } else
-          addToken(Shell::TokenType::AND);
+          addToken(Token::Type::AND);
 
         break;
       case '|':
         if (peek() == '|') {
           advance();
-          addToken(Shell::TokenType::OR_IF);
+          addToken(Token::Type::OR_IF);
         } else
-          addToken(Shell::TokenType::PIPE);
+          addToken(Token::Type::PIPE);
 
         break;
      case '#':
@@ -261,14 +192,14 @@ class Scanner {
       case '\t':
       case '\r': break;
       case '\n':
-        addToken(Shell::TokenType::NEWLINE);
+        addToken(Token::Type::NEWLINE);
         line++;
         break;
       default:
         if (std::isalnum(c) || (c == '-' && peek() != ' '))
           alphaNumeric();
         else if (c == '-' && peek() == ' ')
-          addToken(Shell::TokenType::HYPHEN);
+          addToken(Token::Type::HYPHEN);
         else
           Shell::error(line, start, "Unexpected character");
     }
@@ -286,11 +217,13 @@ public:
       scanToken();
     }
 
-    tokens.push_back(Token(Shell::TokenType::END, "END", line, start, current));
+    tokens.push_back(Token(Token::Type::END, "END", line, start, current));
     return tokens;
   }
 };
 
 } // namespace uofmsh
+
+#include "token.hpp"
 
 #endif
