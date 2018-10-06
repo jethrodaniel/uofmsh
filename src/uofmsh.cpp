@@ -48,22 +48,23 @@ void Shell::runPrompt() {
 }
 
 void Shell::run(std::string source) {
-  (void)source;
-  // Scanner scanner(source);
+  Scanner scanner(source);
 
-  // auto tokens = scanner.scanTokens();
+  auto tokens = scanner.scanTokens();
 
-  // for (const auto &t : tokens)
-  //   std::cout << t << "\n";
+  std::cout << "Tokens: " << tokens.size() << "\n";
+
+  for (unsigned int i = 0; i < tokens.size(); i++)
+    std::cout << i << ": " << tokens[i] << "\n";
 
 }
 
-void Shell::error(int line, std::string message) {
-  Shell::report(line, "", message);
+void Shell::error(int line, int column, std::string msg) {
+  Shell::report(line, column, msg);
 }
 
-void Shell::report(int line, std::string where, std::string message) {
-  std::cerr << "[line " << line << "] Error" << where << ": " + message;
+void Shell::report(int line, int column, std::string msg) {
+  std::cerr << "Error: [" << line << "," << column << "] " << msg << "\n";
   Shell::hadError = true;
 }
 
