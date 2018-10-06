@@ -45,21 +45,26 @@ public:
     RIGHT_PAREN,   // )
     LEFT_BRACE,    // {
     RIGHT_BRACE,   // }
-    PIPE,          // |
     SEMI,          // ;
     POUND,         // #
     COLON,         // :
     HYPHEN,        // -
+    BACKSLASH,     // '\'
 
     REDIRECT_LEFT,   // <
+    DREDIRECT_RIGHT, // <<
     DREDIRECT_LEFT,  // >
     REDIRECT_RIGHT,  // >>
-    DREDIRECT_RIGHT, // <<
-    BANGBANG,        // !!
     BANG,            // !
+    BANGBANG,        // !!
     AND,             // &
     AND_IF,          // &&
+    PIPE,            // |
     OR_IF,           // ||
+
+    SINGLE_QUOTED_STR,  // 'a single quoted string'
+    DOUBLE_QUOTED_STR,  // "a double quoted string"
+    BACKTICK_STR,       // `a double quoted string`
 
     // A generic token, which could be any of the below tokens,
     // depending on the context
@@ -122,10 +127,9 @@ class Scanner {
   }
 
   // Moves the scanner to the next character
-  // @return  the current character
+  // @return  the previous character
   char advance() {
-    current++;
-    return source[current - 1];
+    return source[current++];
   }
 
   // Adds a token to the list of tokens
@@ -150,6 +154,45 @@ class Scanner {
     addToken(Shell::TokenType::TOKEN);
   }
 
+  void singleQuotedStr() {
+    while (peek() != '\'' && !isAtEnd())
+      advance();
+
+    if (isAtEnd())
+      Shell::error(line, start, "Missing single quote.");
+    else {
+      start++;   // To skip the leading '
+      addToken(Shell::TokenType::SINGLE_QUOTED_STR);
+      advance(); // Skip the trailing '
+    }
+  }
+
+  void doubleQuotedStr() {
+    while (peek() != '"' && !isAtEnd())
+      advance();
+
+    if (isAtEnd())
+      Shell::error(line, start, "Missing double quote.");
+    else {
+      start++;   // To skip the leading "
+      addToken(Shell::TokenType::DOUBLE_QUOTED_STR);
+      advance(); // Skip the trailing "
+    }
+  }
+
+  void backtickStr() {
+    while (peek() != '`' && !isAtEnd())
+      advance();
+
+    if (isAtEnd())
+      Shell::error(line, start, "Missing backtick.");
+    else {
+      start++;   // To skip the leading "
+      addToken(Shell::TokenType::BACKTICK_STR);
+      advance(); // Skip the trailing "
+    }
+  }
+
   // Read characters until the the next available token is formed
   void scanToken() {
     char c = advance();
@@ -160,6 +203,16 @@ class Scanner {
       case '}': addToken(Shell::TokenType::RIGHT_BRACE); break;
       case ';': addToken(Shell::TokenType::SEMI); break;
       case ':': addToken(Shell::TokenType::COLON); break;
+      case '\\': addToken(Shell::TokenType::BACKSLASH); break;
+      case '\'':
+        singleQuotedStr();
+        break;
+      case '"':
+        doubleQuotedStr();
+        break;
+      case '`':
+        backtickStr();
+        break;
       case '<':
         if (peek() == '<') {
           advance();

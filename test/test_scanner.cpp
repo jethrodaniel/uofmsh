@@ -6,11 +6,13 @@
 SCENARIO("Scanning input") {
 
   GIVEN("A scanner and input") {
-      std::string input = " ( ) { } ; : < << > >> ! !! & && | ||"
-                          "# a comment\n"
-                          "ruby -w --debug program < input >> output ";
+    std::string input = " ( ) { } ; : < << > >> ! !! & && | ||"
+                        "# a comment\n"
+                        "ruby -w --debug program < input >> output "
+                        " \\ ' single quotes ' \" double  quotes \" "
+                        " ` backticks ` ";
 
-      uofmsh::Scanner scanner(input);
+    uofmsh::Scanner scanner(input);
 
     WHEN("The scanner scans the input") {
       auto tokens = scanner.scanTokens();
@@ -91,8 +93,20 @@ SCENARIO("Scanning input") {
         REQUIRE(tokens[24].getType() == uofmsh::Shell::TokenType::TOKEN);
         REQUIRE(tokens[24].getLexeme() == "output");
 
-        REQUIRE(tokens[25].getType() == uofmsh::Shell::TokenType::END);
-        REQUIRE(tokens[25].getLexeme() == "END");
+        REQUIRE(tokens[25].getType() == uofmsh::Shell::TokenType::BACKSLASH);
+        REQUIRE(tokens[25].getLexeme() == "\\");
+
+        REQUIRE(tokens[26].getType() == uofmsh::Shell::TokenType::SINGLE_QUOTED_STR);
+        REQUIRE(tokens[26].getLexeme() == " single quotes ");
+
+        REQUIRE(tokens[27].getType() == uofmsh::Shell::TokenType::DOUBLE_QUOTED_STR);
+        REQUIRE(tokens[27].getLexeme() == " double  quotes ");
+
+        REQUIRE(tokens[28].getType() == uofmsh::Shell::TokenType::BACKTICK_STR);
+        REQUIRE(tokens[28].getLexeme() == " backticks ");
+
+        REQUIRE(tokens[29].getType() == uofmsh::Shell::TokenType::END);
+        REQUIRE(tokens[29].getLexeme() == "END");
       }
     }
   }
