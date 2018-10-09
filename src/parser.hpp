@@ -147,11 +147,20 @@ class Parser {
   std::vector<Token> tokens; // A list of tokens
   int current = 0;           // The current token's index
 
+  const std::vector<Token::Type> REDIRECTION_OPS = {
+    Token::Type::REDIRECT_LEFT,
+    Token::Type::REDIRECT_RIGHT
+  };
+
   /**
-   * @return  The current token
+   * @param  n  The number of tokens to look ahead
+   * @return    The current token
    */
-  Token peek() {
-    return tokens[current];
+  Token peek(const int n = 0) {
+    if ((unsigned)(n + current) > tokens.size() - 1)
+      return tokens[tokens.size() - 1];
+    else
+      return tokens[current + n];
   }
 
   /**
@@ -191,31 +200,52 @@ class Parser {
   }
 
    /**
-   * Checks the current token's type against a list
+   * Checks the type of tokens[n + current] type against a list
    *
    * @param  types  A list of types to compare with
-   * @return  Whether the current token is of a type in types
+   * @param  n      The number of tokens to look ahead
+   * @return        Whether the tokens[n+current] is of a type in types
    */
-  bool match(std::vector<Token::Type> types) {
+  bool match(std::vector<Token::Type> types, const int n = 0) {
     for (auto t : types)
-      if (peek().getType() == t)
+      if (peek(n).getType() == t)
         return true;
 
     return false;
   }
 
-  // Redirection redirection() {
-  //   return redirection();
-  // }
+  Redirection redirection() {
+    if (match(REDIRECTION_OPS) && match({Token::Type::TOKEN}, 2)) {
+      auto redirectSymbol = advance();
+      auto filename       = advance();
+      return Redirection(redirectSymbol, filename);
+    }
 
-  // Command command() {
-  //   return Command();
-  // }
+    Redirection r(
+      Token(Token::Type::REDIRECT_RIGHT, ">", 0, 0, 0),
+      Token(Token::Type::TOKEN, "filename", 0, 0, 0)
+    );
 
-  // Pipeline pipeline() {
-  //   Command c = command();
-  //   return Pipeline();
-  // }
+    return r;
+  }
+
+  Command command() {
+    Redirection prefix = redirection();
+
+    Command command(
+      std::vector<Redirection> { prefix },
+      { Token(uofmsh::Token::Type::TOKEN, "cat", 0, 0, 0) },
+      std::vector<Redirection> {});
+
+      return command;
+  }
+
+  Pipeline pipeline() {
+    Command c = command();
+
+    Pipeline p(std::vector<Command>{c});
+    return p;
+  }
 
 public:
   /**
@@ -231,21 +261,21 @@ public:
     Exception(Error error) : error(error) { }
   };
 
-  // // Parse and run the input
-  // Program parse() {
-  //   try {
-  //     tokens = scanner.scanTokens();
-  //   } catch (const Scanner::Exception e) {
-  //     throw;
-  //   }
+  // Parse and run the input
+  Program parse() {
+    try {
+      tokens = scanner.scanTokens();
+    } catch (const Scanner::Exception e) {
+      throw;
+    }
 
-  //   Pipeline pipe = pipeline();
+    Pipeline pipe = pipeline();
 
-  //   if (!pipe.isValid())
-  //     throw(Parser::Exception(pipe.getError()));
+    // if (!pipe.isValid())
+    //   throw(Parser::Exception(pipe.getError()));
 
-  //   return Program({pipe});
-  // }
+    return Program({pipe});
+  }
 };
 
 } // namespace uofmsh
