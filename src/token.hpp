@@ -74,12 +74,32 @@ public:
            end    == other.end;
   }
 
+  friend bool operator==(const Token &t1, const Token t2) {
+    return t1.type   == t2.type   &&
+           t1.lexeme == t2.lexeme &&
+           t1.line   == t2.line   &&
+           t1.start  == t2.start  &&
+           t1.end    == t2.end;
+  }
+
   Type getType() {
     return type;
   }
 
   const std::string getLexeme() {
     return lexeme;
+  }
+
+  int getLine() {
+    return line;
+  }
+
+  int getStart() {
+    return start;
+  }
+
+  int getEnd() {
+    return end;
   }
 
 private:

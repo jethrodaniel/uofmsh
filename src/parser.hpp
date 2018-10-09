@@ -51,26 +51,79 @@ public:
     return redirectionOp == other.redirectionOp &&
            filename      == other.filename;
   }
+
+  friend bool operator==(const Redirection &r1, const Redirection r2) {
+    return r1.redirectionOp == r2.redirectionOp &&
+           r1.filename      == r2.filename;
+  }
+
+  // Allows a redirection to be printed using <<
+  friend std::ostream &operator<<(std::ostream &output, const Redirection &r ) {
+    output << "    Redirection [\n"
+           << "      redirectionOp: [" << r.redirectionOp << "],\n"
+           << "      filename: [" << r.filename << "]\n"
+           << "    ]";
+    return output;
+  }
+
 };
 
 class Command : public ASTNode {
-  std::vector<Redirection> prefix;
-  std::vector<Token> elements;
-  std::vector<Redirection> suffix;
+  const std::vector<Redirection> prefix;
+  const std::vector<Token> elements;
+  const std::vector<Redirection> suffix;
 public:
-  std::vector<Redirection> getPrefix() {
+  const std::vector<Redirection> getPrefix() {
     return prefix;
   }
-  std::vector<Redirection> getSuffix() {
+  const std::vector<Redirection> getSuffix() {
     return suffix;
   }
-  std::vector<Token> getElements() {
+  const std::vector<Token> getElements() {
     return elements;
   }
   Command(std::vector<Redirection> prefix,
           std::vector<Token> elements,
           std::vector<Redirection> suffix)
     : prefix(prefix), elements(elements), suffix(suffix) { }
+
+  bool operator==(const Command &other) {
+    return prefix == other.prefix &&
+           elements == other.elements &&
+           suffix == other.suffix;
+  }
+
+  friend bool operator==(const Command &c1, const Command c2) {
+    return c1.prefix   == c2.prefix &&
+           c1.elements == c2.elements &&
+           c1.suffix   == c2.suffix;
+  }
+
+  // Allows a command to be printed using <<
+  friend std::ostream &operator<<(std::ostream &output, const Command &c ) {
+    output << "Command [\n"
+           << "  prefix: [";
+
+    for (const auto &p : c.prefix)
+      output << "\n" << p << "\n";
+
+    output << "  ],\n" // prefix
+           << "  elements: [";
+
+    for (const auto &e : c.elements)
+      output << "\n    " << e << "\n";
+
+    output << "  ]\n" // elements
+           << "  suffix: [";
+
+    for (const auto &s : c.suffix)
+      output << "\n" << s;
+
+    output << "  ]\n" // suffix
+           << "]"; // command
+    return output;
+  }
+
 };
 
 class Pipeline : public ASTNode {
@@ -80,6 +133,15 @@ public:
     return commands;
   }
   Pipeline(std::vector<Command> commands) : commands(commands) { }
+
+  bool operator==(const Pipeline &other) {
+    return commands == other.commands;
+  }
+
+  friend bool operator==(const Pipeline &p1, const Pipeline p2) {
+    return p1.commands == p2.commands;
+  }
+
 };
 
 class Program : public ASTNode {
@@ -89,6 +151,15 @@ public:
     return pipelines;
   }
   Program(std::vector<Pipeline> pipelines) : pipelines(pipelines) { };
+
+  bool operator==(const Program &other) {
+    return pipelines == other.pipelines;
+  }
+
+  friend bool operator==(const Program &p1, const Program p2) {
+    return p1.pipelines == p2.pipelines;
+  }
+
 };
 
 /* A parser forms meaningful expressions from a series of tokens
@@ -161,11 +232,8 @@ class Parser {
    * @param  n  The number of tokens to look ahead
    * @return    The current token
    */
-  Token peek(const int n = 0) {
-    if ((unsigned)(n + current) > tokens.size() - 1)
-      return tokens[tokens.size() - 1];
-    else
-      return tokens[current + n];
+  Token peek() {
+    return tokens[current];
   }
 
   /**
@@ -211,38 +279,40 @@ class Parser {
    * @param  n      The number of tokens to look ahead
    * @return        Whether the tokens[n+current] is of a type in types
    */
-  bool match(std::vector<Token::Type> types, const int n = 0) {
+  bool match(std::vector<Token::Type> types) {
     for (auto t : types)
-      if (peek(n).getType() == t)
+      if (peek().getType() == t)
         return true;
 
     return false;
   }
 
-  Redirection redirection() {
-    if (match(REDIRECTION_OPS) && match({Token::Type::TOKEN}, 2)) {
-      auto redirectSymbol = advance();
-      auto filename       = advance();
-      return Redirection(redirectSymbol, filename);
+  std::vector<Redirection> redirection() {
+    std::vector<Redirection> redirections;
+
+    while (match(REDIRECTION_OPS)) {
+      auto redirect = advance();
+
+      if (match({Token::Type::TOKEN})) {
+        auto filename = advance();
+        redirections.push_back(Redirection(redirect, filename));
+      } else
+        throw(Parser::Exception(Error("Expected a filename", redirect.getLine(), redirect.getStart())));
     }
 
-    Redirection r(
-      Token(Token::Type::REDIRECT_RIGHT, ">", 0, 0, 0),
-      Token(Token::Type::TOKEN, "filename", 0, 0, 0)
-    );
-
-    return r;
+    return redirections;
   }
 
   Command command() {
-    Redirection prefix = redirection();
+    std::vector<Redirection> prefix = redirection();
 
-    Command command(
-      std::vector<Redirection> { prefix },
-      { Token(uofmsh::Token::Type::TOKEN, "cat", 0, 0, 0) },
-      std::vector<Redirection> {});
+    std::vector<Token> elements;
 
-      return command;
+    while (match({Token::Type::TOKEN})) {
+      elements.push_back(advance());
+    }
+
+    return Command(prefix, elements, {});
   }
 
   Pipeline pipeline() {
