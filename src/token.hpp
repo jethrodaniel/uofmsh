@@ -51,7 +51,7 @@ public:
   };
 
   // @return  A new Token instance
-  Token(Type type, std::string lexeme,
+  Token(const Type type, const std::string lexeme,
         const int line, const int start, const int end)
     : type(type), lexeme(lexeme), line(line), start(start), end(end) { }
 
@@ -66,11 +66,19 @@ public:
     return output;
   }
 
+  bool operator==(const Token &other) {
+    return type   == other.type   &&
+           lexeme == other.lexeme &&
+           line   == other.line   &&
+           start  == other.start  &&
+           end    == other.end;
+  }
+
   Type getType() {
     return type;
   }
 
-  std::string getLexeme() {
+  const std::string getLexeme() {
     return lexeme;
   }
 

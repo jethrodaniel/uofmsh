@@ -4,6 +4,19 @@
 #include "../src/uofmsh.hpp"
 #include "../src/parser.hpp"
 
+SCENARIO("Using == with Tokens") {
+  GIVEN("Two tokens with the same members") {
+    uofmsh::Token t1(uofmsh::Token::Type::TOKEN, "cowsay", 0, 0, 0);
+    uofmsh::Token t2(uofmsh::Token::Type::TOKEN, "cowsay", 0, 0, 0);
+
+    WHEN("== is called with the tokens") {
+      THEN("It returns true") {
+        REQUIRE((t1 == t2) == true);
+      }
+    }
+  }
+}
+
 SCENARIO("Using an abstract syntax tree") {
 
   GIVEN("A Parser and input") {
@@ -71,9 +84,9 @@ SCENARIO("Using an abstract syntax tree") {
 
       REQUIRE(program.getPipelines().size() == 1);
 
-      // REQUIRE(program.getPipelines()[0]
-      //                .getCommands()[0]
-      //                .getElements()[0].getLexeme() == "cat");
+      REQUIRE(program.getPipelines()[0]
+                     .getCommands()[0]
+                     .getElements()[0].getLexeme() == "cat");
     }
   }
 }
