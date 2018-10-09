@@ -1,13 +1,13 @@
 CPP = g++
 
-CPP_FLAGS  = -std=c++11
+CPP_FLAGS  = -std=c++17
 CPP_FLAGS += -g
 CPP_FLAGS += -pedantic
 CPP_FLAGS += -Wall
 CPP_FLAGS += -Wextra
 CPP_FLAGS += -Werror
 
-TEST_FLAGS  = -std=c++11
+TEST_FLAGS  = -std=c++17
 TEST_FLAGS += -Wall
 TEST_FLAGS += -I./test/Catch2
 

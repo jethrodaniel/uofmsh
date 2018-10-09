@@ -3,7 +3,6 @@
 // Include Catch
 #include "Catch2/single_include/catch2/catch.hpp"
 
-// Our helpers
 #include "../src/helpers.cpp"
 
 SCENARIO("Splitting a string by a string of delimiters") {

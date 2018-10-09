@@ -53,7 +53,10 @@ public:
   // @return  A new Token instance
   Token(Type type, std::string lexeme,
         const int line, const int start, const int end)
-  : type(type), lexeme(lexeme), line(line), start(start), end(end) { }
+    : type(type), lexeme(lexeme), line(line), start(start), end(end) { }
+
+  Token(const Token &t)
+    : type(t.type), lexeme(t.lexeme), line(t.line), start(t.start), end(t.end) { }
 
   // Allows a token to be printed using <<
   friend std::ostream &operator<<(std::ostream &output, const Token &t ) {

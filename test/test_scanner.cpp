@@ -1,7 +1,7 @@
 // Include Catch
 #include "Catch2/single_include/catch2/catch.hpp"
 
-#include "../src/uofmsh.cpp"
+#include "../src/uofmsh.hpp"
 
 SCENARIO("Scanning input") {
 
