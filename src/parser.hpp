@@ -7,57 +7,99 @@
 
 namespace uofmsh {
 
+/**
+ * A error specifies a message and where the error occured
+ */
 class Error {
-  std::string msg;
-  int line, column;
+  std::string msg;  // The error message
+  int line, column; // The line and column where the error occured
 
 public:
-  Error(std::string msg, int line, int column)
+  /**
+   * @param  msg     The error message
+   * @param  line    The line where the error occured
+   * @param  column  The column where the error occured
+   * @return         A new error instance
+   */
+  explicit Error(std::string msg, int line, int column)
     : msg(msg), line(line), column(column) { }
 
+  /**
+   * @return  The error message
+   */
   std::string getMsg() {
     return msg;
   }
 };
 
+/**
+ * An abstract class used to add common AST node functionality.
+ */
 class ASTNode {
-std::optional<Error> error;
+std::optional<Error> error; // The error, if it exists
 
 public:
+  // @return  Whether the error has a value
   bool isValid() {
-    return error.has_value();
+    return !error.has_value();
   }
 
+  // @return  The AST node's error, if it exists
   Error getError() {
     return error.value();
   }
-
-  //ASTNode();
 };
 
+/**
+ * Represents a redirection
+ */
 class Redirection : public ASTNode {
-  Token redirectionOp, filename;
+  Token redirectionOp, filename; // The tokens that a redirection consists of
+
 public:
+  // @return  The redirection operator token
   Token getRedirectionOp() {
     return redirectionOp;
   }
+
+  // @return  The filename token
   Token getFilename() {
     return filename;
   }
-  Redirection(Token redirectionOp, Token filename)
+
+  /**
+   * @param  redirectOp  The redirection operator token
+   * @param  filename    The filename token
+   * @return             A new redirection instance
+   */
+  explicit Redirection(Token redirectionOp, Token filename)
     : redirectionOp(redirectionOp), filename(filename) { }
 
+  /**
+   * @param  other  A redirection instance to compare to this instance
+   * @return        Whether this redirection is the same, member-wise, as other
+   */
   bool operator==(const Redirection &other) {
     return redirectionOp == other.redirectionOp &&
            filename      == other.filename;
   }
 
-  friend bool operator==(const Redirection &r1, const Redirection r2) {
+  /**
+   * @param  r1  A redirection to compare against r2
+   * @param  r2  A redirection to compare against r1
+   * @return     Whether the redirections are the same, member-wise
+   */
+  friend bool operator==(const Redirection &r1, const Redirection &r2) {
     return r1.redirectionOp == r2.redirectionOp &&
            r1.filename      == r2.filename;
   }
 
-  // Allows a redirection to be printed using <<
+  /**
+   * Allows a redirection instance to be printed using <<
+   *
+   * @param  output  The output stream to write to
+   * @param  r       The redirection instance to write out
+   */
   friend std::ostream &operator<<(std::ostream &output, const Redirection &r ) {
     output << "    Redirection [\n"
            << "      redirectionOp: [" << r.redirectionOp << "],\n"
@@ -68,38 +110,72 @@ public:
 
 };
 
+// Represents a command
 class Command : public ASTNode {
-  const std::vector<Redirection> prefix;
-  const std::vector<Token> elements;
-  const std::vector<Redirection> suffix;
+  const std::vector<Redirection> prefix; // The prefix redirections
+  const std::vector<Token> elements;     // The elements of the command
+  const std::vector<Redirection> suffix; // The suffix redirections
+
 public:
+  /**
+   * @return  The prefix redirections
+   */
   const std::vector<Redirection> getPrefix() {
     return prefix;
   }
+
+  /**
+   * @return  The suffix redirections
+   */
   const std::vector<Redirection> getSuffix() {
     return suffix;
   }
+
+  /**
+   * @return  The command elements
+   */
   const std::vector<Token> getElements() {
     return elements;
   }
-  Command(std::vector<Redirection> prefix,
-          std::vector<Token> elements,
-          std::vector<Redirection> suffix)
+
+  /**
+   * @param  prefix    The prefix redirections
+   * @param  elements  The command elements
+   * @param  suffix    The suffix redirections
+   * @return           A new command instance
+   */
+  explicit Command(std::vector<Redirection> prefix,
+                   std::vector<Token> elements,
+                   std::vector<Redirection> suffix)
     : prefix(prefix), elements(elements), suffix(suffix) { }
 
+  /**
+   * @param  other  A command instance to compare to this instance
+   * @return        Whether this command is the same, member-wise, as other
+   */
   bool operator==(const Command &other) {
     return prefix == other.prefix &&
            elements == other.elements &&
            suffix == other.suffix;
   }
 
-  friend bool operator==(const Command &c1, const Command c2) {
+  /**
+   * @param  c1  A command to compare against c2
+   * @param  c2  A command to compare against c1
+   * @return     Whether the commands are the same, member-wise
+   */
+  friend bool operator==(const Command &c1, const Command &c2) {
     return c1.prefix   == c2.prefix &&
            c1.elements == c2.elements &&
            c1.suffix   == c2.suffix;
   }
 
-  // Allows a command to be printed using <<
+  /**
+   * Allows a command instance to be printed using <<
+   *
+   * @param  output  The output stream to write to
+   * @param  c       The command instance to write out
+   */
   friend std::ostream &operator<<(std::ostream &output, const Command &c ) {
     output << "  Command: [\n"
            << "    prefix: [";
@@ -126,23 +202,47 @@ public:
 
 };
 
+// Represents a pipeline
 class Pipeline : public ASTNode {
-  std::vector<Command> commands;
+  std::vector<Command> commands; // The commands to pipe together, in order
+
 public:
+  /**
+   * @return  The commands
+   */
   std::vector<Command> getCommands() {
     return commands;
   }
-  Pipeline(std::vector<Command> commands) : commands(commands) { }
 
+  /**
+   * @param  commands  The commands to pipe together
+   * @return           A new pipeline instance
+   */
+  explicit Pipeline(std::vector<Command> commands) : commands(commands) { }
+
+  /**
+   * @param  other  A pipeline instance to compare to this instance
+   * @return        Whether this pipeline is the same, member-wise, as other
+   */
   bool operator==(const Pipeline &other) {
     return commands == other.commands;
   }
 
-  friend bool operator==(const Pipeline &p1, const Pipeline p2) {
+  /**
+   * @param  p1  A pipeline to compare against p2
+   * @param  p2  A pipeline to compare against p1
+   * @return     Whether the pipelines are the same, member-wise
+   */
+  friend bool operator==(const Pipeline &p1, const Pipeline &p2) {
     return p1.commands == p2.commands;
   }
 
-  // Allows a pipeline to be printed using <<
+  /**
+   * Allows a pipeline instance to be printed using <<
+   *
+   * @param  output  The output stream to write to
+   * @param  p       The pipeline instance to write out
+   */
   friend std::ostream &operator<<(std::ostream &output, const Pipeline &p ) {
     output << "Pipeline: [\n";
 
@@ -155,23 +255,48 @@ public:
   }
 };
 
+// Represents a program, the highest level of the AST
 class Program : public ASTNode {
-  std::vector<Pipeline> pipelines;
+  std::vector<Pipeline> pipelines; // The pipelines, seperated by ;
+
 public:
+  /**
+   * @return  The pipelines in this program
+   */
   std::vector<Pipeline> getPipelines() {
     return pipelines;
   }
-  Program(std::vector<Pipeline> pipelines) : pipelines(pipelines) { };
 
+  /**
+   * @param  pipelines  The pipelines to use
+   * @return            A new program instance
+   */
+  explicit Program(std::vector<Pipeline> pipelines) : pipelines(pipelines) { };
+
+  /**
+   * @param  other  A program instance to compare to this instance
+   * @return        Whether this program is the same, member-wise, as other
+   */
   bool operator==(const Program &other) {
     return pipelines == other.pipelines;
   }
 
-  friend bool operator==(const Program &p1, const Program p2) {
+  /**
+   * @param  p1  A program to compare against p2
+   * @param  p2  A program to compare against p1
+   * @return     Whether the programs are the same, member-wise
+   */
+  friend bool operator==(const Program &p1, const Program &p2) {
     return p1.pipelines == p2.pipelines;
   }
 
-  // Allows a program to be printed using <<
+
+  /**
+   * Allows a program instance to be printed using <<
+   *
+   * @param  output  The output stream to write to
+   * @param  p       The program instance to write out
+   */
   friend std::ostream &operator<<(std::ostream &output, const Program &p ) {
     output << "Program: [\n";
 
@@ -193,6 +318,7 @@ class Parser {
   std::vector<Token> tokens; // A list of tokens
   int current = 0;           // The current token's index
 
+  // A list of redirection operators
   const std::vector<Token::Type> REDIRECTION_OPS = {
     Token::Type::REDIRECT_LEFT,
     Token::Type::DREDIRECT_LEFT,
@@ -201,7 +327,6 @@ class Parser {
   };
 
   /**
-   * @param  n  The number of tokens to look ahead
    * @return    The current token
    */
   Token peek() {
@@ -232,24 +357,11 @@ class Parser {
     return previous();
   }
 
-  /**
-   * Moves the parser to the previous token
-   *
-   * @return The last visted Token
-   */
-  Token backup() {
-    if (current > 0)
-      return tokens[current--];
-    else
-      return peek();
-  }
-
    /**
-   * Checks the type of tokens[n + current] type against a list
+   * Checks the type of the current token against a list
    *
    * @param  types  A list of types to compare with
-   * @param  n      The number of tokens to look ahead
-   * @return        Whether the tokens[n+current] is of a type in types
+   * @return        Whether the current token is of a type in types
    */
   bool match(std::vector<Token::Type> types) {
     for (auto t : types)
@@ -259,6 +371,11 @@ class Parser {
     return false;
   }
 
+  /**
+   * Parses a redirection instance
+   *
+   * @return  A list of redirections
+   */
   std::vector<Redirection> redirection() {
     std::vector<Redirection> redirections;
 
@@ -275,6 +392,11 @@ class Parser {
     return redirections;
   }
 
+  /**
+   * Parses a command instance
+   *
+   * @return  A command
+   */
   Command command() {
     std::vector<Redirection> prefix = redirection();
 
@@ -289,6 +411,11 @@ class Parser {
     return Command(prefix, elements, suffix);
   }
 
+  /**
+   * Parses a pipeline instance
+   *
+   * @return A pipeline
+   */
   Pipeline pipeline() {
     std::vector<Command> commands;
 
@@ -307,30 +434,39 @@ class Parser {
 
 public:
   /**
-   * @return  A new parser instance, initialized with input
+   * @param  source  The source input
+   * @return         A new parser instance
    */
-  Parser(std::string source)
+  explicit Parser(std::string source)
     : source(source), scanner(Scanner(source)) { }
 
   // An exception to throw in case of a parsing error
   class Exception : std::exception {
-    Error error;
+    Error error; // The parsing error
+
   public:
-    Exception(Error error) : error(error) { }
+    /**
+     * @return  A new parsing exception
+     */
+    explicit Exception(Error error) : error(error) { }
   };
 
-  // Parse and run the input
+  /**
+   * Parse and run the input
+   *
+   * @return  A new program instance
+   */
   Program parse() {
     try {
       tokens = scanner.scanTokens();
-    } catch (const Scanner::Exception e) {
+    } catch (const Scanner::Exception &e) {
       throw;
     }
 
     Pipeline pipe = pipeline();
 
-    // if (!pipe.isValid())
-    //   throw(Parser::Exception(pipe.getError()));
+    if (!pipe.isValid())
+      throw(Parser::Exception(pipe.getError()));
 
     return Program({pipe});
   }

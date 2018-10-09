@@ -7,6 +7,7 @@ namespace uofmsh {
 class Token {
 
 public:
+  // The types of tokens
   enum class Type {
     LEFT_PAREN,    // (
     RIGHT_PAREN,   // )
@@ -50,15 +51,24 @@ public:
     END // EOF
   };
 
-  // @return  A new Token instance
-  Token(const Type type, const std::string lexeme,
-        const int line, const int start, const int end)
+  /**
+   * @param  type    The token's type
+   * @param  lexeme  The text of this token
+   * @param  line    The line where this token was found
+   * @param  start   The starting index of this token
+   * @param  end     The ending index of this token
+   * @return         A new Token instance
+   */
+  explicit Token(const Type type, const std::string &lexeme,
+                 const int line, const int start, const int end)
     : type(type), lexeme(lexeme), line(line), start(start), end(end) { }
 
-  Token(const Token &t)
-    : type(t.type), lexeme(t.lexeme), line(t.line), start(t.start), end(t.end) { }
-
-  // Allows a token to be printed using <<
+  /**
+   * Allows a token instance to be printed using <<
+   *
+   * @param  output  The output stream to write to
+   * @param  t       The token instance to write out
+   */
   friend std::ostream &operator<<(std::ostream &output, const Token &t ) {
     output << "Type: " << (int)t.type << " ["
            << t.line << "," << t.start << " - " << std::setw(3) << t.end
@@ -66,6 +76,10 @@ public:
     return output;
   }
 
+  /**
+   * @param  other  A token instance to compare to this instance
+   * @return        Whether this token is the same, member-wise, as other
+   */
   bool operator==(const Token &other) {
     return type   == other.type   &&
            lexeme == other.lexeme &&
@@ -74,7 +88,12 @@ public:
            end    == other.end;
   }
 
-  friend bool operator==(const Token &t1, const Token t2) {
+  /**
+   * @param  t1  A token to compare against t2
+   * @param  t2  A token to compare against t1
+   * @return     Whether the tokens are the same, member-wise
+   */
+  friend bool operator==(const Token &t1, const Token &t2) {
     return t1.type   == t2.type   &&
            t1.lexeme == t2.lexeme &&
            t1.line   == t2.line   &&
@@ -82,28 +101,43 @@ public:
            t1.end    == t2.end;
   }
 
+  /**
+   * @return  This token's type
+   */
   Type getType() {
     return type;
   }
 
+  /**
+   * This token's text
+   */
   const std::string getLexeme() {
     return lexeme;
   }
 
+  /**
+   * This token's line
+   */
   int getLine() {
     return line;
   }
 
+  /**
+   * This token's starting index
+   */
   int getStart() {
     return start;
   }
 
+  /**
+   * This token's ending index
+   */
   int getEnd() {
     return end;
   }
 
 private:
-  const Type type;
+  const Type type;             // The type of this token
   const std::string lexeme;    // The characters that form this token
   const int line,              // The line number of this token
             start,             // The column number of the start of this token
