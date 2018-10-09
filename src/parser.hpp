@@ -101,26 +101,26 @@ public:
 
   // Allows a command to be printed using <<
   friend std::ostream &operator<<(std::ostream &output, const Command &c ) {
-    output << "Command [\n"
-           << "  prefix: [";
+    output << "  Command: [\n"
+           << "    prefix: [";
 
     for (const auto &p : c.prefix)
-      output << "\n" << p << "\n";
+      output << "\n    " << p << "\n";
 
-    output << "  ],\n" // prefix
-           << "  elements: [";
+    output << "    ],\n" // prefix
+           << "    elements: [";
 
     for (const auto &e : c.elements)
       output << "\n    " << e << "\n";
 
-    output << "  ]\n" // elements
-           << "  suffix: [";
+    output << "    ]\n" // elements
+           << "    suffix: [";
 
     for (const auto &s : c.suffix)
-      output << "\n" << s;
+      output << "\n    " << s << "\n";
 
-    output << "  ]\n" // suffix
-           << "]"; // command
+    output << "    ]\n" // suffix
+           << "  ]"; // command
     return output;
   }
 
@@ -142,6 +142,17 @@ public:
     return p1.commands == p2.commands;
   }
 
+  // Allows a pipeline to be printed using <<
+  friend std::ostream &operator<<(std::ostream &output, const Pipeline &p ) {
+    output << "Pipeline: [\n";
+
+    for (auto const &c : p.commands)
+      output << "\n" << c << "\n";
+
+    output << "\n]";
+
+    return output;
+  }
 };
 
 class Program : public ASTNode {
@@ -160,6 +171,18 @@ public:
     return p1.pipelines == p2.pipelines;
   }
 
+  // Allows a program to be printed using <<
+  friend std::ostream &operator<<(std::ostream &output, const Program &p ) {
+    output << "Program: [\n";
+
+    for (auto const &p : p.pipelines)
+      output << "\n" << p << "\n";
+
+    output << "\n]";
+
+    return output;
+  }
+
 };
 
 /* A parser forms meaningful expressions from a series of tokens
@@ -172,7 +195,9 @@ class Parser {
 
   const std::vector<Token::Type> REDIRECTION_OPS = {
     Token::Type::REDIRECT_LEFT,
-    Token::Type::REDIRECT_RIGHT
+    Token::Type::DREDIRECT_LEFT,
+    Token::Type::REDIRECT_RIGHT,
+    Token::Type::DREDIRECT_RIGHT
   };
 
   /**
@@ -259,14 +284,25 @@ class Parser {
       elements.push_back(advance());
     }
 
-    return Command(prefix, elements, {});
+    std::vector<Redirection> suffix = redirection();
+
+    return Command(prefix, elements, suffix);
   }
 
   Pipeline pipeline() {
-    Command c = command();
+    std::vector<Command> commands;
 
-    Pipeline p(std::vector<Command>{c});
-    return p;
+    Command c = command();
+    commands.push_back(c);
+
+    while (match({Token::Type::PIPE})) {
+      advance(); // skip a |
+
+      if (match({Token::Type::TOKEN}))
+        commands.push_back(command());
+    }
+
+    return Pipeline(commands);
   }
 
 public:
