@@ -46,6 +46,11 @@ public:
   }
   Redirection(Token redirectionOp, Token filename)
     : redirectionOp(redirectionOp), filename(filename) { }
+
+  bool operator==(const Redirection &other) {
+    return redirectionOp == other.redirectionOp &&
+           filename      == other.filename;
+  }
 };
 
 class Command : public ASTNode {

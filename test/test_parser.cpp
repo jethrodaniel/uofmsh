@@ -4,6 +4,27 @@
 #include "../src/uofmsh.hpp"
 #include "../src/parser.hpp"
 
+
+SCENARIO("Using == with Redirections") {
+  GIVEN("Two Redirections with the same members") {
+    uofmsh::Redirection r1(
+      uofmsh::Token(uofmsh::Token::Type::REDIRECT_RIGHT, ">", 0, 0, 0),
+      uofmsh::Token(uofmsh::Token::Type::TOKEN, "cowsay", 0, 0, 0)
+    );
+
+    uofmsh::Redirection r2(
+      uofmsh::Token(uofmsh::Token::Type::REDIRECT_RIGHT, ">", 0, 0, 0),
+      uofmsh::Token(uofmsh::Token::Type::TOKEN, "cowsay", 0, 0, 0)
+    );
+
+    WHEN("== is called with the redirections") {
+      THEN("It returns true") {
+        REQUIRE((r1 == r2) == true);
+      }
+    }
+  }
+}
+
 SCENARIO("Using == with Tokens") {
   GIVEN("Two tokens with the same members") {
     uofmsh::Token t1(uofmsh::Token::Type::TOKEN, "cowsay", 0, 0, 0);
