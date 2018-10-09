@@ -163,59 +163,6 @@ public:
 };
 
 /* A parser forms meaningful expressions from a series of tokens
- *
- * Our simple shell grammar is defined below, starting with the 'program' rule
- *
- * program -> list
- *            list separator
- *
- * separator -> separator_op linebreak
- *              newline_list
- *
- * separator_op -> '&'
- *                 ';'
- *
- * linebreak -> ε
- *              newline_list
- *
- * newline_list -> '\n'
- *                 newline_list '\n'
- *
- * list -> and_or
- *         list separator_op and_or
- *
- * and_or -> pipeline
- *           and_or '&&' linebreak pipeline
- *           and_or '||' linebreak pipeline
- *
- * pipeline -> command
- *             pipeline '|' linebreak command
- *
- * command -> cmd_prefix cmd_word cmd_suffix
- *            cmd_prefix cmd_word
- *            cmd_prefix
- *            cmd_name cmd_suffix
- *            cmd_name
- *
- * cmd_name -> WORD
- *
- * cmd_word -> WORD
- *
- * cmd_prefix -> io_redirect
- *               cmd_prefix io_redirect
- *
- * cmd_suffix -> io_redirect
- *               cmd_suffix io_redirect
- *
- * io_redirect -> io_file
- *                IO_NUMBER io_file
- *
- * io_file -> '<' filename
- *            DREDIRECT_LEFT filename
- *            '>' filename
- *            DREDIRECT_RIGHT filename
- *
- * filename -> WORD    // Perform any redirection
  */
 class Parser {
   const std::string source;  // The source text to process
