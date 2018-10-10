@@ -452,6 +452,10 @@ public:
      * @return  A new parsing exception
      */
     explicit Exception(Error error) : error(error) { }
+
+    Error getError() {
+      return error;
+    }
   };
 
   /**
@@ -471,18 +475,25 @@ public:
 
       pipelines.push_back(pipe);
 
-      while (match({Token::Type::SEMI})) {
-        advance(); // skip a ;
+      while (match({Token::Type::SEMI, Token::Type::NEWLINE})) {
+        advance(); // skip a ; or a \n
+
+        while (match({Token::Type::SEMI, Token::Type::NEWLINE}))
+          advance();  // Skip repeated ; or \n
 
         if (match({Token::Type::TOKEN}))
           pipelines.push_back(pipeline());
-        else
+        else {
+          std::cout << "<<: " << peek();
           throw(Parser::Exception(Error("Expected a pipeline after ;", peek().getLine(), peek().getStart())));
+        }
       }
 
     } catch (const Scanner::Exception &e) {
+      std::cout << e.msg;
       return Program({});
-    } catch (const Parser::Exception &e) {
+    } catch (Parser::Exception &e) {
+      std::cout << e.getError().getMsg();
       return Program({});
     }
 

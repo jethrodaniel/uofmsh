@@ -7,11 +7,11 @@
 SCENARIO("Using an abstract syntax tree") {
 
   GIVEN("A Parser and input") {
-    std::string input = "> newfile; cat file1 file2 | wc -l >> output";
+    std::string input = "> newfile;\n"
+                        "cat file1 file2 | wc -l >> output";
 
     uofmsh::Parser parser(input);
 
-    // cat file1 file2 | wc -l >> output
     uofmsh::Program expected({
       uofmsh::Pipeline({
         uofmsh::Command(
@@ -29,22 +29,22 @@ SCENARIO("Using an abstract syntax tree") {
         uofmsh::Command(
           std::vector<uofmsh::Redirection> {},
           {
-            uofmsh::Token(uofmsh::Token::Type::TOKEN, "cat", 1, 11, 14),
-            uofmsh::Token(uofmsh::Token::Type::TOKEN, "file1", 1, 15, 20),
-            uofmsh::Token(uofmsh::Token::Type::TOKEN, "file2", 1, 21, 26)
+            uofmsh::Token(uofmsh::Token::Type::TOKEN, "cat", 2, 11, 14),
+            uofmsh::Token(uofmsh::Token::Type::TOKEN, "file1", 2, 15, 20),
+            uofmsh::Token(uofmsh::Token::Type::TOKEN, "file2", 2, 21, 26)
           },
           std::vector<uofmsh::Redirection> { }
         ),
         uofmsh::Command(
           std::vector<uofmsh::Redirection> {},
           {
-            uofmsh::Token(uofmsh::Token::Type::TOKEN, "wc", 1, 29, 31),
-            uofmsh::Token(uofmsh::Token::Type::TOKEN, "-l", 1, 32, 34)
+            uofmsh::Token(uofmsh::Token::Type::TOKEN, "wc", 2, 29, 31),
+            uofmsh::Token(uofmsh::Token::Type::TOKEN, "-l", 2, 32, 34)
           },
           {
             uofmsh::Redirection(
-              uofmsh::Token(uofmsh::Token::Type::DREDIRECT_RIGHT, ">>", 1, 35, 37),
-              uofmsh::Token(uofmsh::Token::Type::TOKEN, "output", 1, 38, 44)
+              uofmsh::Token(uofmsh::Token::Type::DREDIRECT_RIGHT, ">>", 2, 35, 37),
+              uofmsh::Token(uofmsh::Token::Type::TOKEN, "output", 2, 38, 44)
             )
           }
         )
