@@ -379,6 +379,7 @@ class Parser {
   std::vector<Redirection> redirection() {
     std::vector<Redirection> redirections;
 
+    // TODO: add IO_NUMBER support
     while (match(REDIRECTION_OPS)) {
       auto redirect = advance();
 
@@ -427,6 +428,8 @@ class Parser {
 
       if (match({Token::Type::TOKEN}))
         commands.push_back(command());
+      else
+        throw(Parser::Exception(Error("Expected a command after |", peek().getLine(), peek().getStart())));
     }
 
     return Pipeline(commands);
@@ -457,18 +460,33 @@ public:
    * @return  A new program instance
    */
   Program parse() {
+    std::vector<Pipeline> pipelines;
+
     try {
+
       tokens = scanner.scanTokens();
+      Pipeline pipe = pipeline();
+
+      // TODO: Use a base Shell::Exception class
+
+      pipelines.push_back(pipe);
+
+      while (match({Token::Type::SEMI})) {
+        advance(); // skip a ;
+
+        if (match({Token::Type::TOKEN}))
+          pipelines.push_back(pipeline());
+        else
+          throw(Parser::Exception(Error("Expected a pipeline after ;", peek().getLine(), peek().getStart())));
+      }
+
     } catch (const Scanner::Exception &e) {
-      throw;
+      return Program({});
+    } catch (const Parser::Exception &e) {
+      return Program({});
     }
 
-    Pipeline pipe = pipeline();
-
-    if (!pipe.isValid())
-      throw(Parser::Exception(pipe.getError()));
-
-    return Program({pipe});
+    return Program(pipelines);
   }
 };
 
