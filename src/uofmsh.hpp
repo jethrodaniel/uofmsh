@@ -38,6 +38,9 @@ public:
   // Outputs an error message about a particular line
   static void error(int line, int column, std::string message);
 
+  // Outputs an error message from the parser
+  static void error(Error e);
+
   // The entry point for our shell
   static int main(int argc, char **argv);
 

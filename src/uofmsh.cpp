@@ -50,19 +50,20 @@ void Shell::runPrompt() {
 
 // Run a string of input
 void Shell::run(std::string source) {
-  Scanner scanner(source);
-
   try {
-    auto tokens = scanner.scanTokens();
-
-    std::cout << "Tokens: " << tokens.size() << "\n";
-
-    for (unsigned int i = 0; i < tokens.size(); i++)
-      std::cout << i << ": " << tokens[i] << "\n";
-
+    Parser parser(source);
+    std::cout << parser.parse(true) << "\n";
+    // Interpreter interpreter(parser.parser());
   } catch (const Scanner::Exception e) {
     error(e.line, e.start, e.msg);
+  } catch (Parser::Exception e) {
+    error(e.getError());
   }
+}
+
+void Shell::error(Error e) {
+  Shell::report(e.getLine(), e.getColumn(), e.getMsg());
+  Shell::hadError = true;
 }
 
 void Shell::error(int line, int column, std::string msg) {

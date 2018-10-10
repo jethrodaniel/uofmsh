@@ -30,6 +30,14 @@ public:
   std::string getMsg() {
     return msg;
   }
+
+  int getLine() {
+    return line;
+  }
+
+  int getColumn() {
+    return column;
+  }
 };
 
 /**
@@ -409,7 +417,11 @@ class Parser {
 
     std::vector<Redirection> suffix = redirection();
 
-    return Command(prefix, elements, suffix);
+
+    if (prefix.size() == 0 && elements.size() == 0 && suffix.size() == 0)
+      throw(Parser::Exception(Error("Expected a command", peek().getLine(), peek().getStart())));
+    else
+      return Command(prefix, elements, suffix);
   }
 
   /**
@@ -432,7 +444,10 @@ class Parser {
         throw(Parser::Exception(Error("Expected a command after |", peek().getLine(), peek().getStart())));
     }
 
-    return Pipeline(commands);
+    if (commands.size() == 0)
+      throw(Parser::Exception(Error("Expected a command", peek().getLine(), peek().getStart())));
+    else
+      return Pipeline(commands);
   }
 
 public:
@@ -463,7 +478,7 @@ public:
    *
    * @return  A new program instance
    */
-  Program parse() {
+  Program parse(bool throwError = false) {
     std::vector<Pipeline> pipelines;
 
     try {
@@ -483,18 +498,20 @@ public:
 
         if (match({Token::Type::TOKEN}))
           pipelines.push_back(pipeline());
-        else {
-          std::cout << "<<: " << peek();
+        else
           throw(Parser::Exception(Error("Expected a pipeline after ;", peek().getLine(), peek().getStart())));
-        }
       }
 
     } catch (const Scanner::Exception &e) {
-      std::cout << e.msg;
-      return Program({});
+      if (throwError)
+        throw;
+      else
+        return Program({});
     } catch (Parser::Exception &e) {
-      std::cout << e.getError().getMsg();
-      return Program({});
+      if (throwError)
+        throw;
+      else
+        return Program({});
     }
 
     return Program(pipelines);
