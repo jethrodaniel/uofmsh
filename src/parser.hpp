@@ -62,7 +62,9 @@ public:
  * Represents a redirection
  */
 class Redirection : public ASTNode {
-  Token redirectionOp, filename; // The tokens that a redirection consists of
+  // The tokens that a redirection consists of
+  std::optional<Token> ioNumber;
+  Token redirectionOp, filename;
 
 public:
   // @return  The redirection operator token
@@ -84,12 +86,22 @@ public:
     : redirectionOp(redirectionOp), filename(filename) { }
 
   /**
+   * @param  ioNumber    The io number of this redirection
+   * @param  redirectOp  The redirection operator token
+   * @param  filename    The filename token
+   * @return             A new redirection instance
+   */
+  explicit Redirection(Token ioNumber, Token redirectionOp, Token filename)
+    : ioNumber(ioNumber), redirectionOp(redirectionOp), filename(filename) { }
+
+  /**
    * @param  other  A redirection instance to compare to this instance
    * @return        Whether this redirection is the same, member-wise, as other
    */
   bool operator==(const Redirection &other) {
     return redirectionOp == other.redirectionOp &&
-           filename      == other.filename;
+           filename      == other.filename      &&
+           ioNumber      == other.ioNumber;
   }
 
   /**
@@ -99,7 +111,8 @@ public:
    */
   friend bool operator==(const Redirection &r1, const Redirection &r2) {
     return r1.redirectionOp == r2.redirectionOp &&
-           r1.filename      == r2.filename;
+           r1.filename      == r2.filename      &&
+           r1.ioNumber      == r2.ioNumber;
   }
 
   /**
@@ -110,9 +123,17 @@ public:
    */
   friend std::ostream &operator<<(std::ostream &output, const Redirection &r ) {
     output << "    Redirection [\n"
+           << "      ioNumber: [";
+
+    if (r.ioNumber.has_value())
+      output <<  r.ioNumber.value();
+
+
+    output << "]\n"
            << "      redirectionOp: [" << r.redirectionOp << "],\n"
            << "      filename: [" << r.filename << "]\n"
            << "    ]";
+
     return output;
   }
 
@@ -380,6 +401,18 @@ class Parser {
   }
 
   /**
+   * Parses an io number
+   *
+   * @return  An optional io number
+   */
+  std::optional<Token> ioNumber() {
+    if (match({Token::Type::IO_NUMBER}))
+      return std::optional<Token>(advance());
+    else
+      return std::nullopt;
+  }
+
+  /**
    * Parses a redirection instance
    *
    * @return  A list of redirections
@@ -387,13 +420,17 @@ class Parser {
   std::vector<Redirection> redirection() {
     std::vector<Redirection> redirections;
 
-    // TODO: add IO_NUMBER support
+    auto ioNum = ioNumber();
+
     while (match(REDIRECTION_OPS)) {
       auto redirect = advance();
 
       if (match({Token::Type::TOKEN})) {
         auto filename = advance();
-        redirections.push_back(Redirection(redirect, filename));
+        if (ioNum)
+          redirections.push_back(Redirection(ioNum.value(), redirect, filename));
+        else
+          redirections.push_back(Redirection(redirect, filename));
       } else
         throw(Parser::Exception(Error("Expected a filename", redirect.getLine(), redirect.getStart())));
     }

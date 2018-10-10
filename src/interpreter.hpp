@@ -10,12 +10,22 @@ namespace uofmsh {
 class Interpreter {
 
 public:
+  // @return  A new interpreter instance
+  Interpreter() { }
+
   // Interpret and run the AST
   void interpret(Program p) {
     auto pipelines = p.getPipelines();
 
-    // if (pipelines.size() == 0)
-    //   return;
+    if (pipelines.size() == 0)
+      return;
+
+    for (auto p : pipelines) {
+      for (auto c : p.getCommands()) {
+        //std::cout << "\n" << c << "\n";
+      }
+    }
+
   }
 };
 

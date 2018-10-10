@@ -15,6 +15,7 @@
 #include "token.hpp"
 #include "scanner.hpp"
 #include "parser.hpp"
+#include "interpreter.hpp"
 
 namespace uofmsh {
 

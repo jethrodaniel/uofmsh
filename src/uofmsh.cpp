@@ -52,8 +52,9 @@ void Shell::runPrompt() {
 void Shell::run(std::string source) {
   try {
     Parser parser(source);
-    std::cout << parser.parse(true) << "\n";
-    // Interpreter interpreter(parser.parser());
+    std::cout << "\n" << parser.parse() << "\n";
+    // Interpreter interpreter;
+    // interpreter.interpret(parser.parse(true));
   } catch (const Scanner::Exception e) {
     error(e.line, e.start, e.msg);
   } catch (Parser::Exception e) {

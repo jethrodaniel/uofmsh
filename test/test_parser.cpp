@@ -8,7 +8,7 @@ SCENARIO("Using an abstract syntax tree") {
 
   GIVEN("A Parser and input") {
     std::string input = "> newfile;\n"
-                        "cat file1 file2 | wc -l >> output";
+                        "cat file1 file2 | wc -l 123>> output";
 
     uofmsh::Parser parser(input);
 
@@ -43,8 +43,9 @@ SCENARIO("Using an abstract syntax tree") {
           },
           {
             uofmsh::Redirection(
-              uofmsh::Token(uofmsh::Token::Type::DREDIRECT_RIGHT, ">>", 2, 35, 37),
-              uofmsh::Token(uofmsh::Token::Type::TOKEN, "output", 2, 38, 44)
+              uofmsh::Token(uofmsh::Token::Type::IO_NUMBER, "123", 2, 35, 38),
+              uofmsh::Token(uofmsh::Token::Type::DREDIRECT_RIGHT, ">>", 2, 38, 40),
+              uofmsh::Token(uofmsh::Token::Type::TOKEN, "output", 2, 41, 47)
             )
           }
         )
