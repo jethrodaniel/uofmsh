@@ -58,7 +58,7 @@ class Scanner {
   void alphaNumeric(bool startsWithNum = false) {
     bool onlyNumbers = startsWithNum;
 
-    while (std::isalnum(peek()) || peek() == '-') {
+    while (std::isalnum(peek()) || peek() == '-' || peek() == '_') {
       if (!std::isdigit(peek()))
         onlyNumbers = false;
 
@@ -66,20 +66,24 @@ class Scanner {
     }
 
     if (onlyNumbers && (peek() == '<' || peek() == '>')) {
+      addToken(Token::Type::IO_NUMBER);
+      start = current;
+      advance();
+
       if (peek() == '<') {
         advance(); // Skip a <
         if (peek() == '<') {
           advance(); // Skip the next <
-          addToken(Token::Type::NDREDIRECT_LEFT);
+          addToken(Token::Type::DREDIRECT_LEFT);
         } else
-          addToken(Token::Type::NREDIRECT_LEFT);
+          addToken(Token::Type::REDIRECT_LEFT);
       } else {
         advance(); // Skip a >
         if (peek() == '>') {
           advance(); // Skip the next >
-          addToken(Token::Type::NDREDIRECT_RIGHT);
+          addToken(Token::Type::DREDIRECT_RIGHT);
         } else
-          addToken(Token::Type::NREDIRECT_RIGHT);
+          addToken(Token::Type::REDIRECT_RIGHT);
       }
     } else
       addToken(Token::Type::TOKEN);
@@ -214,8 +218,10 @@ class Scanner {
             alphaNumeric();
         } else if (c == '-' && peek() == ' ')
           addToken(Token::Type::HYPHEN);
-        else
-          throw Scanner::Exception(line, start, "Unexpected character");
+        else {
+          auto error = std::string("Unexpected character '") + c + "'.";
+          throw Scanner::Exception(line, start, error);
+        }
     }
   }
 

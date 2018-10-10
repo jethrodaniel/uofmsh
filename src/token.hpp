@@ -21,12 +21,8 @@ public:
 
     REDIRECT_LEFT,    // <
     DREDIRECT_LEFT,   // <<
-    NREDIRECT_LEFT,   // n<
-    NDREDIRECT_LEFT,  // n<<
     REDIRECT_RIGHT,   // >
     DREDIRECT_RIGHT,  // >>
-    NREDIRECT_RIGHT,  // n>
-    NDREDIRECT_RIGHT, // n>>
     BANG,             // !
     BANGBANG,         // !!
     AND,              // &
@@ -38,17 +34,17 @@ public:
     DOUBLE_QUOTED_STR,  // "a double quoted string"
     BACKTICK_STR,       // `a double quoted string`
 
+    IO_NUMBER,
+    NEWLINE,
+    END,       // EOF
+
     // A generic token, which could be any of the below tokens,
     // depending on the context
     TOKEN,
 
     WORD,
     ASSIGNMENT_WORD,
-    NAME,
-    NEWLINE,
-    IO_NUMBER,
-
-    END // EOF
+    NAME
   };
 
   /**
