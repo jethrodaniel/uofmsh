@@ -68,7 +68,6 @@ class Scanner {
     if (onlyNumbers && (peek() == '<' || peek() == '>')) {
       addToken(Token::Type::IO_NUMBER);
       start = current;
-      advance();
 
       if (peek() == '<') {
         advance(); // Skip a <
