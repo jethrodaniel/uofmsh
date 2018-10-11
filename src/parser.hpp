@@ -3,6 +3,7 @@
 
 #include "scanner.hpp"
 
+#include <sstream>
 #include <optional>
 
 namespace uofmsh {
@@ -27,15 +28,15 @@ public:
   /**
    * @return  The error message
    */
-  std::string getMsg() {
+  std::string getMsg() const {
     return msg;
   }
 
-  int getLine() {
+  int getLine() const {
     return line;
   }
 
-  int getColumn() {
+  int getColumn() const {
     return column;
   }
 };
@@ -48,7 +49,7 @@ std::optional<Error> error; // The error, if it exists
 
 public:
   // @return  Whether the error has a value
-  bool isValid() {
+  bool isValid() const {
     return !error.has_value();
   }
 
@@ -68,12 +69,12 @@ class Redirection : public ASTNode {
 
 public:
   // @return  The redirection operator token
-  Token getRedirectionOp() {
+  Token getRedirectionOp() const {
     return redirectionOp;
   }
 
   // @return  The filename token
-  Token getFilename() {
+  Token getFilename() const {
     return filename;
   }
 
@@ -122,19 +123,34 @@ public:
    * @param  r       The redirection instance to write out
    */
   friend std::ostream &operator<<(std::ostream &output, const Redirection &r ) {
-    output << "    Redirection [\n"
-           << "      ioNumber: [";
-
-    if (r.ioNumber.has_value())
-      output <<  r.ioNumber.value();
-
-
-    output << "]\n"
-           << "      redirectionOp: [" << r.redirectionOp << "],\n"
-           << "      filename: [" << r.filename << "]\n"
-           << "    ]";
-
+    output << r.prettyPrint();
     return output;
+  }
+
+  /**
+   * @return  indention  The amount to indent
+   * @return             A pretty representation of this redirection
+   */
+  const std::string prettyPrint(const int indention = 0) const {
+    std::ostringstream out;
+    std::string indent(indention, ' ');
+
+    out << indent << "Redirection [\n"
+        << indent << "  ioNumber: [\n";
+
+    if (ioNumber)
+      out << ioNumber.value().prettyPrint(indention + 4) << "\n";
+
+    out << indent << "  ] // ioNumber \n"
+        << indent << "  redirectionOp: [\n"
+        << redirectionOp.prettyPrint(indention + 4) << "\n"
+        << indent << "  ], // redirectionOp \n"
+        << indent << "  filename: [\n"
+        << filename.prettyPrint(indention + 4) << "\n"
+        << indent << "  ] // filename\n"
+        << indent << "] // Redirection";
+
+    return out.str();
   }
 
 };
@@ -149,21 +165,21 @@ public:
   /**
    * @return  The prefix redirections
    */
-  const std::vector<Redirection> getPrefix() {
+  const std::vector<Redirection> getPrefix() const {
     return prefix;
   }
 
   /**
    * @return  The suffix redirections
    */
-  const std::vector<Redirection> getSuffix() {
+  const std::vector<Redirection> getSuffix() const {
     return suffix;
   }
 
   /**
    * @return  The command elements
    */
-  const std::vector<Token> getElements() {
+  const std::vector<Token> getElements() const {
     return elements;
   }
 
@@ -206,27 +222,40 @@ public:
    * @param  c       The command instance to write out
    */
   friend std::ostream &operator<<(std::ostream &output, const Command &c ) {
-    output << "  Command: [\n"
-           << "    prefix: [";
-
-    for (const auto &p : c.prefix)
-      output << "\n    " << p << "\n";
-
-    output << "    ],\n" // prefix
-           << "    elements: [";
-
-    for (const auto &e : c.elements)
-      output << "\n    " << e << "\n";
-
-    output << "    ]\n" // elements
-           << "    suffix: [";
-
-    for (const auto &s : c.suffix)
-      output << "\n    " << s << "\n";
-
-    output << "    ]\n" // suffix
-           << "  ]"; // command
+    output << c.prettyPrint();
     return output;
+  }
+
+  /**
+   * @return  indention  The amount to indent
+   * @return             A pretty representation of this command
+   */
+  const std::string prettyPrint(const int indention = 0) const {
+    std::ostringstream out;
+    std::string indent(indention, ' ');
+
+    out << indent << "Command: [\n"
+        << indent << "  prefix: [\n";
+
+    for (const auto &p : prefix)
+      out << p.prettyPrint(indention + 4) << "\n";
+
+    out << indent << "    ], // prefix \n"
+        << indent << "  elements: [\n";
+
+    for (const auto &e : elements)
+      out << e.prettyPrint(indention + 4) << "\n";
+
+    out << indent << "    ], // elements\n"
+        << indent << "  suffix: [\n";
+
+    for (const auto &s : suffix)
+      out << s.prettyPrint(indention + 4) << "\n";
+
+    out << indent << "  ] // suffix\n"
+        << indent << "] // Command";
+
+    return out.str();
   }
 
 };
@@ -273,15 +302,32 @@ public:
    * @param  p       The pipeline instance to write out
    */
   friend std::ostream &operator<<(std::ostream &output, const Pipeline &p ) {
-    output << "Pipeline: [\n";
-
-    for (auto const &c : p.commands)
-      output << "\n" << c << "\n";
-
-    output << "\n]";
+    output << p.prettyPrint();
 
     return output;
   }
+
+  /**
+   * @return  indention  The amount to indent
+   * @return             A pretty representation of this pipeline
+   */
+  const std::string prettyPrint(const int indention = 0) const {
+    std::ostringstream out;
+    std::string indent(indention, ' ');
+
+    out << indent << "Pipeline: [\n"
+        << indent << "  commands: [\n";
+
+    for (auto const &c : commands)
+      out << c.prettyPrint(indention + 4) << "\n";
+
+    out << indent << "  ] // commands\n"
+        << indent << "] // Pipelines";
+
+    return out.str();
+  }
+
+
 };
 
 // Represents a program, the highest level of the AST
@@ -327,14 +373,29 @@ public:
    * @param  p       The program instance to write out
    */
   friend std::ostream &operator<<(std::ostream &output, const Program &p ) {
-    output << "Program: [\n";
-
-    for (auto const &p : p.pipelines)
-      output << "\n" << p << "\n";
-
-    output << "\n]";
+    output << p.prettyPrint();
 
     return output;
+  }
+
+  /**
+   * @return  indention  The amount to indent
+   * @return             A pretty representation of this program
+   */
+  const std::string prettyPrint(const int indention = 0) const {
+    std::ostringstream out;
+    std::string indent(indention, ' ');
+
+    out << indent << "Program: [\n"
+        << indent << "  pipelines: [\n";
+
+    for (auto const &p : pipelines)
+      out << p.prettyPrint(indention + 4) << "\n";
+
+    out << indent << "  ] // pipelines\n"
+        << indent << "] // Program";
+
+    return out.str();
   }
 
 };

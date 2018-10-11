@@ -66,11 +66,30 @@ public:
    * @param  t       The token instance to write out
    */
   friend std::ostream &operator<<(std::ostream &output, const Token &t ) {
-    output << "Type: " << (int)t.type << " ["
-           << t.line << "," << t.start << " - " << std::setw(3) << t.end
-           << "]: '" << t.lexeme << "'";
+    output << t.prettyPrint();
     return output;
   }
+
+  /**
+   * @return  indention  The amount to indent
+   * @return             A pretty representation of this token
+   */
+  const std::string prettyPrint(const int indention = 0) const {
+    std::ostringstream out;
+    std::string indent(indention, ' ');
+
+    out << indent << "Token: [\n"
+        << indent << "  type:   [" << (int)type << "]\n"
+        << indent << "  line:   [" << line      << "]\n"
+        << indent << "  start:  [" << start     << "]\n"
+        << indent << "  end:    [" << end       << "]\n"
+        << indent << "  lexeme: [" << lexeme    << "]\n"
+        << indent << "] // Token";
+
+    return out.str();
+  }
+
+
 
   /**
    * @param  other  A token instance to compare to this instance
