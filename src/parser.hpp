@@ -8,26 +8,20 @@
 
 namespace uofmsh {
 
-/**
- * A error specifies a message and where the error occured
- */
+// A error specifies a message and where the error occured
 class Error {
   std::string msg;  // The error message
   int line, column; // The line and column where the error occured
 
 public:
-  /**
-   * @param  msg     The error message
-   * @param  line    The line where the error occured
-   * @param  column  The column where the error occured
-   * @return         A new error instance
-   */
+  // @param  msg     The error message
+  // @param  line    The line where the error occured
+  // @param  column  The column where the error occured
+  // @return         A new error instance
   explicit Error(std::string msg, int line, int column)
     : msg(msg), line(line), column(column) { }
 
-  /**
-   * @return  The error message
-   */
+  // @return  The error message
   std::string getMsg() const {
     return msg;
   }
@@ -41,9 +35,7 @@ public:
   }
 };
 
-/**
- * An abstract class used to add common AST node functionality.
- */
+// An abstract class used to add common AST node functionality.
 class ASTNode {
 std::optional<Error> error; // The error, if it exists
 
@@ -59,9 +51,7 @@ public:
   }
 };
 
-/**
- * Represents a redirection
- */
+// Represents a redirection
 class Redirection : public ASTNode {
   // The tokens that a redirection consists of
   std::optional<Token> ioNumber;
@@ -78,59 +68,53 @@ public:
     return filename;
   }
 
-  /**
-   * @param  redirectOp  The redirection operator token
-   * @param  filename    The filename token
-   * @return             A new redirection instance
-   */
+
+  // @param  redirectOp  The redirection operator token
+  // @param  filename    The filename token
+  // @return             A new redirection instance
   explicit Redirection(Token redirectionOp, Token filename)
     : redirectionOp(redirectionOp), filename(filename) { }
 
-  /**
-   * @param  ioNumber    The io number of this redirection
-   * @param  redirectOp  The redirection operator token
-   * @param  filename    The filename token
-   * @return             A new redirection instance
-   */
+
+  // @param  ioNumber    The io number of this redirection
+  // @param  redirectOp  The redirection operator token
+  // @param  filename    The filename token
+  // @return             A new redirection instance
   explicit Redirection(Token ioNumber, Token redirectionOp, Token filename)
     : ioNumber(ioNumber), redirectionOp(redirectionOp), filename(filename) { }
 
-  /**
-   * @param  other  A redirection instance to compare to this instance
-   * @return        Whether this redirection is the same, member-wise, as other
-   */
+
+  // @param  other  A redirection instance to compare to this instance
+  // @return        Whether this redirection is the same, member-wise, as other
   bool operator==(const Redirection &other) {
     return redirectionOp == other.redirectionOp &&
            filename      == other.filename      &&
            ioNumber      == other.ioNumber;
   }
 
-  /**
-   * @param  r1  A redirection to compare against r2
-   * @param  r2  A redirection to compare against r1
-   * @return     Whether the redirections are the same, member-wise
-   */
+
+  // @param  r1  A redirection to compare against r2
+  // @param  r2  A redirection to compare against r1
+  // @return     Whether the redirections are the same, member-wise
   friend bool operator==(const Redirection &r1, const Redirection &r2) {
     return r1.redirectionOp == r2.redirectionOp &&
            r1.filename      == r2.filename      &&
            r1.ioNumber      == r2.ioNumber;
   }
 
-  /**
-   * Allows a redirection instance to be printed using <<
-   *
-   * @param  output  The output stream to write to
-   * @param  r       The redirection instance to write out
-   */
+
+  // Allows a redirection instance to be printed using <<
+  //
+  // @param  output  The output stream to write to
+  // @param  r       The redirection instance to write out
   friend std::ostream &operator<<(std::ostream &output, const Redirection &r ) {
     output << r.prettyPrint();
     return output;
   }
 
-  /**
-   * @return  indention  The amount to indent
-   * @return             A pretty representation of this redirection
-   */
+
+  // @return  indention  The amount to indent
+  // @return             A pretty representation of this redirection
   const std::string prettyPrint(const int indention = 0) const {
     std::ostringstream out;
     std::string indent(indention, ' ');
@@ -162,74 +146,66 @@ class Command : public ASTNode {
   const std::vector<Redirection> suffix; // The suffix redirections
 
 public:
-  /**
-   * @return  The prefix redirections
-   */
+
+  // @return  The prefix redirections
   const std::vector<Redirection> getPrefix() const {
     return prefix;
   }
 
-  /**
-   * @return  The suffix redirections
-   */
+
+  // @return  The suffix redirections
   const std::vector<Redirection> getSuffix() const {
     return suffix;
   }
 
-  /**
-   * @return  The command elements
-   */
+
+  // @return  The command elements
   const std::vector<Token> getElements() const {
     return elements;
   }
 
-  /**
-   * @param  prefix    The prefix redirections
-   * @param  elements  The command elements
-   * @param  suffix    The suffix redirections
-   * @return           A new command instance
-   */
+
+  // @param  prefix    The prefix redirections
+  // @param  elements  The command elements
+  // @param  suffix    The suffix redirections
+  // @return           A new command instance
   explicit Command(std::vector<Redirection> prefix,
                    std::vector<Token> elements,
                    std::vector<Redirection> suffix)
     : prefix(prefix), elements(elements), suffix(suffix) { }
 
-  /**
-   * @param  other  A command instance to compare to this instance
-   * @return        Whether this command is the same, member-wise, as other
-   */
+
+  // @param  other  A command instance to compare to this instance
+  // @return        Whether this command is the same, member-wise, as other
   bool operator==(const Command &other) {
     return prefix == other.prefix &&
            elements == other.elements &&
            suffix == other.suffix;
   }
 
-  /**
-   * @param  c1  A command to compare against c2
-   * @param  c2  A command to compare against c1
-   * @return     Whether the commands are the same, member-wise
-   */
+
+  // @param  c1  A command to compare against c2
+  // @param  c2  A command to compare against c1
+  // @return     Whether the commands are the same, member-wise
   friend bool operator==(const Command &c1, const Command &c2) {
     return c1.prefix   == c2.prefix &&
            c1.elements == c2.elements &&
            c1.suffix   == c2.suffix;
   }
 
-  /**
-   * Allows a command instance to be printed using <<
-   *
-   * @param  output  The output stream to write to
-   * @param  c       The command instance to write out
-   */
+
+  // Allows a command instance to be printed using <<
+  //
+  // @param  output  The output stream to write to
+  // @param  c       The command instance to write out
   friend std::ostream &operator<<(std::ostream &output, const Command &c ) {
     output << c.prettyPrint();
     return output;
   }
 
-  /**
-   * @return  indention  The amount to indent
-   * @return             A pretty representation of this command
-   */
+
+  // @return  indention  The amount to indent
+  // @return             A pretty representation of this command
   const std::string prettyPrint(const int indention = 0) const {
     std::ostringstream out;
     std::string indent(indention, ' ');
@@ -265,52 +241,46 @@ class Pipeline : public ASTNode {
   std::vector<Command> commands; // The commands to pipe together, in order
 
 public:
-  /**
-   * @return  The commands
-   */
+
+  // @return  The commands
   std::vector<Command> getCommands() {
     return commands;
   }
 
-  /**
-   * @param  commands  The commands to pipe together
-   * @return           A new pipeline instance
-   */
+
+  // @param  commands  The commands to pipe together
+  // @return           A new pipeline instance
   explicit Pipeline(std::vector<Command> commands) : commands(commands) { }
 
-  /**
-   * @param  other  A pipeline instance to compare to this instance
-   * @return        Whether this pipeline is the same, member-wise, as other
-   */
+
+  // @param  other  A pipeline instance to compare to this instance
+  // @return        Whether this pipeline is the same, member-wise, as other
   bool operator==(const Pipeline &other) {
     return commands == other.commands;
   }
 
-  /**
-   * @param  p1  A pipeline to compare against p2
-   * @param  p2  A pipeline to compare against p1
-   * @return     Whether the pipelines are the same, member-wise
-   */
+
+  // @param  p1  A pipeline to compare against p2
+  // @param  p2  A pipeline to compare against p1
+  // @return     Whether the pipelines are the same, member-wise
   friend bool operator==(const Pipeline &p1, const Pipeline &p2) {
     return p1.commands == p2.commands;
   }
 
-  /**
-   * Allows a pipeline instance to be printed using <<
-   *
-   * @param  output  The output stream to write to
-   * @param  p       The pipeline instance to write out
-   */
+
+  // Allows a pipeline instance to be printed using <<
+  //
+  // @param  output  The output stream to write to
+  // @param  p       The pipeline instance to write out
   friend std::ostream &operator<<(std::ostream &output, const Pipeline &p ) {
     output << p.prettyPrint();
 
     return output;
   }
 
-  /**
-   * @return  indention  The amount to indent
-   * @return             A pretty representation of this pipeline
-   */
+
+  // @return  indention  The amount to indent
+  // @return             A pretty representation of this pipeline
   const std::string prettyPrint(const int indention = 0) const {
     std::ostringstream out;
     std::string indent(indention, ' ');
@@ -335,53 +305,47 @@ class Program : public ASTNode {
   std::vector<Pipeline> pipelines; // The pipelines, seperated by ;
 
 public:
-  /**
-   * @return  The pipelines in this program
-   */
+
+  // @return  The pipelines in this program
   std::vector<Pipeline> getPipelines() {
     return pipelines;
   }
 
-  /**
-   * @param  pipelines  The pipelines to use
-   * @return            A new program instance
-   */
+
+  // @param  pipelines  The pipelines to use
+  // @return            A new program instance
   explicit Program(std::vector<Pipeline> pipelines) : pipelines(pipelines) { };
 
-  /**
-   * @param  other  A program instance to compare to this instance
-   * @return        Whether this program is the same, member-wise, as other
-   */
+
+  // @param  other  A program instance to compare to this instance
+  // @return        Whether this program is the same, member-wise, as other
   bool operator==(const Program &other) {
     return pipelines == other.pipelines;
   }
 
-  /**
-   * @param  p1  A program to compare against p2
-   * @param  p2  A program to compare against p1
-   * @return     Whether the programs are the same, member-wise
-   */
+
+  // @param  p1  A program to compare against p2
+  // @param  p2  A program to compare against p1
+  // @return     Whether the programs are the same, member-wise
   friend bool operator==(const Program &p1, const Program &p2) {
     return p1.pipelines == p2.pipelines;
   }
 
 
-  /**
-   * Allows a program instance to be printed using <<
-   *
-   * @param  output  The output stream to write to
-   * @param  p       The program instance to write out
-   */
+
+  // Allows a program instance to be printed using <<
+  //
+  // @param  output  The output stream to write to
+  // @param  p       The program instance to write out
   friend std::ostream &operator<<(std::ostream &output, const Program &p ) {
     output << p.prettyPrint();
 
     return output;
   }
 
-  /**
-   * @return  indention  The amount to indent
-   * @return             A pretty representation of this program
-   */
+
+  // @return  indention  The amount to indent
+  // @return             A pretty representation of this program
   const std::string prettyPrint(const int indention = 0) const {
     std::ostringstream out;
     std::string indent(indention, ' ');
@@ -400,8 +364,7 @@ public:
 
 };
 
-/* A parser forms meaningful expressions from a series of tokens
- */
+// A parser forms meaningful expressions from a series of tokens
 class Parser {
   const std::string source;  // The source text to process
   Scanner scanner;           // The scanner to get tokens from
@@ -416,43 +379,38 @@ class Parser {
     Token::Type::DREDIRECT_RIGHT
   };
 
-  /**
-   * @return    The current token
-   */
+
+  // @return    The current token
   Token peek() {
     return tokens[current];
   }
 
-  /**
-   * @return  The previous token
-   */
+
+  // @return  The previous token
   Token previous() {
     return tokens[current - 1];
   }
 
-  /**
-   * @return Whether or not the parser is the end of input
-   */
+
+  // @return Whether or not the parser is the end of input
   bool isAtEnd() {
     return peek().getType() == Token::Type::END;
   }
 
-  /**
-   * Moves the parser to the next token
-   *
-   * @return The previous Token
-   */
+
+  // Moves the parser to the next token
+  //
+  // @return The previous Token
   Token advance() {
     if (!isAtEnd()) current++;
     return previous();
   }
 
-   /**
-   * Checks the type of the current token against a list
-   *
-   * @param  types  A list of types to compare with
-   * @return        Whether the current token is of a type in types
-   */
+
+  // Checks the type of the current token against a list
+  //
+  // @param  types  A list of types to compare with
+  // @return        Whether the current token is of a type in types
   bool match(std::vector<Token::Type> types) {
     for (auto t : types)
       if (peek().getType() == t)
@@ -461,11 +419,10 @@ class Parser {
     return false;
   }
 
-  /**
-   * Parses an io number
-   *
-   * @return  An optional io number
-   */
+
+  // Parses an io number
+  //
+  // @return  An optional io number
   std::optional<Token> ioNumber() {
     if (match({Token::Type::IO_NUMBER}))
       return std::optional<Token>(advance());
@@ -473,11 +430,10 @@ class Parser {
       return std::nullopt;
   }
 
-  /**
-   * Parses a redirection instance
-   *
-   * @return  A list of redirections
-   */
+
+  // Parses a redirection instance
+  //
+  // @return  A list of redirections
   std::vector<Redirection> redirection() {
     std::vector<Redirection> redirections;
 
@@ -499,11 +455,10 @@ class Parser {
     return redirections;
   }
 
-  /**
-   * Parses a command instance
-   *
-   * @return  A command
-   */
+
+  // Parses a command instance
+  //
+  // @return  A command
   Command command() {
     std::vector<Redirection> prefix = redirection();
 
@@ -522,11 +477,10 @@ class Parser {
       return Command(prefix, elements, suffix);
   }
 
-  /**
-   * Parses a pipeline instance
-   *
-   * @return A pipeline
-   */
+
+  // Parses a pipeline instance
+  //
+  // @return A pipeline
   Pipeline pipeline() {
     std::vector<Command> commands;
 
@@ -549,10 +503,9 @@ class Parser {
   }
 
 public:
-  /**
-   * @param  source  The source input
-   * @return         A new parser instance
-   */
+
+  // @param  source  The source input
+  // @return         A new parser instance
   explicit Parser(std::string source)
     : source(source), scanner(Scanner(source)) { }
 
@@ -561,9 +514,8 @@ public:
     Error error; // The parsing error
 
   public:
-    /**
-     * @return  A new parsing exception
-     */
+
+    // @return  A new parsing exception
     explicit Exception(Error error) : error(error) { }
 
     Error getError() {
@@ -571,11 +523,10 @@ public:
     }
   };
 
-  /**
-   * Parse and run the input
-   *
-   * @return  A new program instance
-   */
+
+  // Parse and run the input
+  //
+  // @return  A new program instance
   Program parse(bool throwError = false) {
     std::vector<Pipeline> pipelines;
 

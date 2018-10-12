@@ -47,33 +47,27 @@ public:
     NAME
   };
 
-  /**
-   * @param  type    The token's type
-   * @param  lexeme  The text of this token
-   * @param  line    The line where this token was found
-   * @param  start   The starting index of this token
-   * @param  end     The ending index of this token
-   * @return         A new Token instance
-   */
+  // @param  type    The token's type
+  // @param  lexeme  The text of this token
+  // @param  line    The line where this token was found
+  // @param  start   The starting index of this token
+  // @param  end     The ending index of this token
+  // @return         A new Token instance
   explicit Token(const Type type, const std::string &lexeme,
                  const int line, const int start, const int end)
     : type(type), lexeme(lexeme), line(line), start(start), end(end) { }
 
-  /**
-   * Allows a token instance to be printed using <<
-   *
-   * @param  output  The output stream to write to
-   * @param  t       The token instance to write out
-   */
+  // Allows a token instance to be printed using <<
+  //
+  // @param  output  The output stream to write to
+  // @param  t       The token instance to write out
   friend std::ostream &operator<<(std::ostream &output, const Token &t ) {
     output << t.prettyPrint();
     return output;
   }
 
-  /**
-   * @return  indention  The amount to indent
-   * @return             A pretty representation of this token
-   */
+  // @return  indention  The amount to indent
+  // @return             A pretty representation of this token
   const std::string prettyPrint(const int indention = 0) const {
     std::ostringstream out;
     std::string indent(indention, ' ');
@@ -91,10 +85,8 @@ public:
 
 
 
-  /**
-   * @param  other  A token instance to compare to this instance
-   * @return        Whether this token is the same, member-wise, as other
-   */
+  // @param  other  A token instance to compare to this instance
+  // @return        Whether this token is the same, member-wise, as other
   bool operator==(const Token &other) {
     return type   == other.type   &&
            lexeme == other.lexeme &&
@@ -103,11 +95,9 @@ public:
            end    == other.end;
   }
 
-  /**
-   * @param  t1  A token to compare against t2
-   * @param  t2  A token to compare against t1
-   * @return     Whether the tokens are the same, member-wise
-   */
+  // @param  t1  A token to compare against t2
+  // @param  t2  A token to compare against t1
+  // @return     Whether the tokens are the same, member-wise
   friend bool operator==(const Token &t1, const Token &t2) {
     return t1.type   == t2.type   &&
            t1.lexeme == t2.lexeme &&
@@ -116,37 +106,27 @@ public:
            t1.end    == t2.end;
   }
 
-  /**
-   * @return  This token's type
-   */
+  // @return  This token's type
   Type getType() const {
     return type;
   }
 
-  /**
-   * This token's text
-   */
+  // This token's text
   const std::string getLexeme() const {
     return lexeme;
   }
 
-  /**
-   * This token's line
-   */
+  // This token's line
   int getLine() const {
     return line;
   }
 
-  /**
-   * This token's starting index
-   */
+  // This token's starting index
   int getStart() const {
     return start;
   }
 
-  /**
-   * This token's ending index
-   */
+  // This token's ending index
   int getEnd() const {
     return end;
   }

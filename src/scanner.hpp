@@ -16,35 +16,25 @@ class Scanner {
                current = 0,  // The index of the current token
                line    = 1;  // The line number of the current token
 
-  /**
-   * @return  Whether or not the scanner is at the end of input
-   */
+  // @return  Whether or not the scanner is at the end of input
   bool isAtEnd() {
     return current >= source.size();
   }
 
-  /**
-   * Moves the scanner to the next character
-   *
-   * @return  the previous character
-   */
+  // Moves the scanner to the next character
+  //  @return  the previous character
   char advance() {
     return source[current++];
   }
 
-  /**
-   * Adds a token to the list of tokens
-   */
+  // Adds a token to the list of tokens
   void addToken(Token::Type type) {
     std::string lexeme = source.substr(start, current - start);
     tokens.push_back(Token(type, lexeme, line, start, current));
   }
 
-  /**
-   * Looks at the next character, without moving the scanner
-   *
-   * @return  the next character
-   */
+  // Looks at the next character, without moving the scanner
+  // @return  the next character
   char peek() {
     if (isAtEnd())
       return '\0';
@@ -52,9 +42,7 @@ class Scanner {
       return source[current];
   }
 
-  /**
-   * Constructs an alphnumeric token
-   */
+  // Constructs an alphnumeric token
   void alphaNumeric(bool startsWithNum = false) {
     bool onlyNumbers = startsWithNum;
 
@@ -88,9 +76,7 @@ class Scanner {
       addToken(Token::Type::TOKEN);
   }
 
-  /**
-   * Constructs a single-quoted string
-   */
+  // Constructs a single-quoted string
   void singleQuotedStr() {
     while (peek() != '\'' && !isAtEnd())
       advance();
@@ -104,9 +90,7 @@ class Scanner {
     }
   }
 
-  /**
-   * Constructs a double-quoted string
-   */
+  // Constructs a double-quoted string
   void doubleQuotedStr() {
     while (peek() != '"' && !isAtEnd())
       advance();
@@ -120,9 +104,7 @@ class Scanner {
     }
   }
 
-  /**
-   * Constructs a backtick-quoted string
-   */
+  // Constructs a backtick-quoted string
   void backtickStr() {
     while (peek() != '`' && !isAtEnd())
       advance();
@@ -136,9 +118,7 @@ class Scanner {
     }
   }
 
-  /**
-   * Read characters until the the next available token is formed
-   */
+  // Read characters until the the next available token is formed
   void scanToken() {
     char c = advance();
     switch (c) {
@@ -225,15 +205,11 @@ class Scanner {
   }
 
 public:
-  /**
-   * @param  source  The input text to scan
-   * @return         A new scanner instance
-   */
+  // @param  source  The input text to scan
+  //  @return         A new scanner instance
   explicit Scanner(std::string &source) : source(source) { }
 
-  /**
-   * @return  A list of all tokens from the input
-   */
+  // @return  A list of all tokens from the input
   std::vector<Token> scanTokens() {
     // Until the end of input is found, build tokens
     while (!isAtEnd()) {
