@@ -119,35 +119,35 @@ public:
   /**
    * @return  This token's type
    */
-  Type getType() {
+  Type getType() const {
     return type;
   }
 
   /**
    * This token's text
    */
-  const std::string getLexeme() {
+  const std::string getLexeme() const {
     return lexeme;
   }
 
   /**
    * This token's line
    */
-  int getLine() {
+  int getLine() const {
     return line;
   }
 
   /**
    * This token's starting index
    */
-  int getStart() {
+  int getStart() const {
     return start;
   }
 
   /**
    * This token's ending index
    */
-  int getEnd() {
+  int getEnd() const {
     return end;
   }
 

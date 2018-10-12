@@ -11,7 +11,8 @@ SCENARIO("Scanning input") {
                         "ruby -w --debug program < input >> output "
                         " \\ ' single quotes ' \" double  quotes \" "
                         " ` backticks ` "
-                        " 123< 123<<  321>  321>>";
+                        " 123< 123<<  321>  321>>"
+                        "  /slashes/are/just/words  ";
 
     uofmsh::Scanner scanner(input);
 
@@ -129,6 +130,9 @@ SCENARIO("Scanning input") {
 
         REQUIRE(tokens[36].getType() == uofmsh::Token::Type::DREDIRECT_RIGHT);
         REQUIRE(tokens[36].getLexeme() == ">>");
+
+        REQUIRE(tokens[37].getType() == uofmsh::Token::Type::TOKEN);
+        REQUIRE(tokens[37].getLexeme() == "/slashes/are/just/words");
 
         REQUIRE(tokens[tokens.size() - 1].getType() == uofmsh::Token::Type::END);
         REQUIRE(tokens[tokens.size() - 1].getLexeme() == "END");

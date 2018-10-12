@@ -596,8 +596,6 @@ public:
 
         if (match({Token::Type::TOKEN}))
           pipelines.push_back(pipeline());
-        else
-          throw(Parser::Exception(Error("Expected a pipeline after ;", peek().getLine(), peek().getStart())));
       }
 
     } catch (const Scanner::Exception &e) {

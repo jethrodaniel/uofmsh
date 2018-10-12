@@ -58,7 +58,7 @@ class Scanner {
   void alphaNumeric(bool startsWithNum = false) {
     bool onlyNumbers = startsWithNum;
 
-    while (std::isalnum(peek()) || peek() == '-' || peek() == '_') {
+    while (std::isalnum(peek()) || peek() == '-' || peek() == '_' || peek() == '/') {
       if (!std::isdigit(peek()))
         onlyNumbers = false;
 
@@ -210,7 +210,7 @@ class Scanner {
         line++;
         break;
       default:
-        if (std::isalnum(c) || (c == '-' && peek() != ' ')) {
+        if (std::isalnum(c) || (c == '-' && peek() != ' ') || c == '/') {
           if (std::isdigit(c))
             alphaNumeric(true);
           else
