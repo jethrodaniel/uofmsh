@@ -82,7 +82,7 @@ class Scanner {
       advance();
 
     if (isAtEnd())
-      throw Exception(line, start, "Missing single quote.");
+      throw Error("Missing single quote.", line, start);
     else {
       start++;   // To skip the leading '
       addToken(Token::Type::SINGLE_QUOTED_STR);
@@ -96,7 +96,7 @@ class Scanner {
       advance();
 
     if (isAtEnd())
-      throw Exception(line, start, "Missing double quote.");
+      throw Error("Missing double quote.", line, start);
     else {
       start++;   // To skip the leading "
       addToken(Token::Type::DOUBLE_QUOTED_STR);
@@ -110,7 +110,7 @@ class Scanner {
       advance();
 
     if (isAtEnd())
-      throw Exception(line, start, "Missing backtick.");
+      throw Error("Missing backtick.", line, start);
     else {
       start++;   // To skip the leading "
       addToken(Token::Type::BACKTICK_STR);
@@ -199,13 +199,13 @@ class Scanner {
           addToken(Token::Type::HYPHEN);
         else {
           auto error = std::string("Unexpected character '") + c + "'.";
-          throw Scanner::Exception(line, start, error);
+          throw Error(error, line, start);
         }
     }
   }
 
 public:
-  // @param  source  The input text to scan
+  //  @param  source  The input text to scan
   //  @return         A new scanner instance
   explicit Scanner(std::string &source) : source(source) { }
 
@@ -221,16 +221,6 @@ public:
     return tokens;
   }
 
-  // An exception to throw in case of a scanning error
-  class Exception : std::exception {
-  public:
-    const int line,  // The line the error occured on
-              start; // The start index of the error
-    std::string msg; // The error message
-
-    explicit Exception(const int line, const int start, std::string msg)
-      : line(line), start(start), msg(msg) { }
-  };
 };
 
 } // namespace uofmsh

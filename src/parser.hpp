@@ -1,39 +1,13 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "scanner.hpp"
-
 #include <sstream>
 #include <optional>
 
+#include "error.hpp"
+#include "scanner.hpp"
+
 namespace uofmsh {
-
-// A error specifies a message and where the error occured
-class Error {
-  std::string msg;  // The error message
-  int line, column; // The line and column where the error occured
-
-public:
-  // @param  msg     The error message
-  // @param  line    The line where the error occured
-  // @param  column  The column where the error occured
-  // @return         A new error instance
-  explicit Error(std::string msg, int line, int column)
-    : msg(msg), line(line), column(column) { }
-
-  // @return  The error message
-  std::string getMsg() const {
-    return msg;
-  }
-
-  int getLine() const {
-    return line;
-  }
-
-  int getColumn() const {
-    return column;
-  }
-};
 
 // An abstract class used to add common AST node functionality.
 class ASTNode {
@@ -449,7 +423,7 @@ class Parser {
         else
           redirections.push_back(Redirection(redirect, filename));
       } else
-        throw(Parser::Exception(Error("Expected a filename", redirect.getLine(), redirect.getStart())));
+        throw(Error("Expected a filename", redirect.getLine(), redirect.getStart()));
     }
 
     return redirections;
@@ -472,7 +446,7 @@ class Parser {
 
 
     if (prefix.size() == 0 && elements.size() == 0 && suffix.size() == 0)
-      throw(Parser::Exception(Error("Expected a command", peek().getLine(), peek().getStart())));
+      throw(Error("Expected a command", peek().getLine(), peek().getStart()));
     else
       return Command(prefix, elements, suffix);
   }
@@ -493,11 +467,11 @@ class Parser {
       if (match({Token::Type::TOKEN}))
         commands.push_back(command());
       else
-        throw(Parser::Exception(Error("Expected a command after |", peek().getLine(), peek().getStart())));
+        throw(Error("Expected a command after |", peek().getLine(), peek().getStart()));
     }
 
     if (commands.size() == 0)
-      throw(Parser::Exception(Error("Expected a command", peek().getLine(), peek().getStart())));
+      throw(Error("Expected a command", peek().getLine(), peek().getStart()));
     else
       return Pipeline(commands);
   }
@@ -509,21 +483,6 @@ public:
   explicit Parser(std::string source)
     : source(source), scanner(Scanner(source)) { }
 
-  // An exception to throw in case of a parsing error
-  class Exception : std::exception {
-    Error error; // The parsing error
-
-  public:
-
-    // @return  A new parsing exception
-    explicit Exception(Error error) : error(error) { }
-
-    Error getError() {
-      return error;
-    }
-  };
-
-
   // Parse and run the input
   //
   // @return  A new program instance
@@ -534,8 +493,6 @@ public:
 
       tokens = scanner.scanTokens();
       Pipeline pipe = pipeline();
-
-      // TODO: Use a base Shell::Exception class
 
       pipelines.push_back(pipe);
 
@@ -549,12 +506,7 @@ public:
           pipelines.push_back(pipeline());
       }
 
-    } catch (const Scanner::Exception &e) {
-      if (throwError)
-        throw;
-      else
-        return Program({});
-    } catch (Parser::Exception &e) {
+    } catch (const Error &e) {
       if (throwError)
         throw;
       else

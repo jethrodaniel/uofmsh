@@ -55,25 +55,18 @@ void Shell::run(std::string source) {
     //std::cout << "\n" << parser.parse() << "\n";
     Interpreter interpreter;
     interpreter.interpret(parser.parse(true));
-  } catch (const Scanner::Exception e) {
-    error(e.line, e.start, e.msg);
-  } catch (Parser::Exception e) {
-    error(e.getError());
+  } catch (Error e) {
+    error(e);
   }
 }
 
 void Shell::error(Error e) {
-  Shell::report(e.getLine(), e.getColumn(), e.getMsg());
   Shell::hadError = true;
-}
 
-void Shell::error(int line, int column, std::string msg) {
-  Shell::report(line, column, msg);
-  Shell::hadError = true;
-}
-
-void Shell::report(int line, int column, std::string msg) {
-  std::cerr << "Error: [" << line << "," << column << "] " << msg << "\n";
+  std::cerr << "Error: ["
+            << e.getLine() << ","
+            << e.getColumn() << "] "
+            << e.getMsg() << "\n";
 }
 
 } // namespace uofmsh

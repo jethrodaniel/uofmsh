@@ -11,7 +11,10 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <sstream>
+#include <optional>
 
+#include "error.hpp"
 #include "token.hpp"
 #include "scanner.hpp"
 #include "parser.hpp"
@@ -32,14 +35,8 @@ class Shell {
   // Runs commands
   static void run(std::string source);
 
-  // Outputs a message about a particular line
-  static void report(int line, int column, std::string message);
-
 public:
-  // Outputs an error message about a particular line
-  static void error(int line, int column, std::string message);
-
-  // Outputs an error message from the parser
+  // Outputs an error message
   static void error(Error e);
 
   // The entry point for our shell
