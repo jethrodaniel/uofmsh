@@ -32,7 +32,7 @@ public:
 
     SINGLE_QUOTED_STR,  // 'a single quoted string'
     DOUBLE_QUOTED_STR,  // "a double quoted string"
-    BACKTICK_STR,       // `a double quoted string`
+    BACKTICK_STR,       // `a backtick quoted string`
 
     IO_NUMBER,
     NEWLINE,
@@ -83,8 +83,6 @@ public:
     return out.str();
   }
 
-
-
   // @param  other  A token instance to compare to this instance
   // @return        Whether this token is the same, member-wise, as other
   bool operator==(const Token &other) {
@@ -111,22 +109,22 @@ public:
     return type;
   }
 
-  // This token's text
+  // @return  This token's text
   const std::string getLexeme() const {
     return lexeme;
   }
 
-  // This token's line
+  // @return  This token's line
   int getLine() const {
     return line;
   }
 
-  // This token's starting index
+  // @return  This token's starting index
   int getStart() const {
     return start;
   }
 
-  // This token's ending index
+  // @return  This token's ending index
   int getEnd() const {
     return end;
   }
