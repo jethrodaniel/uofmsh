@@ -39,6 +39,10 @@ public:
     return filename;
   }
 
+  // @return  The io number token
+  std::optional<Token> getIoNumber() const {
+    return ioNumber;
+  }
 
   // @param  redirectOp  The redirection operator token
   // @param  filename    The filename token
