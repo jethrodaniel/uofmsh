@@ -2,7 +2,61 @@
 
 A basic shell
 
-Features
+Supports
+* Semicolon separated pipelines
+* Redirection (including io numbers)
+* Commands
+* Builtins: only `cd` and `exit`
+
+For example,
+```
+~> make
+Usage
+
+  make COMMAND
+
+COMMANDS
+
+  build       Compiles the source code into an executable
+  clean       Removes generated files, except .setup.o and .test.out
+  cucumber    Runs the aruba/cucumber tests
+  lint        Runs the linter
+  style       Formats source and test files to adhere to project standards
+  test        Runs the helper tests
+  purge       Removes all generated files.
+~> make build
+Compiling source code into ./uofmsh
+~> ./uofmsh
+uofmsh> ls
+features  Gemfile  Gemfile.lock  LICENSE  makefile  README.md  src  test  uofmsh
+uofmsh> ls | grep Gem | cowsay > cow; foo 2> error; uptime -p
+up 6 days, 5 hours, 44 minutes
+uofmsh> cat cow
+ _____________________
+< Gemfile Gemfile.lock >
+ ----------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+uofmsh> cat error
+Bad exec. Exiting.: No such file or directory
+uofmsh> pwd
+/home/jethro/school/fall_2018/os/proj1/uofmsh
+uofmsh> cd ..
+uofmsh> pwd
+/home/jethro/school/fall_2018/os/proj1
+uofmsh> cd -
+uofmsh> pwd
+/home/jethro/school/fall_2018/os/proj1/uofmsh
+uofmsh> cd /
+uofmsh> pwd
+/
+uofmsh> exit
+```
+
+Development Features
 * C++ testing with [Catch](https://github.com/catchorg/Catch2)
 * Interactive testing using [Aruba](https://github.com/cucumber/aruba) and [Cucumber](https://github.com/cucumber/cucumber-ruby)
 
@@ -11,7 +65,7 @@ Features
 
 ### To compile and run the shell
 
-* A C++ compiler, such as [g++](https://gcc.gnu.org/)
+* A C++17 compiler, such as [g++](https://gcc.gnu.org/)
 
 ### Additionally, to use the included makefile for project tasks
 
