@@ -75,6 +75,16 @@ class Interpreter {
     _exit(EXIT_FAILURE);
   }
 
+  // @param  r      The redirection
+  // @param  orElse The io number to use as an alternative
+  // @return        The redirection's io number, or a supplied alternative
+  int ioNumberOrElse(Redirection r, int orElse) const {
+    if (r.getIoNumber())
+      return std::stoi(r.getIoNumber().value().getLexeme());
+    else
+      return orElse;
+  }
+
   // Execute a single redirection
   //
   // @param  r  The redirection to execute
@@ -88,11 +98,13 @@ class Interpreter {
     if (type == Token::Type::REDIRECT_RIGHT) {
       // > : Write std out to filename
       openFile = open(filename, OPEN_OUT_FLAGS, OPEN_OUT_MODE);
-      dup      = dup2(openFile, 1);
+      auto fd  = ioNumberOrElse(r, STDOUT_FILENO);
+      dup      = dup2(openFile, fd);
     } else {
       // < : Read input from filename
       openFile = open(filename, O_RDONLY);
-      dup      = dup2(openFile, 0);
+      auto fd  = ioNumberOrElse(r, STDIN_FILENO);
+      dup      = dup2(openFile, fd);
     }
 
     if (openFile < 0)
@@ -147,6 +159,8 @@ class Interpreter {
       auto elements = commands[i].getElements();
 
       // Check for builtins first
+
+      // Builtin cd
       if (elements.size() == 1 && elements[0].getLexeme() == "cd") {
         cd();
         return;
@@ -155,6 +169,7 @@ class Interpreter {
         return;
       }
 
+      // Builtin exit
       if (elements.size() > 0 && elements[0].getLexeme() == "exit")
         quit();
 
