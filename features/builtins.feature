@@ -3,12 +3,11 @@
 Feature: Built-in commands
 
   Background:
-    # When I run `bash` interactively
     When I run `uofmsh` interactively
 
   Scenario: exit
     And  I type "exit"
-    Then the output should contain exactly ""
+    Then the output should contain exactly "uofmsh> "
 
   Scenario: pwd
     And  I type "pwd"

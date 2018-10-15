@@ -39,12 +39,16 @@ class Interpreter {
       path = previousDir;
 
     if (chdir(path.c_str()) != 0) {
-      std::cout << "Bad cd to '" + path + "'";
+      std::cout << "Bad cd to '" + path + "'\n";
       return;
     }
 
     previousDir = currentDir;
     currentDir = std::string(get_current_dir_name());
+  }
+
+  void quit() {
+    exit(EXIT_SUCCESS);
   }
 
   // Converts a list of command elements into a format suitable
@@ -150,6 +154,9 @@ class Interpreter {
         cd(elements[1].getLexeme());
         return;
       }
+
+      if (elements.size() > 0 && elements[0].getLexeme() == "exit")
+        quit();
 
       // Run each command as a child process
       if ((pid = fork()) == -1)

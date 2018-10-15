@@ -18,7 +18,7 @@ Feature: Redirection
     And  I type "cat < cow"
     Then the output should contain exactly:
     """
-     ^__^
+    uofmsh>  ^__^
      (oo)\_______
      (__)\       )\/\
          ||----w |
@@ -27,7 +27,7 @@ Feature: Redirection
 
   Scenario: >
     Given a file named "hello.txt" does not exist
-    And  I type "echo 'hello' > hello.txt"
+    And  I type "echo hello > hello.txt"
     Then a file named "hello.txt" should contain "hello"
 
   Scenario: |
@@ -38,4 +38,4 @@ Feature: Redirection
     May you share freely, never taking more than you give.
     """
     And  I type "cat sqlite.txt | wc -m"
-    Then the output should contain exactly "142"
+    Then the output should contain exactly "uofmsh> 142"

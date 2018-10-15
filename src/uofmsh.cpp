@@ -9,10 +9,10 @@ int Shell::main(int argc, char **argv) {
     std::cout << "Usage: uofmsh [script]\n";
     exit(64);
   } else if (argc == 2) {
-    std::cout << "running script " << argv[1] << "\n";
+    // std::cout << "running script " << argv[1] << "\n";
     runFile(std::string(argv[1]));
   } else {
-    std::cout << "interactive\n";
+    // std::cout << "interactive\n";
     runPrompt();
     exit(0);
   }
