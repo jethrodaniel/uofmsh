@@ -27,22 +27,25 @@ class Shell {
   std::string prompt;  // The shell's prompt
 
   // Runs commands from a file
-  static void runFile(std::string fileName);
+  void runFile(std::string fileName);
 
   // Runs the shell interactively
-  static void runPrompt();
+  void runPrompt();
 
   // Runs commands
-  static void run(std::string source);
+  void run(std::string source);
+
+  // Runs the AST generated from input
+  Interpreter interpreter;
 
 public:
   // Outputs an error message
-  static void error(Error e);
+  void error(Error e);
 
   // The entry point for our shell
-  static int main(int argc, char **argv);
+  int main(int argc, char **argv);
 
-  static bool hadError;  // Whether the last command typed had an error
+  bool hadError = false;  // Whether the last command typed had an error
 
 };
 

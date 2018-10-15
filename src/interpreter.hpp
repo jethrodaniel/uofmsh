@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <pwd.h>
 
 #include "uofmsh.hpp"
 #include "parser.hpp"
@@ -22,6 +23,29 @@ class Interpreter {
   // Options to pass to open
   static const auto OPEN_OUT_FLAGS = O_WRONLY | O_TRUNC | O_CREAT,
                     OPEN_OUT_MODE  = S_IRUSR  | S_IRGRP | S_IWGRP | S_IWUSR;
+
+  std::string previousDir, // The previous working directory
+              currentDir;  // The current working directory
+
+  // Builtin cd function
+  void cd(std::string path = "") {
+
+    // If not path specified, cd $HOME
+    if (path == "") {
+      // The /etc/passwd info for the current user
+      struct passwd* pwd = getpwuid(getuid());
+      path = std::string(pwd->pw_dir);
+    } else if (path == "-")
+      path = previousDir;
+
+    if (chdir(path.c_str()) != 0) {
+      std::cout << "Bad cd to '" + path + "'";
+      return;
+    }
+
+    previousDir = currentDir;
+    currentDir = std::string(get_current_dir_name());
+  }
 
   // Converts a list of command elements into a format suitable
   // for execv, execvp, or execvpe
@@ -97,7 +121,7 @@ class Interpreter {
   // Execute a sequence of piped commands
   //
   // @param  pipeline  The pipeline to execute
-  void pipeline(Pipeline pipeline) const {
+  void pipeline(Pipeline pipeline) {
     auto commands = pipeline.getCommands();
 
     // Each pipe is represented by an int[2]
@@ -115,6 +139,18 @@ class Interpreter {
     // of the next command, and its stdin from the previous command, except
     // for the first and last commands.
     for (unsigned int i = 0; i < commands.size(); i++) {
+
+      auto elements = commands[i].getElements();
+
+      // Check for builtins first
+      if (elements.size() == 1 && elements[0].getLexeme() == "cd") {
+        cd();
+        return;
+      } else if (elements.size() == 2 && elements[0].getLexeme() == "cd") {
+        cd(elements[1].getLexeme());
+        return;
+      }
+
       // Run each command as a child process
       if ((pid = fork()) == -1)
         die("Bad fork. Exiting.");
@@ -157,12 +193,14 @@ class Interpreter {
 
 public:
   // @return  A new interpreter instance
-  explicit Interpreter() { }
+  explicit Interpreter()
+    : previousDir(std::string(get_current_dir_name())),
+      currentDir(std::string(get_current_dir_name())) { }
 
   // Interpret and run the AST
   //
   // @param  program  The program or AST to execute
-  void interpret(Program program) const {
+  void interpret(Program program) {
     auto pipelines = program.getPipelines();
 
     if (pipelines.size() == 0)

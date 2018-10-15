@@ -2,8 +2,6 @@
 
 namespace uofmsh {
 
-bool Shell::hadError = false;
-
 // Entry point for our shell
 int Shell::main(int argc, char **argv) {
 
@@ -52,8 +50,6 @@ void Shell::runPrompt() {
 void Shell::run(std::string source) {
   try {
     Parser parser(source);
-    //std::cout << "\n" << parser.parse() << "\n";
-    Interpreter interpreter;
     interpreter.interpret(parser.parse(true));
   } catch (Error e) {
     error(e);
@@ -61,7 +57,7 @@ void Shell::run(std::string source) {
 }
 
 void Shell::error(Error e) {
-  Shell::hadError = true;
+  hadError = true;
 
   std::cerr << "Error: ["
             << e.getLine() << ","

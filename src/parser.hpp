@@ -110,9 +110,8 @@ class Parser {
 
     std::vector<Token> elements;
 
-    while (match({Token::Type::TOKEN})) {
+    while (match({Token::Type::TOKEN}))
       elements.push_back(advance());
-    }
 
     std::vector<Redirection> suffix = redirection();
 

@@ -12,7 +12,8 @@ SCENARIO("Scanning input") {
                         " \\ ' single quotes ' \" double  quotes \" "
                         " ` backticks ` "
                         " 123< 123<<  321>  321>>"
-                        "  /slashes/are/just/words  ";
+                        "  /slashes/are/just/words  "
+                        " . .. .files";
 
     uofmsh::Scanner scanner(input);
 
@@ -133,6 +134,15 @@ SCENARIO("Scanning input") {
 
         REQUIRE(tokens[37].getType() == uofmsh::Token::Type::TOKEN);
         REQUIRE(tokens[37].getLexeme() == "/slashes/are/just/words");
+
+        REQUIRE(tokens[38].getType() == uofmsh::Token::Type::TOKEN);
+        REQUIRE(tokens[38].getLexeme() == ".");
+
+        REQUIRE(tokens[39].getType() == uofmsh::Token::Type::TOKEN);
+        REQUIRE(tokens[39].getLexeme() == "..");
+
+        REQUIRE(tokens[40].getType() == uofmsh::Token::Type::TOKEN);
+        REQUIRE(tokens[40].getLexeme() == ".files");
 
         REQUIRE(tokens[tokens.size() - 1].getType() == uofmsh::Token::Type::END);
         REQUIRE(tokens[tokens.size() - 1].getLexeme() == "END");

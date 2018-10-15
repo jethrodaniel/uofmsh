@@ -5,6 +5,7 @@
 
 // Entry point for our shell
 int main(int argc, char **argv) {
-  return uofmsh::Shell::main(argc, argv);
+  uofmsh::Shell shell;
+  return shell.main(argc, argv);
 }
 
