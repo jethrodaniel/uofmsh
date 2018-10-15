@@ -29,8 +29,8 @@ usage:
 	@echo "  cucumber    Runs the aruba/cucumber tests"
 	@echo "  lint        Runs the linter"
 	@echo "  style       Formats source and test files to adhere to project standards"
-	@echo "  test        Runs the helper tests"
-	@echo "  purge       Removes all generated files."
+	@echo "  test        Runs the tests"
+	@echo "  purge       Removes all generated files"
 	@echo
 
 .PHONY: build

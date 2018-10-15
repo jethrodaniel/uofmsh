@@ -47,6 +47,7 @@ class Interpreter {
     currentDir = std::string(get_current_dir_name());
   }
 
+  // Builtin exit function
   void quit() {
     exit(EXIT_SUCCESS);
   }

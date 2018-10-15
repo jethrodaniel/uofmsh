@@ -25,24 +25,20 @@ class Parser {
     Token::Type::DREDIRECT_RIGHT
   };
 
-
   // @return    The current token
   Token peek() {
     return tokens[current];
   }
-
 
   // @return  The previous token
   Token previous() {
     return tokens[current - 1];
   }
 
-
   // @return Whether or not the parser is the end of input
   bool isAtEnd() {
     return peek().getType() == Token::Type::END;
   }
-
 
   // Moves the parser to the next token
   //
@@ -51,7 +47,6 @@ class Parser {
     if (!isAtEnd()) current++;
     return previous();
   }
-
 
   // Checks the type of the current token against a list
   //
@@ -65,7 +60,6 @@ class Parser {
     return false;
   }
 
-
   // Parses an io number
   //
   // @return  An optional io number
@@ -75,7 +69,6 @@ class Parser {
     else
       return std::nullopt;
   }
-
 
   // Parses a redirection instance
   //
@@ -101,7 +94,6 @@ class Parser {
     return redirections;
   }
 
-
   // Parses a command instance
   //
   // @return  A command
@@ -121,7 +113,6 @@ class Parser {
     else
       return Command(prefix, elements, suffix);
   }
-
 
   // Parses a pipeline instance
   //

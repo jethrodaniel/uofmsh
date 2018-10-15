@@ -22,8 +22,8 @@ COMMANDS
   cucumber    Runs the aruba/cucumber tests
   lint        Runs the linter
   style       Formats source and test files to adhere to project standards
-  test        Runs the helper tests
-  purge       Removes all generated files.
+  test        Runs the tests
+  purge       Removes all generated files
 ~> make build
 Compiling source code into ./uofmsh
 ~> ./uofmsh

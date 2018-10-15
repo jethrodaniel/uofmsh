@@ -7,20 +7,7 @@
 namespace uofmsh {
 
 // An abstract class used to add common AST node functionality.
-class ASTNode {
-std::optional<Error> error; // The error, if it exists
-
-public:
-  // @return  Whether the error has a value
-  bool isValid() const {
-    return !error.has_value();
-  }
-
-  // @return  The AST node's error, if it exists
-  Error getError() {
-    return error.value();
-  }
-};
+class ASTNode { };
 
 // Represents a redirection
 class Redirection : public ASTNode {
@@ -50,14 +37,12 @@ public:
   explicit Redirection(Token redirectionOp, Token filename)
     : redirectionOp(redirectionOp), filename(filename) { }
 
-
   // @param  ioNumber    The io number of this redirection
   // @param  redirectOp  The redirection operator token
   // @param  filename    The filename token
   // @return             A new redirection instance
   explicit Redirection(Token ioNumber, Token redirectionOp, Token filename)
     : ioNumber(ioNumber), redirectionOp(redirectionOp), filename(filename) { }
-
 
   // @param  other  A redirection instance to compare to this instance
   // @return        Whether this redirection is the same, member-wise, as other
@@ -66,7 +51,6 @@ public:
            filename      == other.filename      &&
            ioNumber      == other.ioNumber;
   }
-
 
   // @param  r1  A redirection to compare against r2
   // @param  r2  A redirection to compare against r1
@@ -77,7 +61,6 @@ public:
            r1.ioNumber      == r2.ioNumber;
   }
 
-
   // Allows a redirection instance to be printed using <<
   //
   // @param  output  The output stream to write to
@@ -86,7 +69,6 @@ public:
     output << r.prettyPrint();
     return output;
   }
-
 
   // @return  indention  The amount to indent
   // @return             A pretty representation of this redirection
@@ -127,18 +109,15 @@ public:
     return prefix;
   }
 
-
   // @return  The suffix redirections
   const std::vector<Redirection> getSuffix() const {
     return suffix;
   }
 
-
   // @return  The command elements
   const std::vector<Token> getElements() const {
     return elements;
   }
-
 
   // @param  prefix    The prefix redirections
   // @param  elements  The command elements
@@ -149,7 +128,6 @@ public:
                    std::vector<Redirection> suffix)
     : prefix(prefix), elements(elements), suffix(suffix) { }
 
-
   // @param  other  A command instance to compare to this instance
   // @return        Whether this command is the same, member-wise, as other
   bool operator==(const Command &other) {
@@ -157,7 +135,6 @@ public:
            elements == other.elements &&
            suffix == other.suffix;
   }
-
 
   // @param  c1  A command to compare against c2
   // @param  c2  A command to compare against c1
@@ -168,7 +145,6 @@ public:
            c1.suffix   == c2.suffix;
   }
 
-
   // Allows a command instance to be printed using <<
   //
   // @param  output  The output stream to write to
@@ -177,7 +153,6 @@ public:
     output << c.prettyPrint();
     return output;
   }
-
 
   // @return  indention  The amount to indent
   // @return             A pretty representation of this command
@@ -222,11 +197,9 @@ public:
     return commands;
   }
 
-
   // @param  commands  The commands to pipe together
   // @return           A new pipeline instance
   explicit Pipeline(std::vector<Command> commands) : commands(commands) { }
-
 
   // @param  other  A pipeline instance to compare to this instance
   // @return        Whether this pipeline is the same, member-wise, as other
@@ -234,14 +207,12 @@ public:
     return commands == other.commands;
   }
 
-
   // @param  p1  A pipeline to compare against p2
   // @param  p2  A pipeline to compare against p1
   // @return     Whether the pipelines are the same, member-wise
   friend bool operator==(const Pipeline &p1, const Pipeline &p2) {
     return p1.commands == p2.commands;
   }
-
 
   // Allows a pipeline instance to be printed using <<
   //
@@ -252,7 +223,6 @@ public:
 
     return output;
   }
-
 
   // @return  indention  The amount to indent
   // @return             A pretty representation of this pipeline
@@ -272,7 +242,6 @@ public:
     return out.str();
   }
 
-
 };
 
 // Represents a program, the highest level of the AST
@@ -286,11 +255,9 @@ public:
     return pipelines;
   }
 
-
   // @param  pipelines  The pipelines to use
   // @return            A new program instance
   explicit Program(std::vector<Pipeline> pipelines) : pipelines(pipelines) { };
-
 
   // @param  other  A program instance to compare to this instance
   // @return        Whether this program is the same, member-wise, as other
@@ -298,15 +265,12 @@ public:
     return pipelines == other.pipelines;
   }
 
-
   // @param  p1  A program to compare against p2
   // @param  p2  A program to compare against p1
   // @return     Whether the programs are the same, member-wise
   friend bool operator==(const Program &p1, const Program &p2) {
     return p1.pipelines == p2.pipelines;
   }
-
-
 
   // Allows a program instance to be printed using <<
   //
@@ -317,7 +281,6 @@ public:
 
     return output;
   }
-
 
   // @return  indention  The amount to indent
   // @return             A pretty representation of this program
