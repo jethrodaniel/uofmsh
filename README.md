@@ -58,7 +58,6 @@ Development Features
 * Interactive testing using [Aruba](https://github.com/cucumber/aruba) and [Cucumber](https://github.com/cucumber/cucumber-ruby)
 
 ## Dependencies
----
 
 ### Compiling and running
 
@@ -70,7 +69,6 @@ Development Features
 * [Git](https://git-scm.com/), to add Catch as a submodule
 
 ## Installation
----
 
 * Clone the repo or download it
      ```
@@ -88,7 +86,6 @@ Development Features
      ```
 
 ## Development
----
 
 ### To show available project commands
 
