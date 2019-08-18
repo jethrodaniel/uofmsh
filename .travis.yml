@@ -1,0 +1,12 @@
+language: ruby
+
+dist: bionic
+
+before_install: |
+  sudo apt install -y g++-8
+
+script: |
+  ./make spec
+
+notifications:
+  email: false
