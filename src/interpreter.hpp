@@ -9,10 +9,10 @@
 #include <fcntl.h>
 #include <pwd.h>
 
-#include "uofmsh.hpp"
+#include "vodka.hpp"
 #include "parser.hpp"
 
-namespace uofmsh {
+namespace vodka {
 
 // Represents an interpreter, which executes an abstract syntax tree
 class Interpreter {
@@ -235,6 +235,6 @@ public:
 
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-namespace uofmsh {
+namespace vodka {
 
 // A error specifies a message and where the error occured
 class Error : public std::exception {
@@ -32,6 +32,6 @@ public:
   }
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

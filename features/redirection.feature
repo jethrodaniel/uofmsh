@@ -4,7 +4,7 @@ Feature: Redirection
 
   Background:
     # When I run `bash` interactively
-    When I run `uofmsh` interactively
+    When I run `vodka` interactively
 
   Scenario: <
     Given a file named "cow" with:
@@ -18,7 +18,7 @@ Feature: Redirection
     And  I type "cat < cow"
     Then the output should contain exactly:
     """
-    uofmsh>  ^__^
+    vodka>  ^__^
      (oo)\_______
      (__)\       )\/\
          ||----w |
@@ -38,4 +38,4 @@ Feature: Redirection
     May you share freely, never taking more than you give.
     """
     And  I type "cat sqlite.txt | wc -m"
-    Then the output should contain exactly "uofmsh> 142"
+    Then the output should contain exactly "vodka> 142"

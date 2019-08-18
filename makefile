@@ -1,4 +1,4 @@
-CPP = g++
+CPP = g++-8
 
 CPP_FLAGS  = -std=c++17
 CPP_FLAGS += -g
@@ -11,7 +11,7 @@ TEST_FLAGS  = -std=c++17
 TEST_FLAGS += -Wall
 TEST_FLAGS += -I./test/Catch2
 
-PROGRAM_NAME = uofmsh
+PROGRAM_NAME = vodka
 
 SOURCES    := $(shell find src -name '*.cpp')
 TEST_SETUP := './test/setup.cpp'

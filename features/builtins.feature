@@ -3,11 +3,11 @@
 Feature: Built-in commands
 
   Background:
-    When I run `uofmsh` interactively
+    When I run `vodka` interactively
 
   Scenario: exit
     And  I type "exit"
-    Then the output should contain exactly "uofmsh> "
+    Then the output should contain exactly "vodka> "
 
   Scenario: pwd
     And  I type "pwd"

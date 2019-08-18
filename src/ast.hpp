@@ -4,7 +4,7 @@
 #include <sstream>
 #include <optional>
 
-namespace uofmsh {
+namespace vodka {
 
 // An abstract class used to add common AST node functionality.
 class ASTNode { };
@@ -302,6 +302,6 @@ public:
 
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

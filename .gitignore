@@ -1,5 +1,5 @@
 # Don't accidently add the compiled program
-uofmsh
+vodka
 
 # Object files
 *.o

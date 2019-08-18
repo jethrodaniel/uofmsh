@@ -1,12 +1,12 @@
-#include "uofmsh.hpp"
+#include "vodka.hpp"
 
-namespace uofmsh {
+namespace vodka {
 
 // Entry point for our shell
 int Shell::main(int argc, char **argv) {
 
   if (argc > 2) {
-    std::cout << "Usage: uofmsh [script]\n";
+    std::cout << "Usage: vodka [script]\n";
     exit(64);
   } else if (argc == 2) {
     // std::cout << "running script " << argv[1] << "\n";
@@ -35,7 +35,7 @@ void Shell::runFile(std::string fileName) {
 // Reads and executes input interactively
 void Shell::runPrompt() {
   while (true) {
-    std::cout << "uofmsh> ";
+    std::cout << "vodka> ";
 
     std::string line;
     std::getline(std::cin >> std::ws, line);
@@ -51,7 +51,7 @@ void Shell::run(std::string source) {
   try {
     Parser parser(source);
     interpreter.interpret(parser.parse(true));
-  } catch (Error e) {
+  } catch (Error &e) {
     error(e);
   }
 }
@@ -65,5 +65,5 @@ void Shell::error(Error e) {
             << e.getMsg() << "\n";
 }
 
-} // namespace uofmsh
+} // namespace vodka
 

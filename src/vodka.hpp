@@ -20,7 +20,7 @@
 #include "parser.hpp"
 #include "interpreter.hpp"
 
-namespace uofmsh {
+namespace vodka {
 
 // Represents a shell's data and methods
 class Shell {
@@ -49,6 +49,6 @@ public:
 
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

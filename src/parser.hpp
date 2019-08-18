@@ -8,7 +8,7 @@
 #include "scanner.hpp"
 #include "ast.hpp"
 
-namespace uofmsh {
+namespace vodka {
 
 // A parser forms meaningful expressions from a series of tokens
 class Parser {
@@ -179,6 +179,6 @@ public:
   }
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

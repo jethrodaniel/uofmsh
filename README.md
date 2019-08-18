@@ -1,4 +1,4 @@
-# uofmsh
+# vodka
 
 A basic shell
 
@@ -25,13 +25,13 @@ COMMANDS
   test        Runs the tests
   purge       Removes all generated files
 ~> make build
-Compiling source code into ./uofmsh
-~> ./uofmsh
-uofmsh> ls
-features  Gemfile  Gemfile.lock  LICENSE  makefile  README.md  src  test  uofmsh
-uofmsh> ls | grep Gem | cowsay > cow; foo 2> error; uptime -p
+Compiling source code into ./vodka
+~> ./vodka
+vodka> ls
+features  Gemfile  Gemfile.lock  LICENSE  makefile  README.md  src  test  vodka
+vodka> ls | grep Gem | cowsay > cow; foo 2> error; uptime -p
 up 6 days, 5 hours, 44 minutes
-uofmsh> cat cow
+vodka> cat cow
  _____________________
 < Gemfile Gemfile.lock >
  ----------------------
@@ -40,20 +40,20 @@ uofmsh> cat cow
             (__)\       )\/\
                 ||----w |
                 ||     ||
-uofmsh> cat error
+vodka> cat error
 Bad exec. Exiting.: No such file or directory
-uofmsh> pwd
-/home/jethro/school/fall_2018/os/proj1/uofmsh
-uofmsh> cd ..
-uofmsh> pwd
+vodka> pwd
+/home/jethro/school/fall_2018/os/proj1/vodka
+vodka> cd ..
+vodka> pwd
 /home/jethro/school/fall_2018/os/proj1
-uofmsh> cd -
-uofmsh> pwd
-/home/jethro/school/fall_2018/os/proj1/uofmsh
-uofmsh> cd /
-uofmsh> pwd
+vodka> cd -
+vodka> pwd
+/home/jethro/school/fall_2018/os/proj1/vodka
+vodka> cd /
+vodka> pwd
 /
-uofmsh> exit
+vodka> exit
 ```
 
 Development Features
@@ -81,12 +81,12 @@ Development Features
 
 * Clone the repo or download it
      ```
-     git clone https://github.com/jethrodaniel/uofmsh.git
+     git clone https://github.com/jethrodaniel/vodka.git
      ```
 
 * Move into the project directory
      ```
-     cd uofmsh
+     cd vodka
      ```
 
 * Create the executable shell
@@ -113,7 +113,7 @@ make
 
 * Alternatively, you can download all submodules and clone at the same time using
      ```
-     git clone --recurse-submodules https://github.com/jethrodaniel/uofmsh.git
+     git clone --recurse-submodules https://github.com/jethrodaniel/vodka.git
      ```
 
 ### To run the aruba/cucumber tests

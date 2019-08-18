@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-namespace uofmsh {
+namespace vodka {
 
 // A token represents the building blocks of the grammar
 class Token {
@@ -137,6 +137,6 @@ private:
             end;               // The column number of the end of this token
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

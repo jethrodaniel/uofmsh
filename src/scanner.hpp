@@ -3,9 +3,9 @@
 
 #include "token.hpp"
 #include "scanner.hpp"
-#include "uofmsh.hpp"
+#include "vodka.hpp"
 
-namespace uofmsh {
+namespace vodka {
 
 // A scanner/lexer reads the input and splits it into tokens
 class Scanner {
@@ -223,6 +223,6 @@ public:
 
 };
 
-} // namespace uofmsh
+} // namespace vodka
 
 #endif

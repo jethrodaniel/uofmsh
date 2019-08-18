@@ -4,7 +4,7 @@ Feature: Commands
 
   Background:
     # When I run `bash` interactively
-    When I run `uofmsh` interactively
+    When I run `vodka` interactively
 
   Scenario: ls
     And  I type "ls -ah"
@@ -13,7 +13,7 @@ Feature: Commands
   Scenario: touch
     Given an empty file named "example.c"
     And  I type "touch example.c"
-    Then the output should contain exactly "uofmsh> "
+    Then the output should contain exactly "vodka> "
     And a file named "example.c" should exist
 
   Scenario: cp
@@ -23,7 +23,7 @@ Feature: Commands
     """
     And a file named "b.txt" does not exist
     And  I type "cp a.txt b.txt"
-    Then the output should contain exactly "uofmsh> "
+    Then the output should contain exactly "vodka> "
     And the file named "a.txt" should contain:
     """
     zeppelin
@@ -36,5 +36,5 @@ Feature: Commands
   Scenario: rm
     Given an empty file named "notes.txt"
     And  I type "rm notes.txt"
-    Then the output should contain exactly "uofmsh> "
+    Then the output should contain exactly "vodka> "
     And the file "notes.txt" should not exist
