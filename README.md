@@ -1,6 +1,6 @@
 # vodka
 
-A basic shell
+A POSIX shell (wip)
 
 Supports
 * Semicolon separated pipelines
@@ -10,29 +10,26 @@ Supports
 
 For example,
 ```
-~> make
-Usage
+λ ./make
+Commands:
+  make build           # Builds the project
+  make clean           # Removes build files
+  make clobber         # Removes all generated files
+  make cucumber        # Runs the aruba/cucumber tests
+  make help [COMMAND]  # Describe available commands or one specific command
+  make lint            # Runs the linter
+  make spec            # Runs the specs
+  make vodka           # Builds and runs the project
 
-  make COMMAND
-
-COMMANDS
-
-  build       Compiles the source code into an executable
-  clean       Removes generated files, except .setup.o and .test.out
-  cucumber    Runs the aruba/cucumber tests
-  lint        Runs the linter
-  style       Formats source and test files to adhere to project standards
-  test        Runs the tests
-  purge       Removes all generated files
-~> make build
-Compiling source code into ./vodka
-~> ./vodka
+λ ./make run
+         run  bundle exec rake build from "."
+g++-8 -std=c++17 -g -pedantic -Wall -Wextra -Werror src/main.cpp src/vodka.cpp -o vodka
 vodka> ls
-features  Gemfile  Gemfile.lock  LICENSE  makefile  README.md  src  test  vodka
+docs  features  Gemfile  Gemfile.lock  LICENSE  make  makefile  rakefile  README.md  spec  src  third_party  tmp  vodka
 vodka> ls | grep Gem | cowsay > cow; foo 2> error; uptime -p
-up 6 days, 5 hours, 44 minutes
+up 1 hour, 38 minutes
 vodka> cat cow
- _____________________
+ ______________________
 < Gemfile Gemfile.lock >
  ----------------------
         \   ^__^
@@ -43,16 +40,16 @@ vodka> cat cow
 vodka> cat error
 Bad exec. Exiting.: No such file or directory
 vodka> pwd
-/home/jethro/school/fall_2018/os/proj1/vodka
-vodka> cd ..
-vodka> pwd
-/home/jethro/school/fall_2018/os/proj1
+/home/jethro/code/c++/vodka
 vodka> cd -
 vodka> pwd
-/home/jethro/school/fall_2018/os/proj1/vodka
+/home/jethro/code/c++/vodka
 vodka> cd /
 vodka> pwd
 /
+vodka> cd -
+vodka> pwd
+/home/jethro/code/c++/vodka
 vodka> exit
 ```
 
@@ -63,18 +60,14 @@ Development Features
 ## Dependencies
 ---
 
-### To compile and run the shell
+### Compiling and running
 
-* A C++17 compiler, such as [g++](https://gcc.gnu.org/)
+* `g++-8`
 
-### Additionally, to use the included makefile for project tasks
+### Buildingand testing
 
-* [GNU Make](https://www.gnu.org/software/make/)
-
-### Additionally, to run the tests
-
+* [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests, and to use rake and thor as a build system.
 * [Git](https://git-scm.com/), to add Catch as a submodule
-* [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests. [RVM](https://rvm.io/) is the suggested installation method.
 
 ## Installation
 ---
@@ -91,7 +84,7 @@ Development Features
 
 * Create the executable shell
      ```
-     make build
+     ./make build
      ```
 
 ## Development
@@ -100,7 +93,7 @@ Development Features
 ### To show available project commands
 
 ```
-make
+./make
 ```
 
 ### To run the unit tests
@@ -120,8 +113,12 @@ make
 
 * Also installs the required Ruby gems. Fails if Ruby isn't already installed.
      ```
-     make cucumber
+     ./make cucumber
      ```
+
+## History
+
+This was originally a homework project - see the [assignment](docs/assignment.pdf).
 
 ## References
 

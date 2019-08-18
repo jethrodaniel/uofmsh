@@ -7,15 +7,15 @@ CPP_FLAGS += -Wall
 CPP_FLAGS += -Wextra
 CPP_FLAGS += -Werror
 
-TEST_FLAGS  = -std=c++17
-TEST_FLAGS += -Wall
-TEST_FLAGS += -I./test/Catch2
+spec_FLAGS  = -std=c++17
+spec_FLAGS += -Wall
+spec_FLAGS += -I./spec/Catch2
 
 PROGRAM_NAME = vodka
 
 SOURCES    := $(shell find src -name '*.cpp')
-TEST_SETUP := './test/setup.cpp'
-TESTS      := $(shell find ./test -name '*.cpp'            \
+spec_SETUP := './spec/setup.cpp'
+specS      := $(shell find ./spec -name '*.cpp'            \
                                   -not -path '*Catch2*'    \
                                   -not -name "*setup.cpp")
 
@@ -25,11 +25,11 @@ usage:
 	@echo "  make COMMAND"
 	@echo "\nCOMMANDS\n"
 	@echo "  build       Compiles the source code into an executable"
-	@echo "  clean       Removes generated files, except .setup.o and .test.out"
-	@echo "  cucumber    Runs the aruba/cucumber tests"
+	@echo "  clean       Removes generated files, except .setup.o and .spec.out"
+	@echo "  cucumber    Runs the aruba/cucumber specs"
 	@echo "  lint        Runs the linter"
-	@echo "  style       Formats source and test files to adhere to project standards"
-	@echo "  test        Runs the tests"
+	@echo "  style       Formats source and spec files to adhere to project standards"
+	@echo "  spec        Runs the specs"
 	@echo "  purge       Removes all generated files"
 	@echo
 
@@ -40,12 +40,12 @@ build:
 
 .PHONY: clean
 clean:
-	@echo "Removing generated files, except .setup.o and .test.out"
+	@echo "Removing generated files, except .setup.o and .spec.out"
 	rm -rf $(PROGRAM_NAME) tmp
 
 .PHONY: cucumber
 cucumber: build bundle
-	@echo "Running cli tests"
+	@echo "Running cli specs"
 	bundle exec cucumber
 
 bundle: gem
@@ -58,7 +58,7 @@ endif
 
 ruby:
 ifeq ( , $(shell which ruby))
-	$(error Please install Ruby to run the aruba/cucumber tests)
+	$(error Please install Ruby to run the aruba/cucumber specs)
 endif
 
 .PHONY: lint
@@ -75,23 +75,23 @@ style:
 ifeq ( , $(shell which astyle))
 	$(error Please install astyle to run the formatter)
 else
-	@echo "Formating source and test files"
-	astyle --project=.astylerc $(SOURCES) $(TESTS)
+	@echo "Formating source and spec files"
+	astyle --project=.astylerc $(SOURCES) $(specS)
 endif
 
-.PHONY: test
-test: .test.out
-	@echo "Running the tests..."
-	./.test.out
+.PHONY: spec
+spec: .spec.out
+	@echo "Running the specs..."
+	./.spec.out
 
-.test.out: .setup.o $(TESTS)
-	$(CPP) $(TEST_FLAGS) .setup.o $(TESTS) -o .test.out
+.spec.out: .setup.o $(specS)
+	$(CPP) $(spec_FLAGS) .setup.o $(specS) -o .spec.out
 
 .setup.o:
-	$(CPP) $(TEST_FLAGS) -c $(TEST_SETUP) -o .setup.o
+	$(CPP) $(spec_FLAGS) -c $(spec_SETUP) -o .setup.o
 
 PHONY: purge
 purge:
 	@echo "Removing all generated files"
-	rm -rf $(PROGRAM_NAME) tmp *.o *.out .test.out .setup.o
+	rm -rf $(PROGRAM_NAME) tmp *.o *.out .spec.out .setup.o
 

@@ -1,0 +1,63 @@
+# frozen_string_literal: true
+
+require 'rake/clean'
+
+PROGRAM_NAME = 'vodka'
+SPEC_NAME = '.spec.out'
+SPEC_OBJECT = '.spec.o'
+
+CPP = 'g++-8'
+
+CPP_FLAGS = [
+  '-std=c++17',
+  '-g',
+  '-pedantic',
+  '-Wall',
+  '-Wextra',
+  '-Werror'
+].join ' '
+
+SPEC_FLAGS = [
+  '-std=c++17',
+  '-Wall',
+  '-I./third_party/Catch2'
+].join ' '
+SPEC_SETUP = './spec/setup.cpp'
+
+SOURCE_FILES = Rake::FileList['src/**/*.cpp']
+SPEC_FILES = Rake::FileList.new 'spec/**/*.cpp' do |fl|
+  fl.exclude 'spec/setup.cpp'
+end
+
+CLEAN << SPEC_NAME
+CLEAN << SPEC_OBJECT
+CLOBBER << PROGRAM_NAME
+
+file PROGRAM_NAME do
+  sh "#{CPP} #{CPP_FLAGS} #{SOURCE_FILES} -o #{PROGRAM_NAME}"
+end
+
+desc "builds the executable, `#{PROGRAM_NAME}`"
+task build: PROGRAM_NAME
+
+file SPEC_NAME => SPEC_OBJECT do
+  sh "#{CPP} #{SPEC_FLAGS} #{SPEC_OBJECT} #{SPEC_FILES} -o #{SPEC_NAME}"
+end
+
+file SPEC_OBJECT do
+  sh "#{CPP} #{SPEC_FLAGS} -c #{SPEC_SETUP} -o #{SPEC_OBJECT}"
+end
+
+desc 'builds the spec program'
+task spec: SPEC_NAME
+
+desc 'show some build configuration settings'
+task :config do
+  puts <<~MSG
+    SPEC_FILES: #{SPEC_FILES.inspect}
+    CLEAN: #{CLEAN.inspect}
+    CLOBBER: #{CLOBBER.inspect}
+  MSG
+end
+
+task default: :build
