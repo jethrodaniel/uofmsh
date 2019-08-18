@@ -116,6 +116,10 @@ Development Features
      ./make cucumber
      ```
 
+## License
+
+[MIT](LICENSE).
+
 ## History
 
 This was originally a homework project - see the [assignment](docs/assignment.pdf).
