@@ -7,17 +7,13 @@
 
 require 'rake'
 require 'thor'
-require 'thor/rake_compat'
+load 'rakefile'
 
 class BuildSystemCLI < Thor
   include Thor::Actions
   include FileUtils
 
   PROJECT_DIR = __dir__
-  POSIX_SHELLS = [
-    'sh',
-    'bash --posix'
-  ]
 
   desc 'build', 'Builds the project'
   def build
@@ -36,11 +32,8 @@ class BuildSystemCLI < Thor
   def cucumber
     invoke :build
     inside PROJECT_DIR do
-      POSIX_SHELLS.each { |shell| rake shell }
-
+      POSIX_SHELLS.keys.each { |shell| rake shell }
       run 'bundle exec cucumber'
-
-      rake 'clean'
     end
   end
 

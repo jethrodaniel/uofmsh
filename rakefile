@@ -70,7 +70,7 @@ task :config do
   MSG
 end
 
-Dir.glob('**/*.feature').each do |feature|
+Dir.glob('features/**/*.feature').each do |feature|
   POSIX_SHELLS.each do |shell, options|
     next if feature.include? shell # Already create shell feature
 
