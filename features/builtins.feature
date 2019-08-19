@@ -3,7 +3,7 @@
 Feature: Built-in commands
 
   Background:
-    When I run `vodka` interactively
+    When I run `./vodka` interactively
 
   Scenario: exit
     And  I type "exit"

@@ -6,6 +6,7 @@ before_install: |
   sudo apt install -y g++-8
 
 script: |
+  bundle exec ./make build
   bundle exec ./make spec
   bundle exec ./make cucumber
 

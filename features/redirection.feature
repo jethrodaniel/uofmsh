@@ -4,7 +4,7 @@ Feature: Redirection
 
   Background:
     # When I run `bash` interactively
-    When I run `vodka` interactively
+    When I run `./vodka` interactively
 
   Scenario: <
     Given a file named "cow" with:

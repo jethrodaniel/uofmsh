@@ -4,7 +4,7 @@ Feature: Commands
 
   Background:
     # When I run `bash` interactively
-    When I run `vodka` interactively
+    When I run `./vodka` interactively
 
   Scenario: ls
     And  I type "ls -ah"
