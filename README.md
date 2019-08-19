@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/jethrodaniel/vodka.svg?branch=master)](https://travis-ci.com/jethrodaniel/vodka)
 
-A POSIX shell (wip)
+A POSIX shell in c++ (wip)
 
 Supports
 * Semicolon separated pipelines
@@ -55,9 +55,15 @@ vodka> pwd
 vodka> exit
 ```
 
+vodka should be (and is tested) to be a drop-in replacement for
+
+- `bash`` --posix`
+- `sh`
+
 Development Features
-* C++ testing with [Catch](https://github.com/catchorg/Catch2)
-* Interactive testing using [Aruba](https://github.com/cucumber/aruba) and [Cucumber](https://github.com/cucumber/cucumber-ruby)
+* C++ testing with [Catch2][catch2]
+* Interactive testing using [Aruba][aruba] and [Cucumber][cucumber]
+  - features also run against `bash` and `sh`, and are generic to any shell
 
 ## Dependencies
 
@@ -65,10 +71,11 @@ Development Features
 
 * `g++-8`
 
-### Buildingand testing
+### Building and testing
 
 * [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests, and to use rake and thor as a build system.
 * [Git](https://git-scm.com/), to add Catch as a submodule
+- [Catch2][catch2], for the c++ tests
 
 ## Installation
 
@@ -80,6 +87,10 @@ Development Features
 * Move into the project directory
      ```
      cd vodka
+     ```
+- Install development dependencies (you'll need ruby and bundler installed)
+     ```
+     bundle
      ```
 
 * Create the executable shell
@@ -115,6 +126,18 @@ Development Features
      ./make cucumber
      ```
 
+## TODO
+
+- [ ] extract `features` into a separate `posix-compliance-spec` repo
+- [ ] add the rest of the actual shell stuff
+  - [ ] here-docs
+  - [ ] readline support
+  - [ ] so much more
+
+Should POSIX compliance even be the main goal here?
+
+POSIX compliance is the minimum requirement, basically - if more is to be added, we'll package the POSIX whatnot under `vodka --posix`, like bash.
+
 ## License
 
 [MIT](LICENSE).
@@ -130,3 +153,7 @@ A big thanks to the following
 - https://weblog.jamisbuck.org/2015/7/30/writing-a-simple-recursive-descent-parser.html
 - http://www.craftinginterpreters.com/
 - http://parsingintro.sourceforge.net/
+
+[catch2]: https://github.com/catchorg/Catch2
+[aruba]: https://github.com/cucumber/aruba
+[cucumber]: https://github.com/cucumber/cucumber-ruby
