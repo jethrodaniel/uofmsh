@@ -4,7 +4,6 @@
 Feature: Redirection
 
   Background:
-    # When I run `bash` interactively
     When I run `./vodka` interactively
 
   Scenario: <
