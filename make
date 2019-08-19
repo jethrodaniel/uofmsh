@@ -7,6 +7,8 @@
 
 require 'rake'
 require 'thor'
+
+# Load everyting in the `rakefile`
 load 'rakefile'
 
 class BuildSystemCLI < Thor
@@ -20,11 +22,11 @@ class BuildSystemCLI < Thor
     inside(PROJECT_DIR) { rake 'build' }
   end
 
-  desc 'vodka', 'Builds and runs the project'
-  def vodka
+  desc PROGRAM_NAME, 'Builds and runs the project'
+  define_method PROGRAM_NAME.to_s do
     inside PROJECT_DIR do
       rake 'build'
-      exec './vodka'
+      exec "./#{PROGRAM_NAME}"
     end
   end
 

@@ -23,7 +23,7 @@ Commands:
   make spec            # Runs the specs
   make vodka           # Builds and runs the project
 
-λ ./make run
+λ ./make vodka
          run  bundle exec rake build from "."
 g++-8 -std=c++17 -g -pedantic -Wall -Wextra -Werror src/main.cpp src/vodka.cpp -o vodka
 vodka> ls
