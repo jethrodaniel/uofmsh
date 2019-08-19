@@ -5,14 +5,19 @@
 #
 # Run `./make` to for help.
 
-PROJECT_DIR = __dir__
-
-require 'thor'
 require 'rake'
+require 'thor'
+require 'thor/rake_compat'
 
 class BuildSystemCLI < Thor
   include Thor::Actions
   include FileUtils
+
+  PROJECT_DIR = __dir__
+  POSIX_SHELLS = [
+    'sh',
+    'bash --posix'
+  ]
 
   desc 'build', 'Builds the project'
   def build
@@ -29,7 +34,14 @@ class BuildSystemCLI < Thor
 
   desc 'cucumber', 'Runs the aruba/cucumber tests'
   def cucumber
-    inside(PROJECT_DIR) { run 'bundle exec cucumber' }
+    invoke :build
+    inside PROJECT_DIR do
+      POSIX_SHELLS.each { |shell| rake shell }
+
+      run 'bundle exec cucumber'
+
+      rake 'clean'
+    end
   end
 
   desc 'lint', 'Runs the linter'

@@ -6,6 +6,11 @@ PROGRAM_NAME = 'vodka'
 SPEC_NAME = '.spec.out'
 SPEC_OBJECT = '.spec.o'
 
+POSIX_SHELLS = {
+  'sh'   => [],
+  'bash' => %w[--posix]
+}.freeze
+
 CPP = 'g++-8'
 
 CPP_FLAGS = [
@@ -32,6 +37,11 @@ end
 CLEAN << SPEC_NAME
 CLEAN << SPEC_OBJECT
 CLOBBER << PROGRAM_NAME
+Dir.glob('**/*.feature').each do |file|
+  POSIX_SHELLS.keys.each do |shell|
+    CLEAN << file.gsub('.feature', "_#{shell}.feature")
+  end
+end
 
 file PROGRAM_NAME do
   sh "#{CPP} #{CPP_FLAGS} #{SOURCE_FILES} -o #{PROGRAM_NAME}"
@@ -58,6 +68,28 @@ task :config do
     CLEAN: #{CLEAN.inspect}
     CLOBBER: #{CLOBBER.inspect}
   MSG
+end
+
+Dir.glob('**/*.feature').each do |feature|
+  POSIX_SHELLS.each do |shell, options|
+    next if feature.include? shell # Already create shell feature
+
+    shell_cmd = "#{shell} #{options.join ' '}"
+    new_feature = feature.gsub '.feature', "_#{shell}.feature"
+
+    desc "creates features for #{shell}"
+    task shell => new_feature
+    file new_feature do
+      puts "\t↳ #{feature.ljust 40, ' '} -> #{new_feature}"
+      File.open new_feature, 'w' do |new_feature|
+        new_feature << File.read(feature)
+                           .gsub("./#{PROGRAM_NAME}", shell_cmd)
+                           .gsub("@#{PROGRAM_NAME}", "@#{shell}")
+                           .gsub("#{PROGRAM_NAME}> ", '') # TODO: remove
+                           .gsub("#{PROGRAM_NAME}>", '')  # TODO: remove
+      end
+    end
+  end
 end
 
 task default: :build

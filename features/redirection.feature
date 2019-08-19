@@ -1,5 +1,6 @@
 # For aruba documentation, see https://relishapp.com/cucumber/aruba/docs/
 
+@vodka
 Feature: Redirection
 
   Background:
