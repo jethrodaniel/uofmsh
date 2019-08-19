@@ -1,5 +1,7 @@
 # vodka
 
+[![Build Status](https://travis-ci.com/jethrodaniel/vodka.svg?branch=master)](https://travis-ci.com/jethrodaniel/vodka)
+
 A POSIX shell (wip)
 
 Supports
