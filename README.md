@@ -17,7 +17,6 @@ Commands:
   make build           # Builds the project
   make clean           # Removes build files
   make clobber         # Removes all generated files
-  make cucumber        # Runs the aruba/cucumber tests
   make help [COMMAND]  # Describe available commands or one specific command
   make lint            # Runs the linter
   make spec            # Runs the specs
@@ -62,7 +61,7 @@ vodka should be (and is tested) to be a drop-in replacement for
 
 Development Features
 * C++ testing with [Catch2][catch2]
-* Interactive testing using [Aruba][aruba] and [Cucumber][cucumber]
+* Interactive shell acceptance testing using [Aruba][aruba] and [Minitest][minitest] (with the spec syntax)
   - features also run against `bash` and `sh`, and are generic to any shell
 
 ## Dependencies
@@ -73,7 +72,7 @@ Development Features
 
 ### Building and testing
 
-* [Ruby](https://www.ruby-lang.org/en/), to run the Aruba/Cucumber tests, and to use rake and thor as a build system.
+* [Ruby](https://www.ruby-lang.org/en/), to run the acceptance tests, and to use rake and thor as a build system.
 * [Git](https://git-scm.com/), to add Catch as a submodule
 - [Catch2][catch2], for the c++ tests
 
@@ -110,8 +109,7 @@ Development Features
 
 * Download Catch, which is included as a submodule
      ```
-     git submodule init
-     git submodule update
+     git submodule update --init
      ```
 
 * Alternatively, you can download all submodules and clone at the same time using
@@ -119,16 +117,15 @@ Development Features
      git clone --recurse-submodules https://github.com/jethrodaniel/vodka.git
      ```
 
-### To run the aruba/cucumber tests
+### To run the acceptance tests
 
 * Also installs the required Ruby gems. Fails if Ruby isn't already installed.
      ```
-     ./make cucumber
+     ./make spec --acceptance
      ```
 
 ## TODO
 
-- [ ] extract `features` into a separate `posix-compliance-spec` repo
 - [ ] add the rest of the actual shell stuff
   - [ ] here-docs
   - [ ] readline support
@@ -156,4 +153,4 @@ A big thanks to the following
 
 [catch2]: https://github.com/catchorg/Catch2
 [aruba]: https://github.com/cucumber/aruba
-[cucumber]: https://github.com/cucumber/cucumber-ruby
+[minitest]: https://github.com/seattlerb/minitest
