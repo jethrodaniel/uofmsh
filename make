@@ -112,7 +112,13 @@ class BuildSystemCLI < Thor
 
     inside PROJECT_DIR do
       if options[:acceptance]
-        exec 'bundle exec ruby -I spec/acceptance/ spec/acceptance/*_spec.rb'
+        puts cmd = <<~SH
+          for file in spec/**/*_spec.rb
+          do
+            ruby -I spec/acceptance/ $file
+          done
+        SH
+        exec cmd
       else
         rake :spec
         run './.spec.out'

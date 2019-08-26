@@ -25,3 +25,5 @@ group :test, :development do
   gem 'rake', '~> 12.3'
   gem 'thor', '~> 0.20.0'
 end
+
+gem "activesupport", "~> 6.0"

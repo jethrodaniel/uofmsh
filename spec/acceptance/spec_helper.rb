@@ -10,6 +10,7 @@ Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 
 require 'aruba/api'
 
+require 'active_support/testing/time_helpers'
 require 'date'
 
 module MiniTest
@@ -55,6 +56,17 @@ end
 # using the spec syntax.
 def desc description, &block
   Class.new ShellTest do
+    instance_eval do
+      def setup
+        super
+        freeze_time
+      end
+
+      def teardown
+        super
+        unfreeze_time
+      end
+    end
     instance_eval(&block)
   end
 end
