@@ -4,7 +4,7 @@
 
 require 'spec_helper'
 
-desc 'Built-in commands' do
+describe 'Built-in commands' do
   describe 'exit' do
     it 'exits the shell' do
       type 'exit'

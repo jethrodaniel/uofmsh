@@ -13,14 +13,6 @@ require 'aruba/api'
 require 'active_support/testing/time_helpers'
 require 'date'
 
-module MiniTest
-  class Spec
-    class << self
-      alias_method :context, :describe
-    end
-  end
-end
-
 # Shared test methods, setup, teardown, etc.
 class ShellTest < Minitest::Test
   include Aruba::Api
@@ -34,7 +26,7 @@ class ShellTest < Minitest::Test
 
   def teardown
     super
-    terminate_all_commands
+    last_command_started.terminate
   end
 
   # Set `VODKA_SPEC_SHELL` to the full path to your shell, to test against
@@ -54,7 +46,7 @@ end
 #
 # Used to consolidate shared spec methods, setup, teardown etc while still
 # using the spec syntax.
-def desc description, &block
+def describe description, &block
   Class.new ShellTest do
     instance_eval do
       def setup
@@ -70,3 +62,6 @@ def desc description, &block
     instance_eval(&block)
   end
 end
+
+# Add `context` as a describe alias
+alias context describe

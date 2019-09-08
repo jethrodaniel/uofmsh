@@ -4,9 +4,49 @@
 
 require 'spec_helper'
 
-desc 'Redirection' do
+describe 'redirection' do
   describe '>' do
-    it 'redirects std out to a file'
+    it 'redirects output to a file'
+  end
+
+  describe '<' do
+    let :cow do
+      <<~'STR'
+        ^__^
+        (oo)\_______
+        (__)\       )\/\
+            ||----w |
+            ||     ||
+      STR
+    end
+
+    before do
+      write_file 'cow.txt', cow
+    end
+
+    it 'redirects input to a file' do
+      type 'cat < cow.txt'
+      # @todo remove prompt
+      last_command_started.output.must_equal "vodka> #{cow}"
+    end
+  end
+
+  describe '>>' do
+    it 'appends output to a file'
+  end
+
+  describe '<<' do
+    it 'appends input to a file'
+  end
+end
+
+describe 'the shell prompt' do
+  context 'when not running interactively' do
+    it "doesn't print the prompt"
+  end
+
+  context 'when running interactively' do
+    it 'prints to the terminal (tty)'
   end
 end
 

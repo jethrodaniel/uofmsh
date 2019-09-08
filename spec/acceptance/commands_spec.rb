@@ -4,7 +4,7 @@
 
 require 'spec_helper'
 
-desc 'Common *nix commands' do
+describe 'Common *nix commands' do
   describe 'ls' do
     let(:user) { ENV['HOME'].gsub '/home/', '' }
 
