@@ -45,6 +45,7 @@ class BuildSystemRake
     -std=c++17
     -Wall
     -I./third_party/Catch2
+    -I./third_party/replxx/include/
   ].join ' '
   SPEC_SETUP = './spec/setup.cpp'
 
@@ -72,7 +73,7 @@ class BuildSystemRake
     task build: PROGRAM_NAME
 
     file SPEC_NAME => SPEC_OBJECT do
-      sh "#{CPP} #{SPEC_FLAGS} #{SPEC_OBJECT} #{SPEC_FILES} -o #{SPEC_NAME}"
+      sh "#{CPP} #{SPEC_FLAGS} #{SPEC_OBJECT} #{SPEC_FILES} #{INCLUDE_FLAGS} #{LOAD_FLAGS} -o #{SPEC_NAME}"
     end
 
     file SPEC_OBJECT do
