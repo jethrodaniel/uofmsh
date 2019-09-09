@@ -20,6 +20,8 @@
 #include "parser.hpp"
 #include "interpreter.hpp"
 
+#include "../third_party/replxx/include/replxx.hxx"
+
 namespace vodka {
 
 // Represents a shell's data and methods

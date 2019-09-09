@@ -27,7 +27,7 @@ describe 'redirection' do
     it 'redirects input to a file' do
       type 'cat < cow.txt'
       # @todo remove prompt
-      last_command_started.output.must_equal "vodka> #{cow}"
+      last_command_started.output.must_equal cow
     end
   end
 

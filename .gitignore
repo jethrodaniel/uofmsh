@@ -1,9 +1,8 @@
 # Don't accidently add the compiled program
 vodka
 
-# Features usedas templates for other POSIX shells
-features/**/*_bash.feature
-features/**/*_sh.feature
+# or the shell history
+.vodka_history
 
 # Object files
 *.o

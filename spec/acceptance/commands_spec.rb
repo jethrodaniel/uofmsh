@@ -11,7 +11,7 @@ describe 'Common *nix commands' do
     it 'shows the contents of a directory' do
       type 'ls -a'
       last_command_started.output.must_include <<~SH
-      vodka> .
+      .
       ..
       SH
     end
