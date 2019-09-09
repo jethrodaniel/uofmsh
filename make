@@ -30,6 +30,17 @@ class BuildSystemRake
     -Werror
   ].join ' '
 
+  INCLUDE_FLAGS = %w[
+    -I./third_party/replxx/include/
+  ].join ' '
+
+  LIB_REPL_XX = './third_party/replxx/build/libreplxx.a'
+
+  LOAD_FLAGS = %w[
+    -L ./third_party/replxx/build
+    -l:libreplxx.a
+  ].join ' '
+
   SPEC_FLAGS = %w[
     -std=c++17
     -Wall
@@ -47,8 +58,14 @@ class BuildSystemRake
   CLOBBER << PROGRAM_NAME
 
   def initialize
-    file PROGRAM_NAME do
-      sh "#{CPP} #{CPP_FLAGS} #{SOURCE_FILES} -o #{PROGRAM_NAME}"
+    file LIB_REPL_XX do
+      Dir.chdir './third_party/replxx/' do
+        sh 'mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd ..'
+      end
+    end
+
+    file PROGRAM_NAME => LIB_REPL_XX do
+      sh "#{CPP} #{CPP_FLAGS} #{SOURCE_FILES} #{INCLUDE_FLAGS} #{LOAD_FLAGS} -o #{PROGRAM_NAME}"
     end
 
     desc "builds the executable, `#{PROGRAM_NAME}`"
@@ -89,12 +106,15 @@ class BuildSystemCLI < Thor
 
   desc 'build', 'Builds the project'
   def build
-    inside(PROJECT_DIR) { rake :build }
+    inside PROJECT_DIR do
+      rake :build
+    end
   end
 
-  desc PROGRAM_NAME, 'Builds and runs the project'
+  desc PROGRAM_NAME, 'Clobbers, builds and runs the project'
   define_method PROGRAM_NAME.to_s do
     inside PROJECT_DIR do
+      rake :clobber
       rake :build
       exec "./#{PROGRAM_NAME}"
     end
@@ -112,13 +132,17 @@ class BuildSystemCLI < Thor
 
     inside PROJECT_DIR do
       if options[:acceptance]
-        puts cmd = <<~SH
+        exec <<~SH
           for file in spec/**/*_spec.rb
           do
-            ruby -I spec/acceptance/ $file
+            echo "\n------------------------------------------\n"
+            echo "Running acceptance spec for '#{PROGRAM_NAME}' ...\n"
+            ruby -I spec/acceptance/ $file && \
+             echo "Running acceptance spec for '/bin/bash' ..." && \
+             VODKA_SPEC_SHELL=/bin/bash ruby -I spec/acceptance/ $file
           done
+          echo
         SH
-        exec cmd
       else
         rake :spec
         run './.spec.out'

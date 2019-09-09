@@ -1,9 +1,7 @@
-; [submodule "spec/Catch2"]
-; 	path = spec/Catch2
-; 	url = https://github.com/catchorg/Catch2.git
 [submodule "third_party/Catch2"]
 	path = third_party/Catch2
 	url = https://github.com/catchorg/Catch2
+
 [submodule "third_party/replxx"]
 	path = third_party/replxx
 	url = https://github.com/AmokHuginnsson/replxx

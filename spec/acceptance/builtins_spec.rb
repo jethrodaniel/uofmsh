@@ -8,14 +8,14 @@ describe 'Built-in commands' do
   describe 'exit' do
     it 'exits the shell' do
       type 'exit'
-      last_command_started.output.must_equal "vodka> "
+      last_command_started.output.must_equal ""
     end
   end
 
   describe 'pwd' do
     it 'prints the current working directory' do
       type 'pwd'
-      last_command_started.output.must_equal "vodka> #{Dir.pwd}/tmp/aruba\n"
+      last_command_started.output.must_equal "#{Dir.pwd}/tmp/aruba\n"
     end
   end
 end
