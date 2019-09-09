@@ -47,8 +47,23 @@ class Interpreter {
     currentDir = std::string(get_current_dir_name());
   }
 
+  // Builtin help function
+  void help() {
+    std::cout
+      << "These shell commands are defined internally.\n"
+      << "Type `help` to see this list.\n"
+      << "Type `help name` to find out more about the function `name` (@todo).\n"
+      << "\n"
+      << "help              displays the help output\n"
+      << "quit/exit         exit the repl\n"
+      << "clear             clears the screen\n"
+      << "history           displays the history\n"
+      << "\n";
+  }
+
   // Builtin exit function
   void quit() {
+    // std::cout << "\nExiting vodka...\n\nGoodbye!\n";
     exit(EXIT_SUCCESS);
   }
 
@@ -170,8 +185,15 @@ class Interpreter {
         return;
       }
 
+      if (elements.size() > 0 && elements[0].getLexeme() == "help") {
+        help();
+        return;
+      }
+
       // Builtin exit
-      if (elements.size() > 0 && elements[0].getLexeme() == "exit")
+      auto is_exit = elements.size() > 0 && elements[0].getLexeme() == "exit";
+      auto is_quit = elements.size() > 0 && elements[0].getLexeme() == "quit";
+      if (is_exit || is_quit)
         quit();
 
       // Run each command as a child process

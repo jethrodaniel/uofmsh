@@ -76,42 +76,9 @@ void Shell::runPrompt() {
     // easier to manipulate
     std::string input {cinput};
 
-    if (input.empty()) {
-      // user hit enter on an empty line
+    if (input.empty()) // user hit enter on an empty line
       continue;
-
-    } else if (input.compare(0, 5, "quit") == 0 || input.compare(0, 5, "exit") == 0) {
-      // exit the repl
-      repl.history_add(input);
-      break;
-    } else if (input.compare(0, 5, "help") == 0) {
-      // display the help output
-      std::cout
-        << "These shell commands are defined internally.\n"
-        << "Type `help` to see this list.\n"
-        << "Type `help name` to find out more about the function `name` (@todo).\n"
-        << "\n"
-        << "help              displays the help output"
-        << "quit/exit         exit the repl\n"
-        << "clear             clears the screen\n"
-        << "history           displays the history\n"
-        << "prompt <str>      set the repl prompt to <str> (@todo)\n"
-        << "\n";
-
-      repl.history_add(input);
-      continue;
-    } else if (input.compare(0, 7, "prompt") == 0) {
-      // set the repl prompt text
-      auto pos = input.find(" ");
-
-      if (pos == std::string::npos)
-        std::cout << "Error: 'prompt' missing argument\n";
-      else
-        prompt = input.substr(pos + 1) + " ";
-
-      repl.history_add(input);
-      continue;
-    } else if (input.compare(0, 8, "history") == 0) {
+    else if (input.compare(0, 8, "history") == 0) {
       // display the current history
       for (size_t i = 0, sz = repl.history_size(); i < sz; ++i)
         std::cout << std::setw(4) << i << ": " << repl.history_line(i) << "\n";
@@ -119,9 +86,7 @@ void Shell::runPrompt() {
       repl.history_add(input);
       continue;
     } else if (input.compare(0, 6, "clear") == 0) {
-      // clear the screen
       repl.clear_screen();
-
       repl.history_add(input);
       continue;
     } else {
@@ -130,23 +95,12 @@ void Shell::runPrompt() {
       repl.history_add(input);
       continue;
     }
+
+    Shell::hadError = false;
   }
 
   // save the history
   repl.history_save(history_file);
-
-  /* std::cout << "\nExiting vodka\n"; */
-
-  // while (true) {
-  //   std::cout << "vodka> ";
-
-  //   std::string line;
-  //   std::getline(std::cin >> std::ws, line);
-
-  //   run(line);
-
-  //   Shell::hadError = false;
-  // }
 }
 
 // Run a string of input
