@@ -1,6 +1,8 @@
 # vodka
 
 [![Build Status](https://travis-ci.com/jethrodaniel/vodka.svg?branch=master)](https://travis-ci.com/jethrodaniel/vodka)
+![](https://img.shields.io/github/license/jethrodaniel/vodka.svg)
+
 
 A POSIX shell in c++ (wip)
 
