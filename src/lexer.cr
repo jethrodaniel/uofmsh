@@ -40,7 +40,7 @@ module Vodka
 
       IO_NUMBER
       NEWLINE
-      END # EOF
+      EOF
 
       # A generic token, which could be any of the below tokens,
       # depending on the context
@@ -59,18 +59,65 @@ module Vodka
     def next_lexeme
       return nil if @scanner.eos?
 
-      next_char = @scanner.peek 1
+      current = advance!
 
-      log.info "next_char: #{next_char}"
+      log.info "current: #{current}"
 
-      case next_char
-      when "q"
-        # puts "yo!"
+      case current
+      when "("   then Token::LEFT_PAREN
+      when ")"   then Token::RIGHT_PAREN
+      when "{"   then Token::LEFT_BRACE
+      when "}"   then Token::RIGHT_BRACE
+      when ";"   then Token::SEMI
+      when "#"   then Token::POUND
+      when ":"   then Token::COLON
+      when "-"   then Token::HYPHEN
+      when "'\'" then Token::BACKSLASH
+      when "<"
+        next_char = peek 1
+        log.info "  next_char: #{next_char}"
+        if next_char == "<"
+          advance!
+          Token::DREDIRECT_LEFT
+        else
+          Token::REDIRECT_LEFT
+        end
+      when ">"
+        next_char = peek 1
+        log.info "> next_char: #{next_char}"
+        if next_char == ">"
+          advance!
+          Token::DREDIRECT_RIGHT
+        else
+          Token::REDIRECT_RIGHT
+        end
+      when "!" then Token::BANG
+      when "|" then Token::PIPE
+      when "&" then Token::AND
+        # SINGLE_QUOTED_STR # 'a single quoted string'
+        # DOUBLE_QUOTED_STR # "a double quoted string"
+        # BACKTICK_STR      # `a backtick quoted string`
+
+        # IO_NUMBER
+        # NEWLINE
       else
-        # puts "no!"
+        # A generic token, which could be any of the below tokens,
+        # depending on the context
+        Token::TOKEN
       end
+      # WORD
+      # ASSIGNMENT_WORD
+      # NAME
+    end
 
-      next_char
+    private def advance!
+      current = peek 1
+      @scanner.offset += 1
+      current
+    end
+
+    private def peek(n)
+      @scanner.peek n
     end
   end
 end
