@@ -1,0 +1,13 @@
+name: vodka
+version: 0.2.0
+
+authors:
+  - Mark Delk <jethrodaniel@gmail.com>
+
+targets:
+  vodka:
+    main: src/main.cr
+
+crystal: 0.31.1
+
+license: MIT
