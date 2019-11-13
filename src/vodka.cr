@@ -112,11 +112,24 @@ module Vodka
   class Shell
     property prompt
 
+    BANNER = <<-COW
+                  ^__^
+          _______/(oo)
+      /\\/(       /(__)🚬    vodka.
+         ||w----||
+         ||     ||
+    COW
+
     def initialize(@prompt : String)
+      @prompt ||= "λ "
     end
 
     # Run the interactive shell, i.e, the REPL
-    def repl!
+    def repl!(banner = false, fortune = false)
+      puts BANNER if banner
+
+      puts %x{fortune} if fortune
+
       loop do
         print "#{@prompt}"
         input = gets.not_nil!.chomp
@@ -126,6 +139,7 @@ module Vodka
 
     # Run a single line of input
     def eval!(input : String)
+      # TODO: dont handle builtins differently, just check if builtin first
       if input == "q" || input == "exit"
         puts "bye! <3"
         exit 1
