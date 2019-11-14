@@ -1,3 +1,5 @@
+require "./log"
+
 module Vodka
   class Shell
     include Vodka::Log
@@ -31,7 +33,11 @@ module Vodka
         # TODO cleanup
         interpreter = Interpreter.new input
 
-        interpreter.interpret!
+        begin
+          interpreter.interpret!
+        rescue e : Vodka::Lexer::Error | Vodka::Parser::Error
+          puts "#{e.class}: #{e.message}"
+        end
       end
     end
 

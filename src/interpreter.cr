@@ -1,6 +1,8 @@
+require "./log"
+
 module Vodka
   class Interpreter
-    # include VodkaSupport::Log
+    include Vodka::Log
 
     property input
 
@@ -10,13 +12,12 @@ module Vodka
 
     # Run the AST tree as a program
     def interpret!
-      next_node = @parser.next_ast_node
-
-      # log.info "next_ast_node: #{next_node}"
-
-      # case next_node
-      # when nil
-      # end
+      begin
+        ast = @parser.parse!
+        # log.info "INTERPRETER: #{next_node}"
+      rescue e : Vodka::Lexer::Error
+        raise e
+      end
     end
   end
 end
