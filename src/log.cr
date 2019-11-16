@@ -2,8 +2,15 @@ require "logger"
 
 module Vodka
   module Log
-    # TODO
-    # property level
+    @@level = 0
+
+    def self.level=(n)
+      @@level = n
+    end
+
+    def self.level
+      @@level
+    end
 
     def log
       log = Logger.new STDOUT

@@ -6,6 +6,24 @@ describe Vodka do
   end
 end
 
+describe Vodka::Log do
+  it "#level" do
+    Vodka::Log.level.should eq(0)
+  end
+
+  it "#level=" do
+    Vodka::Log.level.should eq(0)
+    Vodka::Log.level = 9_001
+    Vodka::Log.level.should eq(9_001)
+  end
+
+  # Error: can't include dynamically
+  pending "log" do
+  #   include Vodka::Log
+  #   log.info "testing, 1,2,3..."
+  end
+end
+
 describe Vodka::Token do
   it ".to_s" do
     token = Vodka::Token.new \
@@ -15,20 +33,6 @@ describe Vodka::Token do
       text: "!"
 
     token.to_s.should eq("[1:1] BANG `!`")
-  end
-end
-
-describe Vodka::Lexer do
-  it ".to_s" do
-    lexer = Vodka::Lexer.new "fortune | cowsay"
-
-    expected = <<-STR
-    [1:1] WORD `fortune`
-    [1:9] PIPE `|`
-    [1:11] WORD `cowsay`
-    STR
-
-    lexer.to_s.should eq expected
   end
 end
 
