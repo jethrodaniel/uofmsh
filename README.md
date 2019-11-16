@@ -1,6 +1,6 @@
 # vodka
 
-[![Build Status](https://travis-ci.com/jethrodaniel/vodka.svg?branch=master)](https://travis-ci.com/jethrodaniel/vodka)
+![](https://github.com/jethrodaniel/vodka/workflows/build/badge.svg)
 
 ## Install
 
