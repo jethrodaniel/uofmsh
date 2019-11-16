@@ -30,18 +30,31 @@ describe Vodka::Lexer do
 
     lexer.to_s.should eq expected
   end
+end
 
-  context "multiple examples" do
-    it "or" do
-      lexer = Vodka::Lexer.new "fortune || cowsay"
-
-      expected = <<-STR
-      [1:1] WORD `fortune`
-      [1:9] OR_IF `||`
-      [1:12] WORD `cowsay`
-      STR
-
-      lexer.to_s.should eq expected
+macro create_lexer_spec(name, command, expected)
+  describe Vodka::Lexer do
+    it {{name}} do
+      lexer = Vodka::Lexer.new {{command}}
+      lexer.to_s.should eq {{expected}}
     end
   end
 end
+
+create_lexer_spec "or", "fortune || cowsay", <<-STR
+[1:1] WORD `fortune`
+[1:9] OR_IF `||`
+[1:12] WORD `cowsay`
+STR
+
+create_lexer_spec "and", "fortune && cowsay", <<-STR
+[1:1] WORD `fortune`
+[1:9] AND_IF `&&`
+[1:12] WORD `cowsay`
+STR
+
+create_lexer_spec "pipe", "fortune | cowsay", <<-STR
+[1:1] WORD `fortune`
+[1:9] PIPE `|`
+[1:11] WORD `cowsay`
+STR

@@ -7,15 +7,11 @@ module Vodka
     property input
 
     def initialize(@input : String)
-      @parser = Parser.new @input
-    end
-
-    # Run the AST tree as a program
-    def interpret!
       begin
         ast = @parser.parse!
+        @ast = Parser.new @input
         # log.info "INTERPRETER: #{next_node}"
-      rescue e : Vodka::Lexer::Error
+      rescue e : Vodka::Lexer::Error | Vodka::Parser::Error
         raise e
       end
     end
