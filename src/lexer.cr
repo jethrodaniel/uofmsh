@@ -232,38 +232,39 @@ module Vodka
 
     # The current character.
     #
-    # @return [String] the current character
+    # @return the current character
     private def curr_char
       @scanner.string[@scanner.offset].to_s
     end
 
     # Check what character is next.
     #
-    # @return [String] the next character
+    # @return the next character
     private def next_char
-      @scanner.peek(2).to_s
+      @scanner.string[@scanner.offset + 1].to_s
     end
 
     # Check what character was previous to our current one.
     #
-    # @return [String] the previous character
+    # @return the previous character
     private def prev_char
       @scanner.string[@scanner.offset - 1].to_s
     end
 
-    # @return [Number] the current scanner offset
+    # @return the current scanner offset
     private def advance!
       @scanner.offset += 1
     end
 
-    # @return [Number] the current scanner offset
+    # @param n: the number of characters to advance by
+    # @return the current scanner offset
     private def advance!(n : Number)
       @scanner.offset += n
     end
 
     # Advance the scanner by pattern's match result
     #
-    # @return [String] the scanner's match result
+    # @return the scanner's match result
     private def advance!(pattern : String | Regex)
       @scanner.scan pattern
     end
