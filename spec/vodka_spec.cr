@@ -136,9 +136,16 @@ create_lexer_spec "redirect input", "cat < file", <<-LEX
 [1:7] WORD `file`
 LEX
 
-create_lexer_spec "here-docs", "cat <<here\nhere", <<-LEX
+create_lexer_spec "here-docs", <<-SH, <<-LEX
+cat <<here
+  wow!
+here
+SH
 [1:1] WORD `cat`
 [1:5] HEREDOC `<<here`
 [1:11] NEWLINE `\n`
-[2:1] WORD `here`
+[2:3] WORD `wow`
+[2:6] BANG `!`
+[2:7] NEWLINE `\n`
+[3:1] WORD `here`
 LEX
