@@ -58,10 +58,10 @@ module Vodka
   #
   #
   class Lexer
-    include Vodka::Log
-
     class Error < Exception
     end
+
+    property log : Logger = Logger.new(STDOUT, level: Logger::INFO)
 
     property input
     getter tokens
@@ -76,7 +76,11 @@ module Vodka
     end
 
     def to_s
-      @tokens.map(&.to_s).join "\n"
+      if @tokens.size.zero?
+        ""
+      else
+        @tokens.map(&.to_s).join "\n"
+      end
     end
 
     # Parse the entire input into a list of TOKENS.
@@ -92,7 +96,7 @@ module Vodka
     #
     # TODO: better names
     private def scan_token!
-      log.info "[lexer] current: #{curr_char.inspect}"
+      log.debug "[lexer] current: #{curr_char.inspect}"
 
       case curr_char
       when "("
@@ -144,7 +148,6 @@ module Vodka
       when "<"
         log.info "[lexer] next_char: #{next_char.inspect}"
         if m = match(/\<<(?<name>\w+)/)
-          puts "m: #{m}"
           m = advance!(/\<<(?<name>\w+)/)
           name = if m
                    m[2..]

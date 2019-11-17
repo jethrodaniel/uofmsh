@@ -1,14 +1,14 @@
 require "./spec_helper"
 
 describe Vodka::Log do
-  it "#level" do
-    Vodka::Log.level.should eq(0)
+  pending "#level" do
+    Vodka::Log.level.should eq(Logger::ERROR)
   end
 
-  it "#level=" do
-    Vodka::Log.level.should eq(0)
-    Vodka::Log.level = 9_001
-    Vodka::Log.level.should eq(9_001)
+  pending "#level=" do
+    Vodka::Log.level.should eq(Logger::ERROR)
+    Vodka::Log.level = Logger::DEBUG
+    Vodka::Log.level.should eq(Logger::DEBUG)
   end
 
   # Error: can't include dynamically

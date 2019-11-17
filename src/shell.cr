@@ -2,9 +2,10 @@ require "./log"
 
 module Vodka
   class Shell
-    include Vodka::Log
-
     property prompt
+
+    property log : Logger = Logger.new(STDOUT, level: Logger::DEBUG)
+    # delegate log, to: @log
 
     BANNER = <<-COW
                   ^__^
@@ -15,9 +16,8 @@ module Vodka
     COW
 
     def initialize(@prompt : String)
-      log.info "starting shell..."
+      @log.info "starting shell..."
       @prompt ||= "λ"
-      # @interpreter ||= Interpreter.new ""
     end
 
     # Run the interactive shell, i.e, the REPL
@@ -28,26 +28,23 @@ module Vodka
 
       loop do
         print "#{@prompt}"
-        input = gets.not_nil!.chomp || ""
-
-        # TODO cleanup
-        interpreter = Interpreter.new input
-
-        begin
-          interpreter.interpret!
-        rescue e : Vodka::Lexer::Error | Vodka::Parser::Error
-          puts "#{e.class}: #{e.message}"
-        end
+        eval! gets.not_nil!.chomp
       end
     end
 
     # Run a single line of input
     def eval!(input : String)
+      begin
+        Interpreter.new input
+      rescue e : Vodka::Lexer::Error | Vodka::Parser::Error
+        puts "#{e.class}: #{e.message}"
+      end
+
       # # TODO: dont handle builtins differently, just check if builtin first
-      # if input == "q" || input == "exit"
-      #   puts "bye! <3"
-      #   exit 1
-      # end
+      if input == "exit"
+        puts "bye! <3"
+        exit 1
+      end
     end
 
     def to_s
