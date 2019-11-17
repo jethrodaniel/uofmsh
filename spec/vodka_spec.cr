@@ -67,3 +67,27 @@ create_lexer_spec "bg", "fortune &", <<-STR
 [1:1] WORD `fortune`
 [1:9] AND `&`
 STR
+
+create_lexer_spec "parenthesis", "(cat file)", <<-STR
+[1:1] LEFT_PAREN `(`
+[1:2] WORD `cat`
+[1:6] WORD `file`
+[1:10] RIGHT_PAREN `)`
+STR
+
+create_lexer_spec "braces", "{cat file}", <<-STR
+[1:1] LEFT_BRACE `{`
+[1:2] WORD `cat`
+[1:6] WORD `file`
+[1:10] RIGHT_BRACE `}`
+STR
+
+create_lexer_spec "semi-colon", "date;", <<-STR
+[1:1] WORD `date`
+[1:5] SEMI `;`
+STR
+
+# create_lexer_spec "comments", "# ignore me", <<-STR
+# [1:1] WORD `date`
+# [1:5] SEMI `;`
+# STR
