@@ -30,12 +30,11 @@ module Vodka
       DOUBLE_QUOTED_STR # "a double quoted string"
       BACKTICK_STR      # `a backtick quoted string`
 
-      IO_NUMBER
+      HEREDOC # <<here
+
       NEWLINE
 
       WORD
-      ASSIGNMENT_WORD
-      NAME
     end
 
     def initialize(@line : Int32,
@@ -143,10 +142,16 @@ module Vodka
         advance!
       when "<"
         log.info "[lexer] next_char: #{next_char.inspect}"
-        if next_char == "<"
-          add_token type: Token::Types::DREDIRECT_LEFT, text: "<<"
-          @curr_col += 2
-          advance! 2
+        if m = match(/\<<(?<name>\w+)/)
+          puts "m: #{m}"
+          m = advance!(/\<<(?<name>\w+)/)
+          name = if m
+                   m[2..]
+                 else
+                   ""
+                 end
+          add_token type: Token::Types::HEREDOC, text: %(<<#{name})
+          @curr_col += 2 + name.size
         else
           add_token type: Token::Types::REDIRECT_LEFT, text: "<"
           @curr_col += 1

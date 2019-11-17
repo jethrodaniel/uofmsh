@@ -13,7 +13,7 @@ shards build vodka
 ## Tests
 
 ```
-crystal specs
+make
 ```
 
 ## License
