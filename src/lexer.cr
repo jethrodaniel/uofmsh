@@ -15,17 +15,17 @@ module Vodka
       HYPHEN      # -
       BACKSLASH   # '\'
 
-      REDIRECT_LEFT   # <
-      DREDIRECT_LEFT  # <<
-      REDIRECT_RIGHT  # >
+      REDIRECT_LEFT          # <
+      DREDIRECT_LEFT         # <<
+      REDIRECT_RIGHT         # >
       REDIRECT_RIGHT_CLOBBER # >|
-      DREDIRECT_RIGHT # >>
-      BANG            # !
-      BANGBANG        # !!
-      AND             # &
-      AND_IF          # &&
-      PIPE            # |
-      OR_IF           # ||
+      DREDIRECT_RIGHT        # >>
+      BANG                   # !
+      BANGBANG               # !!
+      AND                    # &
+      AND_IF                 # &&
+      PIPE                   # |
+      OR_IF                  # ||
 
       SINGLE_QUOTED_STR # 'a single quoted string'
       DOUBLE_QUOTED_STR # "a double quoted string"
