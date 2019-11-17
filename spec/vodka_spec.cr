@@ -93,3 +93,23 @@ cal # also me
 SH
 [1:13] WORD `cal`
 LEX
+
+create_lexer_spec "colon", ":", <<-LEX
+[1:1] COLON `:`
+LEX
+
+create_lexer_spec "hyphen", "-", <<-LEX
+[1:1] HYPHEN `-`
+LEX
+
+create_lexer_spec "new lines", <<-LEX, <<-SH
+
+
+
+vim
+LEX
+[1:1] NEWLINE `\n`
+[2:1] NEWLINE `\n`
+[3:1] NEWLINE `\n`
+[4:1] WORD `vim`
+SH
