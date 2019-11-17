@@ -135,6 +135,13 @@ lex_spec "redirect io", "cat file 2> errors", <<-LEX
 [1:13] WORD `errors`
 LEX
 
+lex_spec "append io", "cat file 2>> errors", <<-LEX
+[1:1] WORD `cat`
+[1:5] WORD `file`
+[1:10] DREDIRECT_RIGHT `2>>`
+[1:14] WORD `errors`
+LEX
+
 lex_spec "no clobber", "cat file 2>| errors", <<-LEX
 [1:1] WORD `cat`
 [1:5] WORD `file`
