@@ -116,9 +116,9 @@ module Vodka
         @curr_col += 1
         advance!
       when "#"
-        add_token type: Token::Types::POUND, text: curr_char
-        @curr_col += 1
-        advance!
+        # Skip comment lines
+        m = @scanner.scan_until(/\n|$/) || [1] of Int32
+        @curr_col += m.size
       when ":"
         add_token type: Token::Types::COLON, text: curr_char
         @curr_col += 1

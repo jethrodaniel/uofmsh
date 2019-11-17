@@ -45,49 +45,51 @@ macro create_lexer_spec(name, command, expected)
   end
 end
 
-create_lexer_spec "or", "fortune || cowsay", <<-STR
+create_lexer_spec "or", "fortune || cowsay", <<-LEX
 [1:1] WORD `fortune`
 [1:9] OR_IF `||`
 [1:12] WORD `cowsay`
-STR
+LEX
 
-create_lexer_spec "pipe", "fortune | cowsay", <<-STR
+create_lexer_spec "pipe", "fortune | cowsay", <<-LEX
 [1:1] WORD `fortune`
 [1:9] PIPE `|`
 [1:11] WORD `cowsay`
-STR
+LEX
 
-create_lexer_spec "and", "fortune && cowsay", <<-STR
+create_lexer_spec "and", "fortune && cowsay", <<-LEX
 [1:1] WORD `fortune`
 [1:9] AND_IF `&&`
 [1:12] WORD `cowsay`
-STR
+LEX
 
-create_lexer_spec "bg", "fortune &", <<-STR
+create_lexer_spec "bg", "fortune &", <<-LEX
 [1:1] WORD `fortune`
 [1:9] AND `&`
-STR
+LEX
 
-create_lexer_spec "parenthesis", "(cat file)", <<-STR
+create_lexer_spec "parenthesis", "(cat file)", <<-LEX
 [1:1] LEFT_PAREN `(`
 [1:2] WORD `cat`
 [1:6] WORD `file`
 [1:10] RIGHT_PAREN `)`
-STR
+LEX
 
-create_lexer_spec "braces", "{cat file}", <<-STR
+create_lexer_spec "braces", "{cat file}", <<-LEX
 [1:1] LEFT_BRACE `{`
 [1:2] WORD `cat`
 [1:6] WORD `file`
 [1:10] RIGHT_BRACE `}`
-STR
+LEX
 
-create_lexer_spec "semi-colon", "date;", <<-STR
+create_lexer_spec "semi-colon", "date;", <<-LEX
 [1:1] WORD `date`
 [1:5] SEMI `;`
-STR
+LEX
 
-# create_lexer_spec "comments", "# ignore me", <<-STR
-# [1:1] WORD `date`
-# [1:5] SEMI `;`
-# STR
+create_lexer_spec "comments", <<-SH, <<-LEX
+# ignore me
+cal # also me
+SH
+[1:13] WORD `cal`
+LEX
