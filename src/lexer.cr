@@ -115,10 +115,12 @@ module Vodka
         add_token type: Token::Types::SEMI, text: curr_char
         @curr_col += 1
         advance!
-      when "#"
-        # Skip comment lines
-        m = @scanner.scan_until(/\n|$/) || [1] of Int32
-        @curr_col += m.size
+      when "#" # Skip comment lines
+        @curr_col += if m = @scanner.scan_until(/\n|$/)
+                       m.size
+                     else
+                       1
+                     end
       when ":"
         add_token type: Token::Types::COLON, text: curr_char
         @curr_col += 1
