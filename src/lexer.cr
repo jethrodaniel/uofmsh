@@ -129,7 +129,7 @@ module Vodka
         add_token type: Token::Types::HYPHEN, text: curr_char
         @curr_col += 1
         advance!
-      when "'\'"
+      when "\\"
         add_token type: Token::Types::BACKSLASH, text: curr_char
         @curr_col += 1
         advance!
@@ -137,7 +137,7 @@ module Vodka
         add_token type: Token::Types::NEWLINE, text: curr_char
         @curr_line += 1
         advance!
-      when " "
+      when " " # Ignore white space
         @curr_col += 1
         advance!
       when "<"

@@ -102,6 +102,10 @@ create_lexer_spec "hyphen", "-", <<-LEX
 [1:1] HYPHEN `-`
 LEX
 
+create_lexer_spec "backslash", "\\", <<-LEX
+[1:1] BACKSLASH `\\`
+LEX
+
 create_lexer_spec "new lines", <<-LEX, <<-SH
 
 
