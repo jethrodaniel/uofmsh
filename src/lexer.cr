@@ -18,6 +18,7 @@ module Vodka
       REDIRECT_LEFT   # <
       DREDIRECT_LEFT  # <<
       REDIRECT_RIGHT  # >
+      REDIRECT_RIGHT_CLOBBER # >|
       DREDIRECT_RIGHT # >>
       BANG            # !
       BANGBANG        # !!
@@ -208,14 +209,14 @@ module Vodka
       when "`"
         # BACKTICK_STR      # `a backtick quoted string`
       else
-        # Possibly
-        # IO_NUMBER
-        # log.info "[lexer] next_char: #{next_char.inspect}"
-
         if m = match(/\d+\>\>/)
           add_token type: Token::Types::DREDIRECT_RIGHT, text: m
           @curr_col += m.size
           advance! /\d+\>\>/
+        elsif m = match(/\d+\>\|/)
+          add_token type: Token::Types::REDIRECT_RIGHT_CLOBBER, text: m
+          @curr_col += m.size
+          advance! /\d+\>\|/
         elsif m = match(/\d+\>/)
           add_token type: Token::Types::REDIRECT_RIGHT, text: m
           @curr_col += m.size
