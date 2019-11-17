@@ -159,7 +159,7 @@ module Vodka
         end
       when ">"
         log.info "[lexer] next_char: #{next_char.inspect}"
-        if next_char == "<"
+        if next_char == ">"
           add_token type: Token::Types::DREDIRECT_RIGHT, text: ">>"
           @curr_col += 2
           advance! 2

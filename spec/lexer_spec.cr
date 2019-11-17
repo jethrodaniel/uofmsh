@@ -113,3 +113,17 @@ SH
 [2:7] NEWLINE `\n`
 [3:1] WORD `here`
 LEX
+
+lex_spec "redirect output", "cat file > out", <<-LEX
+[1:1] WORD `cat`
+[1:5] WORD `file`
+[1:10] REDIRECT_RIGHT `>`
+[1:12] WORD `out`
+LEX
+
+lex_spec "append output", "cat file >> out", <<-LEX
+[1:1] WORD `cat`
+[1:5] WORD `file`
+[1:10] DREDIRECT_RIGHT `>>`
+[1:13] WORD `out`
+LEX
