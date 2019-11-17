@@ -241,6 +241,10 @@ module Vodka
     #
     # @return the next character
     private def next_char
+      if @scanner.string.size - 1 < @scanner.offset + 1
+        return "" # In case we're currently on the last character
+      end
+
       @scanner.string[@scanner.offset + 1].to_s
     end
 

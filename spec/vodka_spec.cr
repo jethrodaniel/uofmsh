@@ -19,8 +19,8 @@ describe Vodka::Log do
 
   # Error: can't include dynamically
   pending "log" do
-  #   include Vodka::Log
-  #   log.info "testing, 1,2,3..."
+    #   include Vodka::Log
+    #   log.info "testing, 1,2,3..."
   end
 end
 
@@ -51,14 +51,19 @@ create_lexer_spec "or", "fortune || cowsay", <<-STR
 [1:12] WORD `cowsay`
 STR
 
+create_lexer_spec "pipe", "fortune | cowsay", <<-STR
+[1:1] WORD `fortune`
+[1:9] PIPE `|`
+[1:11] WORD `cowsay`
+STR
+
 create_lexer_spec "and", "fortune && cowsay", <<-STR
 [1:1] WORD `fortune`
 [1:9] AND_IF `&&`
 [1:12] WORD `cowsay`
 STR
 
-create_lexer_spec "pipe", "fortune | cowsay", <<-STR
+create_lexer_spec "bg", "fortune &", <<-STR
 [1:1] WORD `fortune`
-[1:9] PIPE `|`
-[1:11] WORD `cowsay`
+[1:9] AND `&`
 STR
