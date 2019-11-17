@@ -136,8 +136,9 @@ module Vodka
       when "\n"
         add_token type: Token::Types::NEWLINE, text: curr_char
         @curr_line += 1
+        @curr_col = 0
         advance!
-      when " " # Ignore white space
+      when " ", "\t" # Ignore white space
         @curr_col += 1
         advance!
       when "<"

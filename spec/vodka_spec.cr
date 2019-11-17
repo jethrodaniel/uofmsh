@@ -117,3 +117,15 @@ LEX
 [3:1] NEWLINE `\n`
 [4:1] WORD `vim`
 SH
+
+create_lexer_spec "whitespace", <<-LEX, <<-SH
+        date
+	cal
+				date
+LEX
+[1:9] WORD `date`
+[1:13] NEWLINE `\n`
+[2:2] WORD `cal`
+[2:5] NEWLINE `\n`
+[3:5] WORD `date`
+SH
