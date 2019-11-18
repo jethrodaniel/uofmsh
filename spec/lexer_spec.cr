@@ -148,3 +148,21 @@ lex_spec "no clobber", "cat file 2>| errors", <<-LEX
 [1:10] REDIRECT_RIGHT_CLOBBER `2>|`
 [1:14] WORD `errors`
 LEX
+
+lex_spec "single quotes", "echo 'wow'", <<-LEX
+[1:1] WORD `echo`
+[1:6] SINGLE_QUOTE_STRING `wow`
+LEX
+
+lex_spec "backtick quotes", "echo `date`", <<-LEX
+[1:1] WORD `echo`
+[1:6] BACKTICK_STRING `date`
+LEX
+
+lex_spec "double quotes", %(echo "foo"), <<-LEX
+[1:1] WORD `echo`
+[1:6] DOUBLE_QUOTE_STRING `foo`
+LEX
+
+# lex_spec "words", "cat one.c Two_ gH32,", <<-LEX
+# LEX

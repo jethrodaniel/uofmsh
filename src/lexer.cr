@@ -27,9 +27,9 @@ module Vodka
       PIPE                   # |
       OR_IF                  # ||
 
-      SINGLE_QUOTED_STR # 'a single quoted string'
-      DOUBLE_QUOTED_STR # "a double quoted string"
-      BACKTICK_STR      # `a backtick quoted string`
+      SINGLE_QUOTE_STRING # 'a single quoted string'
+      DOUBLE_QUOTE_STRING # "a double quoted string"
+      BACKTICK_STRING     # `a backtick quoted string`
 
       HEREDOC # <<here
 
@@ -206,11 +206,29 @@ module Vodka
           advance!
         end
       when "'"
-        # SINGLE_QUOTED_STR # 'a single quoted string'
+        if m = match(/'.*'/)
+          add_token type: Token::Types::SINGLE_QUOTE_STRING, text: m[1...-1]
+          @curr_col += m.size
+          advance! /'.*'/
+        else
+          raise Lexer::Error.new("unterminated single quote pair at #{curr_pos}")
+        end
       when "\""
-        # DOUBLE_QUOTED_STR # "a double quoted string"
+        if m = match(/".*"/)
+          add_token type: Token::Types::DOUBLE_QUOTE_STRING, text: m[1...-1]
+          @curr_col += m.size
+          advance! /".*"/
+        else
+          raise Lexer::Error.new("unterminated double pair at #{curr_pos}")
+        end
       when "`"
-        # BACKTICK_STR      # `a backtick quoted string`
+        if m = match(/`.*`/)
+          add_token type: Token::Types::BACKTICK_STRING, text: m[1...-1]
+          @curr_col += m.size
+          advance! /`.*`/
+        else
+          raise Lexer::Error.new("unterminated backtick pair at #{curr_pos}")
+        end
       else
         if m = match(/\d+\>\>/)
           add_token type: Token::Types::DREDIRECT_RIGHT, text: m
@@ -240,6 +258,11 @@ module Vodka
           raise Lexer::Error.new("unexpected character: #{next_char}")
         end
       end
+    end
+
+    # Show the current position, for error messages
+    private def curr_pos
+      "[#{@curr_line + 1}:#{@curr_col + 1}]"
     end
 
     # The current character.
