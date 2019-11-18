@@ -36,6 +36,8 @@ module Vodka
       NEWLINE
 
       WORD
+      NAME
+      ASSIGNMENT_WORD
     end
 
     def initialize(@line : Int32,
@@ -253,6 +255,11 @@ module Vodka
           raise Lexer::Error.new("unterminated single quote pair at #{curr_pos}")
         end
       when "\""
+        # TODO: Double quotes have to be parsed recursively - for example
+        #
+        # ```
+        # echo "foo$(echo "bar$(echo "!")")"
+        # ```
         if m = match(/".*"/)
           add_token type: Token::Types::DOUBLE_QUOTE_STRING, text: m[1...-1]
           @curr_col += m.size
@@ -260,7 +267,7 @@ module Vodka
         else
           raise Lexer::Error.new("unterminated double pair at #{curr_pos}")
         end
-      when "`"
+      when "`" # TODO: handle backtick strings, i.e, command substitution
         if m = match(/`.*`/)
           add_token type: Token::Types::BACKTICK_STRING, text: m[1...-1]
           @curr_col += m.size
@@ -268,6 +275,8 @@ module Vodka
         else
           raise Lexer::Error.new("unterminated backtick pair at #{curr_pos}")
         end
+      when "$"
+        raise Lexer::Error.new("TODO: `$`")
       else
         if m = match(/\d+\>\>/)
           add_token type: Token::Types::DREDIRECT_RIGHT, text: m
