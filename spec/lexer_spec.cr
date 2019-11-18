@@ -9,6 +9,16 @@ macro lex_spec(name, command, expected)
   end
 end
 
+macro lex_spec_fail(name, command, failure)
+  describe Vodka::Lexer do
+    it {{name}} do
+      expect_raises Vodka::Lexer::Error, {{failure}} do
+        lexer = Vodka::Lexer.new {{command}}
+      end
+    end
+  end
+end
+
 lex_spec "or", "fortune || cowsay", <<-LEX
 [1:1] WORD `fortune`
 [1:9] OR_IF `||`
@@ -165,6 +175,14 @@ lex_spec "single quotes", "echo 'wow'", <<-LEX
 [1:1] WORD `echo`
 [1:6] SINGLE_QUOTE_STRING `wow`
 LEX
+
+lex_spec_fail "unterminated single quote pair", "echo 'wow", <<-ERR
+unterminated single quote pair at [1:6]
+ERR
+
+lex_spec_fail "single quotes can't contain single quotes", "echo 'wow''", <<-ERR
+unterminated single quote pair at [1:11]
+ERR
 
 lex_spec "backtick quotes", "echo `date`", <<-LEX
 [1:1] WORD `echo`

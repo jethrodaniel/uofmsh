@@ -33,3 +33,7 @@ A big thanks to the following
 - https://weblog.jamisbuck.org/2015/7/30/writing-a-simple-recursive-descent-parser.html
 - http://www.craftinginterpreters.com/
 - http://parsingintro.sourceforge.net/
+
+Etc
+
+- https://pastebin.com/qpsK4TF6

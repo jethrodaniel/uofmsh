@@ -244,11 +244,11 @@ module Vodka
           add_token type: Token::Types::WORD, text: next_char
           advance! 2
         end
-      when "'"
-        if m = match(/'.*'/)
+      when "'" # single quotes cannot contain single quotes
+        if m = match(/'[^']+'/)
           add_token type: Token::Types::SINGLE_QUOTE_STRING, text: m[1...-1]
           @curr_col += m.size
-          advance! /'.*'/
+          advance! /'[^']+'/
         else
           raise Lexer::Error.new("unterminated single quote pair at #{curr_pos}")
         end
