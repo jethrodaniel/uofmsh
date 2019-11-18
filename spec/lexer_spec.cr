@@ -66,8 +66,20 @@ lex_spec "hyphen", "-", <<-LEX
 [1:1] HYPHEN `-`
 LEX
 
-lex_spec "backslash", "\\", <<-LEX
-[1:1] BACKSLASH `\\`
+lex_spec "single backslash", "\\", <<-LEX
+LEX
+
+lex_spec "backslash quoting", <<-SH, <<-LEX
+\\\\
+echo \\$HOME
+\# \!
+SH
+[1:3] WORD `\\`
+[1:3] NEWLINE `\n`
+[2:1] WORD `echo`
+[2:8] WORD `$`
+[2:8] WORD `HOME`
+[2:12] NEWLINE `\n`
 LEX
 
 lex_spec "new lines", <<-LEX, <<-SH

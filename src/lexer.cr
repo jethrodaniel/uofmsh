@@ -133,10 +133,6 @@ module Vodka
         add_token type: Token::Types::HYPHEN, text: curr_char
         @curr_col += 1
         advance!
-      when "\\"
-        add_token type: Token::Types::BACKSLASH, text: curr_char
-        @curr_col += 1
-        advance!
       when "\n"
         add_token type: Token::Types::NEWLINE, text: curr_char
         @curr_line += 1
@@ -204,6 +200,49 @@ module Vodka
           add_token type: Token::Types::AND, text: "&"
           @curr_col += 1
           advance!
+        end
+      when "\\"
+        # A backslash either
+        #
+        # - "quotes" the next character as a literal
+        # - serves to break up long lines (a `\`,`\n` pair)
+        #
+        # Apparently in Bash, some characters are treated special for the first
+        # point. https://superuser.com/a/794968/1056015
+
+        case next_char
+        when "" # Do nothing, as we ended with a backslash. TODO: error?
+          @curr_col += 1
+          advance!
+        when "\\"
+          @curr_col += 2
+          add_token type: Token::Types::WORD, text: next_char
+          advance! 2
+        when "\n"
+          @curr_line += 1
+          advance! 2
+        else
+          # TODO: this is def not right
+          #
+          # Need to treat the next character as a literal... what does that
+          # mean here? Do we just turn this
+          #
+          # ```
+          # echo \$HOME
+          # ```
+          #
+          # into
+          #
+          # ```
+          # WORD: echo
+          # WORD: $
+          # WORD: HOME
+          # ```
+          #
+          # Surely not?
+          @curr_col += 2
+          add_token type: Token::Types::WORD, text: next_char
+          advance! 2
         end
       when "'"
         if m = match(/'.*'/)
