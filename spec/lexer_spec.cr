@@ -194,5 +194,10 @@ lex_spec "double quotes", %(echo "foo"), <<-LEX
 [1:6] DOUBLE_QUOTE_STRING `foo`
 LEX
 
-# lex_spec "words", "cat one.c Two_ gH32,", <<-LEX
-# LEX
+# What's in a name? That which we call a text would be just as executable..
+#
+# Apparently anything except `/` and `\0`.
+#
+# https://unix.stackexchange.com/a/230299/354783
+lex_spec "words", "cat one.c Two_ gH32,", <<-LEX
+LEX
