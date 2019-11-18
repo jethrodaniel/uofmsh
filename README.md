@@ -2,12 +2,16 @@
 
 ![](https://github.com/jethrodaniel/vodka/workflows/build/badge.svg)
 
+## Why?
+
+Have you seen bash's source code?
+
 ## Install
 
 ```
 git clone https://github.com/jethrodaniel/vodka
 cd vodka
-shards build vodka
+make run
 ```
 
 ## Tests

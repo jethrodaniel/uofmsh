@@ -1,6 +1,6 @@
 require "string_scanner"
 
-require "./log"
+# require "./log"
 
 module Vodka
   class Token
@@ -211,7 +211,7 @@ module Vodka
         #
         # Apparently in Bash, some characters are treated special for the first
         # point. https://superuser.com/a/794968/1056015
-
+        #
         case next_char
         when "" # Do nothing, as we ended with a backslash. TODO: error?
           @curr_col += 1
