@@ -260,6 +260,27 @@ module Vodka
         # ```
         # echo "foo$(echo "bar$(echo "!")")"
         # ```
+        #
+        # Double quotes allow the following:
+        #
+        # - parameter expansion   "${HOME}", "$HOME"
+        # - command substitution  "$(echo "$HOME")", "ls `echo "$HOME`"
+        # - arithmetic expansion  "1 == $((2 - 1))"
+        #
+        # TODO: make it the lexer's job to determine whether every one of the
+        # above are properly formatted. We'll just pass DOUBLE_QUOTE_STRING to
+        # the parser for now, but at least it'll be _validly formatted_. The
+        # actual subshell creation and command still needs to be ran at
+        # execution time, where we'll create a new Vodka::Lexer then.
+        #
+        # So
+        #
+        # ```
+        # echo "look! 1 + $(echo "1 == $((1 + 1))")"
+        # ```
+        #
+        # will be tokenized as `[WORD, DOUBLE_QUOTE_STRING]`.
+        #
         if m = match(/".*"/)
           add_token type: Token::Types::DOUBLE_QUOTE_STRING, text: m[1...-1]
           @curr_col += m.size
