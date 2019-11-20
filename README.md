@@ -2,10 +2,6 @@
 
 ![](https://github.com/jethrodaniel/vodka/workflows/build/badge.svg)
 
-## Why?
-
-Have you seen bash's source code?
-
 ## Install
 
 ```
