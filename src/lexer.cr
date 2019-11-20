@@ -1,18 +1,22 @@
 require "string_scanner"
 
+require "./log"
 require "./token"
 
 module Vodka
   class Lexer
+    include Vodka::Log
+
     class Error < Exception
     end
-
-    property log : Logger = Logger.new(STDOUT, level: Logger::INFO)
 
     getter input
     getter tokens
 
     def initialize(@input : String)
+      log.info "starting lexer..."
+      log.debug "debugging lexer..."
+
       @scanner = StringScanner.new @input
       @tokens = [] of Token
       @curr_line = 0
@@ -34,6 +38,8 @@ module Vodka
     end
 
     # Handle the current character, attempt to match a TOKEN
+    #
+    # This is called repeatedly until the scanner hits the end of input
     private def scan_token!
       log.debug "[lexer] current: #{curr_char.inspect}"
 

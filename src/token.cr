@@ -1,5 +1,9 @@
+require "./log"
+
 module Vodka
   class Token
+    include Vodka::Log
+
     def initialize(@line : Int32,
                    @column : Int32,
                    @type : Types,

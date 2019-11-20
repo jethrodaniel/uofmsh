@@ -5,8 +5,12 @@
 ## Install
 
 ```
-git clone https://github.com/jethrodaniel/vodka
-cd vodka
+git clone https://github.com/jethrodaniel/vodka && cd vodka && make
+```
+
+## Running the shell
+
+```
 make run
 ```
 
@@ -14,6 +18,12 @@ make run
 
 ```
 make
+```
+
+## Development
+
+```
+VODKA_LOG=debug make run
 ```
 
 ## License

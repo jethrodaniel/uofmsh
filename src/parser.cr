@@ -4,6 +4,8 @@ require "./lexer"
 
 module Vodka
   class Parser
+    include Vodka::Log
+
     class Error < Exception
     end
 

@@ -3,6 +3,8 @@ require "./parser"
 
 module Vodka
   class Shell
+    include Vodka::Log
+
     BANNER = <<-COW
                   ^__^
           _______/(oo)
@@ -13,10 +15,8 @@ module Vodka
 
     property prompt : String = "λ"
 
-    property log : Logger = Logger.new(STDOUT, level: Logger::DEBUG)
-
     def initialize(@prompt : String)
-      @log.info "starting shell..."
+      log.info "starting shell..."
     end
 
     # Run the interactive shell, i.e, the REPL
