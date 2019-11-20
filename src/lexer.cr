@@ -1,64 +1,8 @@
 require "string_scanner"
 
-# require "./log"
+require "./token"
 
 module Vodka
-  class Token
-    enum Types
-      LEFT_PAREN  # (
-      RIGHT_PAREN # )
-      LEFT_BRACE  # {
-      RIGHT_BRACE # }
-      SEMI        # ;
-      POUND       # #
-      COLON       # :
-      HYPHEN      # -
-      BACKSLASH   # '\'
-
-      REDIRECT_LEFT          # <
-      DREDIRECT_LEFT         # <<
-      REDIRECT_RIGHT         # >
-      REDIRECT_RIGHT_CLOBBER # >|
-      DREDIRECT_RIGHT        # >>
-      BANG                   # !
-      BANGBANG               # !!
-      AND                    # &
-      AND_IF                 # &&
-      PIPE                   # |
-      OR_IF                  # ||
-
-      SINGLE_QUOTE_STRING # 'a single quoted string'
-      DOUBLE_QUOTE_STRING # "a double quoted string"
-      BACKTICK_STRING     # `a backtick quoted string`
-
-      HEREDOC # <<here
-
-      NEWLINE
-
-      WORD
-      NAME
-      ASSIGNMENT_WORD
-    end
-
-    def initialize(@line : Int32,
-                   @column : Int32,
-                   @type : Types,
-                   @text : String)
-    end
-
-    def to_s
-      "[#{@line + 1}:#{@column + 1}] #{@type} \`#{@text}`"
-    end
-  end
-
-  # scanner - keeps track of position in file, line number, etc.
-  # lexer - constructs TOKENS
-  #
-  # The grammar for a posix shell is
-  #
-  # bnf
-  #
-  #
   class Lexer
     class Error < Exception
     end
