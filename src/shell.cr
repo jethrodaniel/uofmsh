@@ -13,8 +13,6 @@ module Vodka
 
     property prompt : String = "λ"
 
-    # property parser : Vodka::Parser
-
     property log : Logger = Logger.new(STDOUT, level: Logger::DEBUG)
 
     def initialize(@prompt : String)

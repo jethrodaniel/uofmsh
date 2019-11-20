@@ -1,12 +1,13 @@
 require "./log"
 require "./ast"
+require "./lexer"
 
 module Vodka
   class Parser
     class Error < Exception
     end
 
-    property input
+    getter input
     getter lexer
 
     def initialize(@input : String)
@@ -15,7 +16,7 @@ module Vodka
     end
 
     # Parse the TOKENS into an AST tree
-    def parse!
+    def parse
       puts @lexer.to_s
       # log.info "PARSER:  #{next_lexeme}"
     end

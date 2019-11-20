@@ -9,7 +9,7 @@ module Vodka
 
     property log : Logger = Logger.new(STDOUT, level: Logger::INFO)
 
-    property input
+    getter input
     getter tokens
 
     def initialize(@input : String)
@@ -21,26 +21,19 @@ module Vodka
       scan_tokens!
     end
 
+    # Returns all the tokens, in a readable manner
     def to_s
-      if @tokens.size.zero?
-        ""
-      else
-        @tokens.map(&.to_s).join "\n"
-      end
+      @tokens.map(&.to_s).join "\n"
     end
 
-    # Parse the entire input into a list of TOKENS.
-    #
-    # TODO: better names
+    # Parse the entire input into a list of TOKENS
     private def scan_tokens!
       until @scanner.eos?
         scan_token!
       end
     end
 
-    # advance the scanner and attempt to match a TOKEN
-    #
-    # TODO: better names
+    # Handle the current character, attempt to match a TOKEN
     private def scan_token!
       log.debug "[lexer] current: #{curr_char.inspect}"
 
@@ -278,16 +271,12 @@ module Vodka
       "[#{@curr_line + 1}:#{@curr_col + 1}]"
     end
 
-    # The current character.
-    #
-    # @return the current character
+    # The current character
     private def curr_char
       @scanner.string[@scanner.offset].to_s
     end
 
-    # Check what character is next.
-    #
-    # @return the next character
+    # Check which character is next
     private def next_char
       if @scanner.string.size - 1 < @scanner.offset + 1
         return "" # In case we're currently on the last character
@@ -296,41 +285,32 @@ module Vodka
       @scanner.string[@scanner.offset + 1].to_s
     end
 
-    # Check what character was previous to our current one.
-    #
-    # @return the previous character
+    # Check what character is previous to our current position
     private def prev_char
       @scanner.string[@scanner.offset - 1].to_s
     end
 
-    # @return the current scanner offset
+    # Advance the scanner
     private def advance!
       @scanner.offset += 1
     end
 
-    # @param n: the number of characters to advance by
-    # @return the current scanner offset
+    # Advance the scanner by a number of characters
     private def advance!(n : Number)
       @scanner.offset += n
     end
 
     # Advance the scanner by pattern's match result
-    #
-    # @return the scanner's match result
     private def advance!(pattern : String | Regex)
       @scanner.scan pattern
     end
 
-    # Check if the scanner matches a provided regex, without advancing
-    #
-    # @return [String] the matched input
+    # Check if the current input matches a provided regex, without advancing
     private def match(pattern)
       @scanner.check pattern
     end
 
-    # Add a new token to our list.
-    #
-    # @return [Vodka::Token] the new token that was added to @tokens
+    # Add a new token to our list
     private def add_token(type : Token::Types, text : String)
       @tokens << Token.new line: @curr_line, column: @curr_col, type: type, text: text
     end
