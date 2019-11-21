@@ -4,6 +4,8 @@ module Vodka
   class Token
     include Vodka::Log
 
+    getter line, column, type, text
+
     def initialize(@line : Int32,
                    @column : Int32,
                    @type : Types,
@@ -12,6 +14,13 @@ module Vodka
 
     def to_s
       "[#{@line + 1}:#{@column + 1}] #{@type} \`#{@text}`"
+    end
+
+    def ==(other)
+      @line == other.line && \
+         @column == other.column && \
+         @type == other.type && \
+         @text == other.text
     end
 
     enum Types

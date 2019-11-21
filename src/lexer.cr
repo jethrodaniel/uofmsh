@@ -22,7 +22,7 @@ module Vodka
       @curr_line = 0
       @curr_col = 0
 
-      scan_tokens!
+      # scan_tokens!
     end
 
     # Returns all the tokens, in a readable manner
@@ -30,9 +30,40 @@ module Vodka
       @tokens.map(&.to_s).join "\n"
     end
 
+    # TODO: abstract all input to shell into an object that responds to `gets`,
+    # so that input can be a string, or even stdinput, to facilitate the actual
+    # _interpret as you go_ that is the REPL.
+    # NOTE: that's input one character at a time
+    # TODO: use chars here instead of strings
+    def next_token
+      if @tokens.empty? # First time
+        until !@tokens.empty? || finished?
+          scan_token!
+        end
+        if @tokens.size > 0
+          return @tokens.last
+        else
+          return ""
+        end
+      end
+
+      prev = @tokens.last
+
+      until @tokens.last != prev || finished?
+        scan_token!
+      end
+
+      prev == @tokens.last ? "" : @tokens.last
+    end
+
+    # Whether the lexer has finished parsing the input
+    def finished?
+      @scanner.eos?
+    end
+
     # Parse the entire input into a list of TOKENS
     private def scan_tokens!
-      until @scanner.eos?
+      until finished?
         scan_token!
       end
     end
@@ -41,7 +72,7 @@ module Vodka
     #
     # This is called repeatedly until the scanner hits the end of input
     private def scan_token!
-      log.debug "[lexer] current: #{curr_char.inspect}"
+      log.warn "scan_token! - curr_char: #{curr_char.inspect}"
 
       case curr_char
       when "("
@@ -318,7 +349,10 @@ module Vodka
 
     # Add a new token to our list
     private def add_token(type : Token::Types, text : String)
-      @tokens << Token.new line: @curr_line, column: @curr_col, type: type, text: text
+      log.warn "add_token"
+      token = Token.new line: @curr_line, column: @curr_col, type: type, text: text
+      log.debug "adding token: #{token.to_s}"
+      @tokens << token
     end
   end
 end
