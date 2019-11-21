@@ -4,26 +4,33 @@
 
 ## Install
 
-```
-git clone https://github.com/jethrodaniel/vodka && cd vodka && make
-```
-
-## Running the shell
+Assuming you have crystal installed
 
 ```
-make run
+git clone https://github.com/jethrodaniel/vodka
+cd vodka
+make build
+./bin/vodka
 ```
 
-## Tests
+## Development
+
+To run all tests
 
 ```
 make
 ```
 
-## Development
+To run a specfic test
 
 ```
-VODKA_LOG=debug make run
+crystal spec spec/lexer_spec.cr:122
+```
+
+To set the logging level
+
+```
+VODKA_LOG=debug ./bin/vodka # info, warn, etc
 ```
 
 ## License

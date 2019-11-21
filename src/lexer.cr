@@ -21,8 +21,6 @@ module Vodka
       @tokens = [] of Token
       @curr_line = 0
       @curr_col = 0
-
-      # scan_tokens!
     end
 
     # Returns all the tokens, in a readable manner
@@ -62,9 +60,10 @@ module Vodka
     end
 
     # Parse the entire input into a list of TOKENS
-    private def scan_tokens!
+    def all_tokens
       until finished?
         scan_token!
+        # next_token
       end
     end
 
@@ -72,7 +71,7 @@ module Vodka
     #
     # This is called repeatedly until the scanner hits the end of input
     private def scan_token!
-      log.warn "scan_token! - curr_char: #{curr_char.inspect}"
+      log.warn "scan_token! - curr_char: #{curr_char.inspect}, curr_pos: #{curr_pos}"
 
       case curr_char
       when "("
@@ -116,7 +115,8 @@ module Vodka
         advance!
       when " ", "\t" # Ignore white space
         @curr_col += 1
-        advance!
+        log.debug "curr_pos: #{curr_pos}"
+        advance! 1
       when "<"
         log.info "[lexer] next_char: #{next_char.inspect}"
         if m = match(/\<<(?<name>\w+)/)
@@ -296,7 +296,8 @@ module Vodka
         elsif m = match(/(\w|\d)+/)
           add_token type: Token::Types::WORD, text: m
           @curr_col += m.size
-          advance! /(\w|\d)+/
+          log.warn ">>"
+          advance! m.size
         else
           raise Lexer::Error.new("unexpected character: #{next_char}")
         end
