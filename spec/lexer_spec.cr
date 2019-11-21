@@ -11,6 +11,17 @@ describe Vodka::Lexer do
     lexer.next_token.to_s.should eq "[1:20] WORD `cow`"
     lexer.next_token.to_s.should eq ""
   end
+
+  it ".finished?" do
+    lexer = Vodka::Lexer.new "fortune | cowsay > cow"
+    lexer.finished?.should be_false
+
+    4.times { lexer.next_token }
+    lexer.finished?.should be_false
+
+    lexer.next_token
+    lexer.finished?.should be_true
+  end
 end
 
 macro lex_spec(name, command, expected)
