@@ -9,3 +9,6 @@ build: lint
 
 lint:
 	crystal tool format
+
+clean:
+	rm -rf ./bin

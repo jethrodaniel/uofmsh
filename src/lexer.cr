@@ -33,6 +33,8 @@ module Vodka
     # _interpret as you go_ that is the REPL.
     # NOTE: that's input one character at a time
     # TODO: use chars here instead of strings
+    #
+    # Return the next token, or "" if EOF
     def next_token
       if @tokens.empty? # First time
         until !@tokens.empty? || finished?
@@ -45,6 +47,7 @@ module Vodka
         end
       end
 
+      # we have a previous token, so get the next one
       prev = @tokens.last
 
       until @tokens.last != prev || finished?
