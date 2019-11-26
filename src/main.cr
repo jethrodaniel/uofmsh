@@ -1,6 +1,8 @@
 require "./vodka"
 
-Vodka::Lexer.interactive
+# Vodka::Lexer.interactive
+lexer = Vodka::Lexer.new "fortune | cowsay > cow"
+puts lexer.next_token
 
 # Vodka::Shell.new("$ ").repl banner: true, fortune: true
 

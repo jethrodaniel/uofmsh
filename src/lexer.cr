@@ -10,7 +10,8 @@ module Vodka
     class Error < Exception
     end
 
-    getter io : IO::FileDescriptor # The input that we call `read_char` on
+    # getter io : IO::FileDescriptor # The input that we call `read_char` on
+    getter io : IO::FileDescriptor | IO::Memory # The input that we call `read_char` on
     getter? finished = false
 
     property input = [] of Char
@@ -21,6 +22,12 @@ module Vodka
     property current : Char = '\u0000' # \B is ASCII _Start of Text_
 
     def initialize(@io : IO)
+      log.info "starting lexer..."
+      log.debug "debugging lexer..."
+    end
+
+    def initialize(io : String)
+      @io = IO::Memory.new io
       log.info "starting lexer..."
       log.debug "debugging lexer..."
     end
