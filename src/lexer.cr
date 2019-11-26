@@ -10,7 +10,7 @@ module Vodka
     class Error < Exception
     end
 
-    getter io : IO # The input that we call `read_char` on
+    getter io : IO::FileDescriptor # The input that we call `read_char` on
     getter? finished = false
 
     property input = [] of Char
@@ -292,7 +292,7 @@ module Vodka
 
     # Advance the scanner head, return the new current character
     private def advance!
-      if (c = @io.read_char).nil?
+      unless c = @io.read_char
         @finished = true
         @input << '\0'
         return c

@@ -1,5 +1,6 @@
-default: build
-	crystal spec
+# default: build
+#	crystal spec
+default: run
 
 run: build
 	./bin/vodka
