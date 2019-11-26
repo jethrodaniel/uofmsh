@@ -17,11 +17,6 @@ make build
 
 ### What it do
 
-vodka is a shell designed to do everything I need a shell for everyday, and nothing more.
-
----
-
-Here's everything it does.
 
 pipes (like normal)
 
@@ -47,12 +42,6 @@ simple quotes _without_ interpolation (like ruby)
 echo '#{yeet}'
 ```
 
-globs - **TODO** handle this with an external/builtin program
-
-```
-rm *.c
-```
-
 command chaining (like normal)
 
 ```
@@ -60,38 +49,27 @@ which crystall || echo "pls install crystal first. kthnxbye."
 which crystall && echo "you got crystal? kool."
 ```
 
-minimalist $PATH configuration
+yaml PATH configuration
 
 ```
 # ~/.config/vodka/config.yml
 
 path:
-  # The following are already added to the $PATH
-  #
-  # - ENV['$HOME']
-  # - "ENV['$HOME']/.bin"
-  # - "ENV['$HOME']/bin"
-  # - /usr/local/bin/
-  # - /usr/bin/
-  # - /bin/
-  #
-  - /opt/vodka/bin/
+  - some/path
 ```
 
 ### What it **doesn't** do
 
 - job control (backgrounding processes, etc.. just use tmux)
-- subshells
 - conditionals (besides the one-line command chaining)
-- builtins
-- variables and assignment
 - functions
-- arithmetic (use a separate program)
-- etc..
+- `$(())` arithmetic, use `"#{bc <<< "(1 + 2) * 2 ^ 2"}` 
+- `${}`
+- globs, `.*`, and `.?` matching
 
 ## Development
 
-To run all tests
+To run the tests
 
 ```
 make
@@ -112,10 +90,6 @@ VODKA_LOG=debug ./bin/vodka # info, warn, etc
 ## License
 
 [MIT](LICENSE).
-
-## History
-
-This was originally a homework project - see the [assignment](docs/assignment.pdf), which is in C++, and has a git tag.
 
 ## References
 
