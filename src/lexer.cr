@@ -95,12 +95,10 @@ module Vodka
         add_token type: Token::Types::RIGHT_BRACE, text: curr_char
       when ';'
         add_token type: Token::Types::SEMI, text: curr_char
-        # when '#' # Skip comment lines
-        #  @column += if m = @scanner.scan_until(/\n|$/)
-        #               m.size
-        #             else
-        #               1
-        #             end
+      when '#' # Skip comment lines
+        until next_char == '\n' || finished?
+          advance!
+        end
       when ':'
         add_token type: Token::Types::COLON, text: curr_char
       when '-'
@@ -346,7 +344,11 @@ module Vodka
     private def next_char
       return @input.last if finished?
 
-      @io.peek.chr
+      c = @io.read_char
+
+      @io.seek(-1, IO::Seek::Current)
+
+      c
     end
 
     private def prev_char
