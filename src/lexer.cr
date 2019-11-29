@@ -4,76 +4,63 @@ require "./log"
 require "./token"
 
 module Vodka
+  # A lexer performs lexical analysis on input, using a scanner to read
+  # characters at a time.
+  #
+  # This lexer is set up to read lines at a time - for each one, we use a char
+  # reader to work as a string scanner for that line.
+  #
+  # We maintain a copy of the entire input in a char array, which grows as
+  # lines are added.
+  #
+  # ```
+  # lex = Vodka::Lexer.newjkjk
+  # lex.lex
+  # while line = (lex << gets.chomp)
+  #   puts line.tokens
+  #   # puts lex.tokens #=> all tokens
+  # end
+  #
+  # # lex.finish # if not using the above ; `close`? `lex`?
+  # ```
   class Lexer
     include Vodka::Log
 
     class Error < Exception
     end
 
-    # getter io : IO::FileDescriptor # The input that we call `read_char` on
-    getter io : IO::FileDescriptor | IO::Memory # The input that we call `read_char` on
-    getter? finished = false
-
-    property input = [] of Char
+    # property input : Char::Reader
+    property lines = [] of Char::Reader
+    property current_line : Char::Reader
     property tokens = [] of Token
-    property line = 0
-    property column = 0
-    property start = 0
-    property current : Char = '\u0000' # \B is ASCII _Start of Text_
 
-    def initialize(@io : IO)
+    def initialize(line : String)
       log.info "starting lexer..."
       log.debug "debugging lexer..."
+
+      # self << line
+      # Have to do this to make sure that `@current_line` isn't nullable
+      @current_line = Char::Reader.new(line)
+      @lines << @current_line
     end
 
-    def initialize(io : String)
-      @io = IO::Memory.new io
-      log.info "starting lexer..."
-      log.debug "debugging lexer..."
+    def <<(line)
+      @current_line = Char::Reader.new(line)
+      @lines << @current_line
     end
 
-    def self.interactive
-      lex = self.new io: STDIN
+    # def self.interactive
+    #   lex = self.new io: STDIN
 
-      while t = lex.next_token
-        puts "token: #{t.to_s.inspect}"
-      end
+    #   while t = lex.next_token
+    #     puts "token: #{t.to_s.inspect}"
+    #   end
 
-      puts lex.to_s.inspect
-    end
+    #   puts lex.to_s.inspect
+    # end
 
     def to_s
       @tokens.map(&.to_s).join "\n"
-    end
-
-    def next_token
-      if @tokens.empty? # First time
-        until !@tokens.empty? || finished?
-          scan_token!
-        end
-        if @tokens.size > 0
-          return @tokens.last
-        else
-          return ""
-        end
-      end
-
-      # we have a previous token, so get the next one
-      prev = @tokens.last
-
-      until @tokens.last != prev || finished?
-        scan_token!
-      end
-
-      prev == @tokens.last ? "" : @tokens.last
-    end
-
-    # Parse the entire input into a list of TOKENS
-    def all_tokens
-      until finished?
-        scan_token!
-        # next_token
-      end
     end
 
     # Handle the current character, attempt to match a TOKEN
