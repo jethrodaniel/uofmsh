@@ -1,22 +1,14 @@
-require "./vodka"
+require "./ometa"
 
-Vodka::Lexer.interactive
+# Ometa::Shell.new("$ ").repl banner: true, fortune: true
 
-# Vodka::Shell.new("$ ").repl banner: true, fortune: true
+while line = gets
+  puts line.inspect
 
-# require "io/console"
+  if line == 'q'
+    puts "bye! <3"
+    exit 1
+  end
 
-# while c = STDIN.raw(&.read_char)
-#   puts c.inspect
-#
-#   if c == 'q'
-#     puts "bye! <3"
-#     exit 1
-#   end
-# end
-#
-# str = String.build do |str|
-#   str << "hello "
-#   str << 1
-# end
-# str # => "hello 1"
+  puts Ometa::Lexer.new(line).to_s
+end

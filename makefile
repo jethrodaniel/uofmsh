@@ -1,11 +1,12 @@
 # default: build
-default: run
+# default: run
+default: spec
 
-spec: clean
+spec: clean build
 	crystal spec
 
 run: build
-	./bin/vodka
+	./bin/ometa
 
 build: lint
 	shards build --error-trace

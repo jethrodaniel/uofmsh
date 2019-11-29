@@ -2,9 +2,9 @@ require "./log"
 require "./ast"
 require "./lexer"
 
-module Vodka
+module Ometa
   class Parser
-    include Vodka::Log
+    include Ometa::Log
 
     class Error < Exception
     end

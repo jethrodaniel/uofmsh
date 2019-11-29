@@ -1,6 +1,6 @@
 require "logger"
 
-module Vodka
+module Ometa
   # Basic logging module that provides `log`.
   #
   # Set the `VODKA_LOG` environment variable to change this, defaults to `info`.

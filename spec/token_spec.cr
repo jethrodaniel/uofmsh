@@ -1,33 +1,33 @@
 require "./spec_helper"
 
-describe Vodka::Token do
+describe Ometa::Token do
   it ".to_s" do
-    token = Vodka::Token.new \
+    token = Ometa::Token.new \
       line: 0,
       column: 0,
-      type: Vodka::Token::Types::BANG,
+      type: Ometa::Token::Types::BANG,
       text: "!"
 
     token.to_s.should eq("[1:1] BANG `!`")
   end
 
   it "==" do
-    a = Vodka::Token.new \
+    a = Ometa::Token.new \
       line: 1,
       column: 1,
-      type: Vodka::Token::Types::BANG,
+      type: Ometa::Token::Types::BANG,
       text: "!"
 
-    b = Vodka::Token.new \
+    b = Ometa::Token.new \
       line: 1,
       column: 1,
-      type: Vodka::Token::Types::BANG,
+      type: Ometa::Token::Types::BANG,
       text: "!"
 
-    c = Vodka::Token.new \
+    c = Ometa::Token.new \
       line: 2,
       column: 1,
-      type: Vodka::Token::Types::WORD,
+      type: Ometa::Token::Types::WORD,
       text: "cowsay"
 
     a.should eq(b)

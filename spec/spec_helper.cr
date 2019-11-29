@@ -1,2 +1,2 @@
 require "spec"
-require "../src/vodka"
+require "../src/ometa"

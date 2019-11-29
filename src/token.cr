@@ -1,8 +1,8 @@
 require "./log"
 
-module Vodka
+module Ometa
   class Token
-    include Vodka::Log
+    include Ometa::Log
 
     getter line, column, type, text
 

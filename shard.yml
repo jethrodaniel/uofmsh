@@ -1,11 +1,11 @@
-name: vodka
-version: 0.2.0
+name: ometa
+version: 0.1.0
 
 authors:
   - Mark Delk <jethrodaniel@gmail.com>
 
 targets:
-  vodka:
+  ometa:
     main: src/main.cr
 
 crystal: 0.31.1

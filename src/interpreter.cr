@@ -1,14 +1,14 @@
 require "./log"
 require "./parser"
 
-module Vodka
+module Ometa
   class Shell
-    include Vodka::Log
+    include Ometa::Log
 
     BANNER = <<-COW
                   ^__^
           _______/(oo)
-      /\\/(       /(__)🚬    vodka.
+      /\\/(       /(__)🚬    ometa.
          ||w----||
          ||     ||
     COW
@@ -22,7 +22,7 @@ module Vodka
     # Run the interactive shell
     #
     # ```
-    # Vodka::Shell.new.repl banner: true, fortune: true
+    # Ometa::Shell.new.repl banner: true, fortune: true
     # ```
     def repl(banner = false, fortune = false)
       @input = STDIN
@@ -40,14 +40,14 @@ module Vodka
     # Run a string of input
     #
     # ```
-    # sh = Vodka::Shell.new
+    # sh = Ometa::Shell.new
     # sh.eval "crystal run src/main.rc"
     # ```
     # def eval(input : String)
     #   begin
     #     parser = Parser.new input
     #     puts parser.lexer.to_s if parser.lexer.tokens.size > 0
-    #   rescue e : Vodka::Lexer::Error | Vodka::Parser::Error
+    #   rescue e : Ometa::Lexer::Error | Ometa::Parser::Error
     #     puts "#{e.class}: #{e.message}"
     #   end
 
@@ -59,7 +59,7 @@ module Vodka
     # end
 
     def to_s
-      "[vodka shell] #{@prompt}"
+      "[ometa shell] #{@prompt}"
     end
   end
 end
