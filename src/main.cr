@@ -1,14 +1,20 @@
 require "./ometa"
 
-# Ometa::Shell.new("$ ").repl banner: true, fortune: true
+line = [] of Char
 
-while line = gets
-  puts line.inspect
+while c = STDIN.read_char
+  print c.inspect
 
-  if line == 'q'
+  case c
+  when 'q'
     puts "bye! <3"
     exit 1
+  when '\n'
+    puts
+    puts "> #{line.join.to_s}"
+    puts Ometa::Lexer.new(line.join).to_s
+    line = [] of Char
+  else
+    line << c
   end
-
-  puts Ometa::Lexer.new(line).to_s
 end
