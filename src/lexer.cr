@@ -105,7 +105,7 @@ module Ometa
         @column_number += 1
         advance! # Eat the closing '
 
-        raise Lexer::Error.new("blank literal is meaningless") if literal == ""
+        raise Lexer::Error.new("blank literal is meaningless at #{curr_pos}") if literal == ""
 
         add_token type: Token::Types::LITERAL, text: literal
         @column_number += literal.size
