@@ -25,37 +25,74 @@ module Ometa
     end
 
     enum Types
+      # parameterized rules:
+      #
+      # ```
+      # charRange :x :y = char:c ?(x <= c && c <= y) -> c
+      # ```
+      #
+      # semantic predicates:
+      #
+      # ```
+      # digit = char:d ?(d >= ’0’ && d <= ’9’) -> d
+      # ```
+      #
+      # grouping:
+      #
+      # ```
+      # foo = (bar | baz)*
+      # ```
       LEFT_PAREN  # (
       RIGHT_PAREN # )
+
+      # grouping of semantic actions:
+      #
+      # ```
+      # exp = exp:x ’+’ fac:y -> { [’add’, x, y] };
+      # ```
+      #
+      # This is a derivation of the '08 syntax.
+      #
+      # TODO: is this really needed?
+      # TODO: might use _semantic actions must be on one line_ for now
       LEFT_BRACE  # {
       RIGHT_BRACE # }
-      SEMI        # ;
-      POUND       # #
-      COLON       # :
-      HYPHEN      # -
-      BACKSLASH   # '\'
 
-      REDIRECT_LEFT          # <
-      DREDIRECT_LEFT         # <<
-      REDIRECT_RIGHT         # >
-      REDIRECT_RIGHT_CLOBBER # >|
-      DREDIRECT_RIGHT        # >>
-      BANG                   # !
-      BANGBANG               # !!
-      AND                    # &
-      AND_IF                 # &&
-      PIPE                   # |
-      OR_IF                  # ||
+      # match lists:
+      #
+      # ```
+      # eval = [’num’ anything:x] -> x.to_i
+      # ```
+      LEFT_BRACKET  # [
+      RIGHT_BRACKET # ]
 
-      SINGLE_QUOTE_STRING # 'a single quoted string'
-      DOUBLE_QUOTE_STRING # "a double quoted string"
-      BACKTICK_STRING     # `a backtick quoted string`
+      LOOK_AHEAD     # &
+      SEMI           # ;
+      COLON          # :
+      EQUALS         # =
+      SEMANTIC_START # ->
+      LITERAL        # '...'
+      ZERO_OR_MORE   # *
+      ONE_OR_MORE    # +
+      ONE_OR_ZERO    # ?
 
-      HEREDOC # <<here
+      # negation:
+      #
+      # ```
+      # end = ~anything
+      # ```
+      NOT
 
-      NEWLINE
+      SUPER # ^
+      OR    # |
 
-      WORD
+      NEWLINE # \n
+
+      RULE
+
+      # foreign
+      # anything
+
       NAME
       ASSIGNMENT_WORD
     end

@@ -55,6 +55,10 @@ module Ometa
       advance! unless at_start?
 
       case curr_char
+      when '='
+        add_token type: Token::Types::EQUALS, text: curr_char
+      when '|'
+        add_token type: Token::Types::OR, text: curr_char
       when '('
         add_token type: Token::Types::LEFT_PAREN, text: curr_char
         @column_number += 1
@@ -84,20 +88,39 @@ module Ometa
       when '\u{0}' # do nothing
       when ' '
         @column_number += 1
+      when '\''
+        @column_number += 1
+        start = curr_char
+        literal = ""
+        while next_char != '\''
+          if has_next?
+            advance!
+            @column_number += 1
+            literal += curr_char.to_s
+          else
+            raise Lexer::Error.new("unterminated literal single qoute at #{curr_pos}")
+          end
+        end
+
+        @column_number += 1
+        advance! # Eat the closing '
+
+        raise Lexer::Error.new("blank literal is meaningless") if literal == ""
+
+        add_token type: Token::Types::LITERAL, text: literal
+        @column_number += literal.size
       else
-        log.debug ">> else"
         if curr_char.letter? || curr_char == '_'
           m = curr_char.to_s
           while has_next? && (next_char.alphanumeric? || next_char == '_')
-            log.debug ">>>> next_char: #{next_char}"
             advance!
             m += curr_char.to_s
           end
 
-          add_token type: Token::Types::WORD, text: m
+          add_token type: Token::Types::RULE, text: m
           @column_number += m.size
         else
-          raise Lexer::Error.new("unexpected character: #{next_char.inspect}")
+          raise Lexer::Error.new("unexpected character #{next_char.inspect} at #{curr_pos}")
         end
       end
     end
@@ -111,6 +134,7 @@ module Ometa
     end
 
     private def next_char
+      return '\0' unless @reader.has_next?
       @reader.peek_next_char
     end
 

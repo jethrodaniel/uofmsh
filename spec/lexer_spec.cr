@@ -4,15 +4,20 @@ describe Ometa::Lexer do
   it "do" do
     lex = Ometa::Lexer.new <<-OMETA
     ometa Exp {
+      foo = '0'
     }
     OMETA
 
     lex.to_s.should eq <<-LEX
-    [1:1-5] WORD `ometa`
-    [1:7-9] WORD `Exp`
+    [1:1-5] RULE `ometa`
+    [1:7-9] RULE `Exp`
     [1:11-11] LEFT_BRACE `{`
     [1:12-12] NEWLINE `\n`
-    [2:1-1] RIGHT_BRACE `}`
+    [2:3-5] RULE `foo`
+    [2:7-7] EQUALS `=`
+    [2:11-11] LITERAL `0`
+    [2:12-12] NEWLINE `\n`
+    [3:1-1] RIGHT_BRACE `}`
     LEX
   end
 end
