@@ -1,12 +1,12 @@
 # default: build
-# default: run
-default: spec
+default: run
+# default: spec
 
 spec: clean build
 	crystal spec
 
 run: build
-	./bin/ometa
+	OMETA_LOG=debug ./bin/ometa
 
 build: lint
 	shards build --error-trace

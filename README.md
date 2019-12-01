@@ -1,71 +1,21 @@
-# vodka
+# ometa
 
 ![](https://github.com/jethrodaniel/vodka/workflows/build/badge.svg)
 
-a stupid simple shell.
+An implementation of Alessandro Warth's OMeta system in Crystal.
 
 ## Install
 
 Assuming you have crystal installed
 
 ```
-git clone https://github.com/jethrodaniel/vodka
-cd vodka
-make build
-./bin/vodka
+git clone https://github.com/jethrodaniel/ometa
+cd ometa
+make
 ```
 
 ### What it do
 
-
-pipes (like normal)
-
-```
-fortune | cowsay
-```
-
-file descriptors (like normal)
-
-```
-fortune | cowsay 2>errors >cow
-```
-
-interpolation of commands (like ruby)
-
-```
-vim "notes_#{date +%Y%m%d%H%M%S}.txt"
-```
-
-simple quotes _without_ interpolation (like ruby)
-
-```
-echo '#{yeet}'
-```
-
-command chaining (like normal)
-
-```
-which crystall || echo "pls install crystal first. kthnxbye."
-which crystall && echo "you got crystal? kool."
-```
-
-yaml PATH configuration
-
-```
-# ~/.config/vodka/config.yml
-
-path:
-  - some/path
-```
-
-### What it **doesn't** do
-
-- job control (backgrounding processes, etc.. just use tmux)
-- conditionals (besides the one-line command chaining)
-- functions
-- `$(())` arithmetic, use `"#{bc <<< "(1 + 2) * 2 ^ 2"}` 
-- `${}`
-- globs, `.*`, and `.?` matching
 
 ## Development
 
@@ -84,23 +34,51 @@ crystal spec spec/lexer_spec.cr:122
 To set the logging level
 
 ```
-VODKA_LOG=debug ./bin/vodka # info, warn, etc
+OMETA_LOG=debug ./bin/ometa # info, warn, etc
 ```
 
 ## License
 
 [MIT](LICENSE).
 
-## References
+# Links:
 
-- POSIX shell specifications: https://pubs.opengroup.org/onlinepubs/9699919799/
+- [OMeta website](http://tinlizzie.org/ometa/)
+- [js version](https://github.com/alexwarth/ometa-js)
+- [the 2008 paper](http://www.vpri.org/pdf/tr2008003_experimenting.pdf)
+- [some article about OMeta](http://www.moserware.com/2008/06/ometa-who-what-when-where-why.html)
+- [Pegged, a PEG generator in D](https://github.com/PhilippeSigaud/Pegged/wiki/PEG-Basics)
 
-A big thanks to the following
+```
+# Table 2.1: Inductive definition of the language of parsing
 
-- https://weblog.jamisbuck.org/2015/7/30/writing-a-simple-recursive-descent-parser.html
-- http://www.craftinginterpreters.com/
-- http://parsingintro.sourceforge.net/
++------------+-----------------------------------------+
+| expression |              meaning                    |
++------------+-----------------------------------------+
+|  e1 e2     |              sequencing                 |
+| e1 | e2    |          prioritized choice             |
+|   e*       |         zero or more repetitions        |
+|   e+       | one or more repetitions (not essential) |
+|  (e)       |              grouping                   |
+|  ~e        |              negation                   |
+|  &e        |     look-ahead (not essential)          |
+|   r        |           rule application              |
+|  'x'       |       matches the character x           |
++------------+-----------------------------------------+
+```
 
-Etc
+Here is a grammar for standard arithmetic expressions:
 
-- https://pastebin.com/qpsK4TF6
+```
+Arithmetic:
+    Expr     <- Factor AddExpr*
+    AddExpr  <- ('+'/'-') Factor
+    Factor   <- Primary MulExpr*
+    MulExpr  <- ('*'/'/') Primary
+    Primary  <- '(' Expr ')'
+              / Number
+              / Variable
+              / '-' Primary
+    Number   <- [0-9]+
+    Variable <- identifier
+```

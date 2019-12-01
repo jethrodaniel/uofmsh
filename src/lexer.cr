@@ -31,58 +31,76 @@ module Ometa
 
     # Parse the entire input into a list of TOKENS
     private def lex!
-      while @reader.has_next?
+      log.debug "[lex] current: #{curr_char.inspect}"
+      log.debug "[lex] next: #{next_char.inspect}"
+      while has_next?
         next_token!
       end
+    end
+
+    private def has_next?
+      @reader.has_next? && next_char != '\0'
     end
 
     # Handle the current character, attempt to match a TOKEN
     #
     # This is called repeatedly until the scanner hits the end of input
     private def next_token!
-      log.debug "[lexer] current: #{curr_char.inspect}"
+      log.debug "[next_token] current: #{curr_char.inspect}"
+
+      advance!
 
       case curr_char
-      when "("
+      when '('
         add_token type: Token::Types::LEFT_PAREN, text: curr_char
         @column_number += 1
         advance!
-      when ")"
+      when ')'
         add_token type: Token::Types::RIGHT_PAREN, text: curr_char
         @column_number += 1
         advance!
-      when "{"
+      when '{'
         add_token type: Token::Types::LEFT_BRACE, text: curr_char
         @column_number += 1
         advance!
-      when "}"
+      when '}'
         add_token type: Token::Types::RIGHT_BRACE, text: curr_char
         @column_number += 1
         advance!
-      when ";"
+      when ';'
         add_token type: Token::Types::SEMI, text: curr_char
         @column_number += 1
         advance!
-        # when "#" # Skip comment lines
+        # when "#"
+        # until next_char == '\n' ||
         #   @column_number += if m = @scanner.scan_until(/\n|$/)
         #                       m.size
         #                     else
         #                       1
         #                     end
-      when "\n"
+      when '\n'
         add_token type: Token::Types::NEWLINE, text: curr_char
         @line_number += 1
         @column_number = 0
         advance!
+      when '\u{0}'
+        @column_number += 1
+      when ' '
+        @column_number += 1
       else
-        if curr_char.to_s.match(/(\w|\d)+/)
-          m = curr_char
+        log.debug ">> else"
+        if curr_char.letter? || curr_char == '_'
+          m = curr_char.to_s
+          while has_next? && (next_char.alphanumeric? || next_char == '_')
+            log.debug ">>>> next_char: #{next_char}"
+            advance!
+            m += curr_char.to_s
+          end
+
           add_token type: Token::Types::WORD, text: m
-          # @column_number += m.size
-          # advance! /(\w|\d)+/
-          advance!
+          @column_number += m.size
         else
-          raise Lexer::Error.new("unexpected character: #{next_char}")
+          raise Lexer::Error.new("unexpected character: #{next_char.inspect}")
         end
       end
     end
@@ -104,6 +122,7 @@ module Ometa
     end
 
     private def advance!
+      log.debug "advance!..."
       @reader.next_char
     end
 
@@ -112,12 +131,14 @@ module Ometa
     end
 
     private def add_token(type : Token::Types, text : Char | String)
-      @tokens << Token.new(
+      t = Token.new(
         line: @line_number,
         column: @column_number,
         type: type,
         text: text.to_s
       )
+      log.debug { "adding token #{t.to_s}" }
+      @tokens << t
     end
   end
 end

@@ -3,7 +3,7 @@ require "logger"
 module Ometa
   # Basic logging module that provides `log`.
   #
-  # Set the `VODKA_LOG` environment variable to change this, defaults to `info`.
+  # Set the `OMETA_LOG` environment variable to change this, defaults to `info`.
   #
   # NOTE: The result must be one of the following, matched case-insensitive:
   #  - debug
@@ -16,8 +16,8 @@ module Ometa
     # logs something.
     # TODO: colorize output
     def log
-      level = if ENV.has_key? "VODKA_LOG"
-                case ENV["VODKA_LOG"]
+      level = if ENV.has_key? "OMETA_LOG"
+                case ENV["OMETA_LOG"]
                 when .match(/debug/m)   then Logger::DEBUG
                 when .match(/info/m)    then Logger::INFO
                 when .match(/warn/m)    then Logger::WARN

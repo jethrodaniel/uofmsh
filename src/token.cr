@@ -13,7 +13,7 @@ module Ometa
     end
 
     def to_s
-      "[#{@line + 1}:#{@column + 1}] #{@type} \`#{@text}`"
+      "[#{@line}:#{@column}-#{@text.size + @column}] #{@type} \`#{@text}`"
     end
 
     def ==(other)
