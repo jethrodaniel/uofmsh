@@ -13,7 +13,8 @@ module Ometa
     end
 
     def to_s
-      "[#{@line}:#{@column}-#{@text.size + @column}] #{@type} \`#{@text}`"
+      t = @text == '\n' ? "\\n" : @text
+      "[#{@line}:#{@column}-#{@column - 1 + @text.size}] #{@type} `#{t}`"
     end
 
     def ==(other)

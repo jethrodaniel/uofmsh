@@ -1,5 +1,5 @@
 # default: build
-default: run
+default: clean run
 # default: spec
 
 spec: clean build

@@ -2,13 +2,17 @@ require "./spec_helper"
 
 describe Ometa::Lexer do
   it "do" do
-    lex = Ometa::Lexer.new "ometa ExpRecognizer"
-    # lex.line_number.should eq(1)
-    # lex.column_number.should eq(1)
+    lex = Ometa::Lexer.new <<-OMETA
+    ometa Exp {
+    }
+    OMETA
 
-    # lex.lex!
     lex.to_s.should eq <<-LEX
-      wow
+    [1:1-5] WORD `ometa`
+    [1:7-9] WORD `Exp`
+    [1:11-11] LEFT_BRACE `{`
+    [1:12-12] NEWLINE `\n`
+    [2:1-1] RIGHT_BRACE `}`
     LEX
   end
 end

@@ -42,35 +42,34 @@ module Ometa
       @reader.has_next? && next_char != '\0'
     end
 
+    private def at_start?
+      @line_number == 1 && @column_number == 1
+    end
+
     # Handle the current character, attempt to match a TOKEN
     #
     # This is called repeatedly until the scanner hits the end of input
     private def next_token!
       log.debug "[next_token] current: #{curr_char.inspect}"
 
-      advance!
+      advance! unless at_start?
 
       case curr_char
       when '('
         add_token type: Token::Types::LEFT_PAREN, text: curr_char
         @column_number += 1
-        advance!
       when ')'
         add_token type: Token::Types::RIGHT_PAREN, text: curr_char
         @column_number += 1
-        advance!
       when '{'
         add_token type: Token::Types::LEFT_BRACE, text: curr_char
         @column_number += 1
-        advance!
       when '}'
         add_token type: Token::Types::RIGHT_BRACE, text: curr_char
         @column_number += 1
-        advance!
       when ';'
         add_token type: Token::Types::SEMI, text: curr_char
         @column_number += 1
-        advance!
         # when "#"
         # until next_char == '\n' ||
         #   @column_number += if m = @scanner.scan_until(/\n|$/)
@@ -81,10 +80,8 @@ module Ometa
       when '\n'
         add_token type: Token::Types::NEWLINE, text: curr_char
         @line_number += 1
-        @column_number = 0
-        advance!
-      when '\u{0}'
-        @column_number += 1
+        @column_number = 1
+      when '\u{0}' # do nothing
       when ' '
         @column_number += 1
       else
